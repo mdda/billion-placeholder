@@ -10,5 +10,5 @@ make
 # run ./demo.sh for fun...
 # 100Mb file, 17M words in sentences, 253k vocab 
 # Actual training : 81k word vocab, vector-length : 50, max_iter 15
-15:30
-15:42 (finished earlier...)
+15:30 - 15:42 (finished earlier...)
+23:48 - 23:55 (started earlier...)
