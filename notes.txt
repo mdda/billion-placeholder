@@ -1,0 +1,7 @@
+
+GloVe from :: http://www-nlp.stanford.edu/projects/glove/
+
+wget http://www-nlp.stanford.edu/software/glove.tar.gz
+tar -xzf glove.tar.gz
+cd glove
+
