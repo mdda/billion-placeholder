@@ -12,3 +12,12 @@ make
 # Actual training : 81k word vocab, vector-length : 50, max_iter 15
 15:30 - 15:42 (finished earlier...)
 23:48 - 23:55 (started earlier...)
+
+
+# The sample 'text8' corpus file appears to be just :
+#   plain lowercase words
+#   no punctuation
+#   no line-gaps
+#   numbers spelled out as digits
+#   apostrophes->spaces
+
