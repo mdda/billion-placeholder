@@ -14,9 +14,9 @@ make
 23:48 - 23:55 (started earlier...)
 
 wc data/orig/train_v2.txt 
-  30301028  768646526 4147291308 data/orig/train_v2.txt
+  30,301,028  768,646,526 4,147,291,308 data/orig/train_v2.txt
 wc data/orig/test_v2.txt
-  306682  7481193 43045391 data/orig/test_v2.txt
+  306,682  7,481,193 43,045,391 data/orig/test_v2.txt
 
 # The sample 'text8' corpus file appears to be just :
 #   plain lowercase words
@@ -27,5 +27,12 @@ wc data/orig/test_v2.txt
 
 mkdir -p data/{orig,glove}
 
-python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_100.txt --lines 100
+date
+##  1MM 19s
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_1MM.txt --lines 1000000
+##  10MM 3m25s
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_10MM.txt --lines 10000000
+##   ALL 10m03s
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_ALL.txt
+date
 

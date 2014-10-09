@@ -32,20 +32,27 @@ my_test = """
 7,"The Wizards recovered from a 4-9 start season , and several of the team 's key players have been around long enough to know that a bad start does not necessarily lead to a bad finish ."
 """
 
-_digits = re.compile('\d')
+_digits = re.compile(r'\d')
+_digitsub = re.compile(r'[\d\,]+')
 
-
-for i, line in enumerate(inputfile):
-  words=line.split(' ')
+for l, line in enumerate(inputfile):
+  words=line.split()
+  
   # For consistency (most likely case), first word should be lowercased
   #  unless 'I' or a proper name (too soon to tell)
   words[0]=words[0].lower()  
+  
   for i,w in enumerate(words):
     if bool(_digits.search(w)): 
       # Replace all consecutive digits with NUMBER
-      print "NUMBER : ", w
-  #outputfile.writeln(' '.join(words))
-  if i>args.lines: break
+      words[i] = _digitsub.sub('{N}', w)
+      #print "NUMBER : ", w, '', words[i]
+      continue
+      
+  outputfile.write(' '.join(words))
+  outputfile.write("\n")
+  #print(' '.join(words))
+  if l>args.lines: break
   
 inputfile.close()
 outputfile.close()
