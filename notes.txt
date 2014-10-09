@@ -21,3 +21,7 @@ make
 #   numbers spelled out as digits
 #   apostrophes->spaces
 
+mkdir -p data/{orig,glove}
+
+python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_100.txt --lines 100
+
