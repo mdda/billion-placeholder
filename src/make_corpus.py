@@ -1,11 +1,12 @@
 #! python
  
 import argparse
+import re
 
 parser = argparse.ArgumentParser(description='Parses training file in to Corpus (for GloVe)')
 parser.add_argument('-i','--input', help='Input file name', required=True)
 parser.add_argument('-o','--output', help='Output file name', required=True)
-parser.add_argument('-l','--lines', help='# of lines', type=int, default=-1)
+parser.add_argument('-l','--lines', help='# of lines', type=int, default=1e9)
 
 args = parser.parse_args()
 
@@ -26,17 +27,25 @@ AMMAN ( Reuters ) - King Abdullah of Jordan will meet U.S. President Barack Obam
 
 my_test = """
 4,"The 's bloody body was discovered on a bed ."
-5,"Her adds that most Americans "" want to be seen in their big house with a big car . """
+5,\"Her adds that most Americans "" want to be seen in their big house with a big car . ""\"
 6,"Michael Jackson could be forced to fly to the High Court in London to testify in a case being brought against him the King of Bahrain 's son ."
 7,"The Wizards recovered from a 4-9 start season , and several of the team 's key players have been around long enough to know that a bad start does not necessarily lead to a bad finish ."
 """
 
-# dictionary definition 0-, 1- etc. are there to parse the date block delimited with dashes, and make sure the negative numbers are not effected
-reps = {'"NAN"':'NAN', '"':'', '0-':'0,','1-':'1,','2-':'2,','3-':'3,','4-':'4,','5-':'5,','6-':'6,','7-':'7,','8-':'8,','9-':'9,', ' ':',', ':':',' }
+_digits = re.compile('\d')
 
-for i in range(4): inputfile.next() # skip first four lines
-for line in inputfile:
-    outputfile.writelines(data_parser(line, reps))
 
+for i, line in enumerate(inputfile):
+  words=line.split(' ')
+  # For consistency (most likely case), first word should be lowercased
+  #  unless 'I' or a proper name (too soon to tell)
+  words[0]=words[0].lower()  
+  for i,w in enumerate(words):
+    if bool(_digits.search(w)): 
+      # Replace all consecutive digits with NUMBER
+      print "NUMBER : ", w
+  #outputfile.writeln(' '.join(words))
+  if i>args.lines: break
+  
 inputfile.close()
 outputfile.close()
