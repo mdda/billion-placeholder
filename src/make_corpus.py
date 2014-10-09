@@ -35,7 +35,7 @@ my_test = """
 _digits = re.compile(r'\d')
 _digitsub = re.compile(r'[\d\,]+')
 
-for l, line in enumerate(inputfile):
+def regularize(line):
   words=line.split()
   
   # For consistency (most likely case), first word should be lowercased
@@ -49,8 +49,14 @@ for l, line in enumerate(inputfile):
       #print "NUMBER : ", w, '', words[i]
       continue
       
+  return words
+  
+for l, line in enumerate(inputfile):  
+  words = regularize(line)
+  
   outputfile.write(' '.join(words))
   outputfile.write("\n")
+  
   #print(' '.join(words))
   if l>args.lines: break
   
