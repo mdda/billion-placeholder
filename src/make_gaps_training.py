@@ -17,19 +17,46 @@ outputfile = open(args.output, 'w')
 regularize=billion.util.regularize
 vocab_index = billion.util.load_vocab(args.vocab)
 
-for w in ['the', 'computer', 'investor', 'xNONEXISTENTx', ]:
-  print w, ' -> ', vocab_index[w]
+#for w in ['the', 'computer', 'investor', 'xNONEXISTENTx', ]:
+#  print w, ' -> ', vocab_index[w]
 
-"""
+missing_ones = ['the', 'and', 'of', 'to', 'for', 'a', 'an', 'on', 'in', 'at', 'by', 'from', ]
+if len(missing_ones)>30:
+  print "missing_ones list too long to pack into integer"
+  exit
+  
 for l, line in enumerate(inputfile):  
   words = regularize(line)
+  vocab_indices = [ vocab_index[w] for w in words ]
   
-  outputfile.write(' '.join(words))
-  outputfile.write("\n")
+  for i in range(len(words)-2):
+    if vocab_indices[i] is None or vocab_indices[i+1] is None or vocab_indices[i+2] is None:
+      continue
+    # Middle word missing
+    out = [vocab_indices[i], vocab_indices[i+2], 1 ]
+    missing = words[i+1]
+    if missing in missing_ones:
+      a = 1 << missing_ones.index(missing)
+      out.append(a)
+    else:
+      out.append(0)
+    #print(out)
+    outputfile.write("%d,%d,%d,%d\n" % (out[0], out[1], out[2], out[3]))
+    
+    
+  for i in range(len(words)-1):
+    if vocab_indices[i] is None or vocab_indices[i+1] is None:
+      continue
+    # Word not missing
+    out = [vocab_indices[i], vocab_indices[i+1], 0 ]
+    out.append(0)
+    #print(out)
+    outputfile.write("%d,%d,%d,%d\n" % (out[0], out[1], out[2], out[3]))
   
-  #print(' '.join(words))
-  if l>args.lines: break
-"""
+  #print(' '.join(out))
+  #if l>5: break
+  if 0 == l % 10000:
+    print "Line : ", l
   
 inputfile.close()
 outputfile.close()
