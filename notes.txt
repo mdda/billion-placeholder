@@ -30,6 +30,10 @@ mkdir -p data/{orig,glove,gaps,fill,holdout}
 ## Move the Kaggle training and test data into the right place
 #rsync -avz --progress data/orig andrewsm@holland.herald:/home/andrewsm/sketchpad/kaggle/1-billion-words/data/
 
+## Create a holdout/{orig,test} set, so we can benchmark ourselves locally
+python src/make_holdout_files.py --input data/orig/train_v2.txt --orig data/holdout/orig.txt --test data/holdout/test.txt 
+
+## Create preprocessed corpus files that can be fed to GloVe directly
 date
 ##  1MM 19s (laptop), 1MM 10s (holland)
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/1MM_0-corpus.txt --lines 1000000
@@ -46,5 +50,3 @@ date
 
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
 
-
-python src/make_holdout_files.py --input data/orig/train_v2.txt --orig data/holdout/orig.txt --test data/holdout/test.txt 
