@@ -36,8 +36,14 @@ mkdir -p data/{orig,glove,gaps,fill,holdout}
 ## Move the Kaggle training and test data into the right place
 #rsync -avz --progress data/orig andrewsm@holland.herald:/home/andrewsm/sketchpad/kaggle/1-billion-words/data/
 
+
 ## Create a holdout/{orig,test} set, so we can benchmark ourselves locally
 python src/make_holdout_files.py --input data/orig/train_v2.txt --orig data/holdout/orig.txt --test data/holdout/test.txt 
+
+## Test to see what the holdout test sample scores vs its own source data
+python src/score_vs_holdout.py --orig data/holdout/orig.txt --submission data/holdout/test.txt 
+# End result is 71627 cases : 5.54351 distance 1SD=(5.53332, 5.55372) (ideal = 5.55211)
+
 
 ## Create preprocessed corpus files that can be fed to GloVe directly
 date
@@ -54,15 +60,10 @@ date
 # 0.0287 -> 0.0083 in 3h45m (holland)
 ./src/corpus-glove.sh ALL
 
+# Move pre-computed vectors back to laptop
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/glove/ALL_1-vocab.txt data/glove/
-
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/glove/ALL_3-vectors.txt data/glove/
 
 
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
-
-
-## Test to see what the holdout test sample scores vs its own source data
-python src/score_vs_holdout.py --orig data/holdout/orig.txt --submission data/holdout/test.txt 
-# End result is 71627 cases : 5.54351 distance 1SD=(5.53332, 5.55372) (ideal = 5.55211)
 
