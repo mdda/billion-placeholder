@@ -1,4 +1,6 @@
 import re
+
+import sys # for Flush
 from collections import defaultdict
 
 # sample text string, just for demonstration to let you know how the data looks like
@@ -44,3 +46,10 @@ def load_vocab(filename):
   f.close()
   
   return v
+
+def print_thousands(s, l, overwrite=True):
+  commas = "{:,}".format(l)
+  if overwrite:  # http://en.wikipedia.org/wiki/ANSI_escape_code
+    print '\x1b[0G',
+  print s, commas, "          ",  # Nice over-writing (no newline)
+  sys.stdout.flush()

@@ -29,9 +29,9 @@ print(missing_ones, "\n")
 
 for l, line in enumerate(inputfile):  
   if 0 == l % 10000:
-    print '\x1b[0G', 'Line : ', l, # Nice over-writing (no newline)
-    sys.stdout.flush()
-
+    billion.util.print_thousands("Line # ", l)
+    # Skip this iter - since it's going into our 'holdout set'
+    continue
     
   words = regularize(line)
   vocab_indices = [ vocab_index[w] for w in words ]

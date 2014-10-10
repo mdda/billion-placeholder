@@ -24,9 +24,7 @@ regularize=billion.util.regularize
 
 for l, line in enumerate(inputfile):  
   if 0 == l % 10000:
-    #print('\x1b[0G', 'Line : ', l, end="")   # Nice over-writing (no newline)
-    print '\x1b[0G', 'Line : ', l, # Nice over-writing (no newline)
-    sys.stdout.flush()
+    billion.util.print_thousands("Line # ", l)
   
   words = regularize(line)
   
