@@ -26,6 +26,9 @@ if len(missing_ones)>30:
   exit
   
 for l, line in enumerate(inputfile):  
+  if 0 == l % 10000:
+    print "Line : ", l
+    
   words = regularize(line)
   vocab_indices = [ vocab_index[w] for w in words ]
   
@@ -55,8 +58,6 @@ for l, line in enumerate(inputfile):
   
   #print(' '.join(out))
   #if l>5: break
-  if 0 == l % 10000:
-    print "Line : ", l
   
 inputfile.close()
 outputfile.close()

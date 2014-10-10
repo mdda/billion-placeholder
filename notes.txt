@@ -27,14 +27,19 @@ wc data/orig/test_v2.txt
 
 mkdir -p data/{orig,glove,gaps,fill}
 
+## Move the Kaggle training and test data into the right place
+#rsync -avz --progress data/orig andrewsm@holland.herald:/home/andrewsm/sketchpad/kaggle/1-billion-words/data/
+
 date
 ##  1MM 19s
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_1MM.txt --lines 1000000
 ##  10MM 3m25s
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_10MM.txt --lines 10000000
-##   ALL 10m03s
+##   ALL 10m03s (laptop),  ALL 5m50s (holland)
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_ALL.txt
 date
+
+./src/corpus-glove.sh 
 
 python src/make_gaps_training.py --input data/glove/corpus_1MM.txt --vocab data/glove1MM/vocab.txt --output data/gaps/gaps_train.txt 
 

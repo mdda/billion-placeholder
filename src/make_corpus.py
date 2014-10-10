@@ -23,6 +23,9 @@ outputfile = open(args.output, 'w')
 regularize=billion.util.regularize
 
 for l, line in enumerate(inputfile):  
+  if 0 == l % 10000:
+    print "Line : ", l
+  
   words = regularize(line)
   
   outputfile.write(' '.join(words))
