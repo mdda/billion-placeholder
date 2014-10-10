@@ -1,11 +1,12 @@
 #!/bin/bash
 
 DIR=./data/glove/
-CORPUS=${DIR}corpus_1MM.txt
-#CORPUS=${DIR}corpus_ALL.txt
+PREFIX=1MM
+#PREFIX=ALL
+CORPUS=${DIR}${PREFIX}_corpus.txt
 
 if [ ! -e ${CORPUS} ]; then
-  echo "Need to prepare corpus!"
+  echo "Need to prepare corpus ${CORPUS} !"
   exit
 #  mkdir -p ${DIR}
 #  wget http://mattmahoney.net/dc/text8.zip --directory-prefix=${DIR}
@@ -13,10 +14,10 @@ if [ ! -e ${CORPUS} ]; then
 #  rm ${CORPUS}.zip
 fi
 
-VOCAB_FILE=${DIR}vocab.txt
-COOCCURRENCE_FILE=${DIR}cooccurrence.bin
-COOCCURRENCE_SHUF_FILE=${DIR}cooccurrence.shuf.bin
-SAVE_FILE=${DIR}vectors
+VOCAB_FILE=${DIR}${PREFIX}vocab.txt
+COOCCURRENCE_FILE=${DIR}${PREFIX}cooccurrence.bin
+COOCCURRENCE_SHUF_FILE=${DIR}${PREFIX}cooccurrence.shuf.bin
+SAVE_FILE=${DIR}${PREFIX}vectors
 VERBOSE=2
 MEMORY=4.0
 VOCAB_MIN_COUNT=5

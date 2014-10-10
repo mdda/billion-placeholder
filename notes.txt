@@ -32,72 +32,14 @@ mkdir -p data/{orig,glove,gaps,fill}
 
 date
 ##  1MM 19s (laptop), 1MM 12s (holland)
-#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_1MM.txt --lines 1000000
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/1MM_corpus.txt --lines 1000000
 ##  10MM 3m25s
-#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_10MM.txt --lines 10000000
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/10MM_corpus.txt --lines 10000000
 ##   ALL 10m03s (laptop),  ALL 5m50s (holland)
-#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/corpus_ALL.txt
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/ALL_corpus.txt
 date
 
-./src/corpus-glove.sh 
+./src/corpus-glove.sh > data/glove/1MM__log.txt
 
-python src/make_gaps_training.py --input data/glove/corpus_1MM.txt --vocab data/glove1MM/vocab.txt --output data/gaps/gaps_train.txt 
+python src/make_gaps_training.py --input data/glove/1MM_corpus.txt --vocab data/glove/1MM_vocab.txt --output data/gaps/1MM_train.txt 
 
-
-
-
-"""
-[andrewsm@changi 1-billion-words]$ ./src/corpus-glove.sh 
-Fri Oct 10 01:32:56 SGT 2014
-BUILDING VOCABULARY
-Processed 25378909 tokens.
-Counted 337020 unique words.
-Truncating vocabulary at min count 5.
-Using vocabulary of size 82908.
-
-Fri Oct 10 01:32:59 SGT 2014
-COUNTING COOCCURRENCES
-window size: 15
-context: symmetric
-max product: 13752509
-overflow length: 38028356
-Reading vocab from file "./data/glove/vocab.txt"...loaded 82908 words.
-Building lookup table...table contains 99131215 elements.
-Processed 25378909 tokens.
-Writing cooccurrences to disk.........2 files in total.
-Merging cooccurrence files: processed 61050364 lines.
-
-Fri Oct 10 01:33:44 SGT 2014
-SHUFFLING COOCCURRENCES
-array size: 255013683
-Shuffling by chunks: processed 61050364 lines.
-Wrote 1 temporary file(s).
-Merging temp files: processed 61050364 lines.
-
-Fri Oct 10 01:34:11 SGT 2014
-TRAINING MODEL
-Read 61050364 lines.
-Initializing parameters...done.
-vector size: 240
-vocab size: 82908
-x_max: 10.000000
-alpha: 0.750000
-iter: 001, cost: 0.072249
-iter: 002, cost: 0.051552
-iter: 003, cost: 0.043694
-iter: 004, cost: 0.037815
-iter: 005, cost: 0.033361
-iter: 006, cost: 0.030239
-iter: 007, cost: 0.028046
-iter: 008, cost: 0.026429
-iter: 009, cost: 0.025266
-iter: 010, cost: 0.024306
-iter: 011, cost: 0.023548
-iter: 012, cost: 0.022948
-iter: 013, cost: 0.022398
-iter: 014, cost: 0.021946
-iter: 015, cost: 0.021555
-SUCCESS!
-Fri Oct 10 02:01:40 SGT 2014
-
-"""
