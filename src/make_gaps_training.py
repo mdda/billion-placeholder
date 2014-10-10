@@ -24,10 +24,12 @@ missing_ones = ['the', 'and', 'of', 'to', 'for', 'a', 'an', 'on', 'in', 'at', 'b
 if len(missing_ones)>30:
   print "missing_ones list too long to pack into integer"
   exit
-  
+
+print(missing_ones, "\n")
+
 for l, line in enumerate(inputfile):  
   if 0 == l % 10000:
-    print "Line : ", l
+    print "\033[19GLine : ", l  # Nice overwriting
     
   words = regularize(line)
   vocab_indices = [ vocab_index[w] for w in words ]

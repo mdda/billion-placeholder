@@ -13,9 +13,9 @@ parser.add_argument('-l','--lines', help='# of lines', type=int, default=50e6)
 args = parser.parse_args()
 
 ## show values ##
-#print ("Input file: %s" % args.input )
-#print ("Output file: %s" % args.output )
-#print ("Lines : %d" % args.lines )
+#print("Input file: %s" % args.input )
+#print("Output file: %s" % args.output )
+print("Lines : %d\n" % args.lines )
 
 inputfile = open(args.input)
 outputfile = open(args.output, 'w')
@@ -24,7 +24,7 @@ regularize=billion.util.regularize
 
 for l, line in enumerate(inputfile):  
   if 0 == l % 10000:
-    print "Line : ", l
+    print "\033[19GLine : ", l   # Nice over-writing
   
   words = regularize(line)
   

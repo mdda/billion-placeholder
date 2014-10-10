@@ -1,15 +1,22 @@
 #!/bin/bash
 
-PREFIX=$1
+PREFIX=${1:-1MM}
 #PREFIX=1MM
 #PREFIX=ALL
 
-X_MAX=$2
-#X_MAX=10  # For 1MM
-#X_MAX=10  # For ALL
+X_MAX=25    # For 1MM
+MAX_ITER=15 # For 1MM
+MEMORY=4.0  # Standard
+
+if [ ${PREFIX} == "ALL" ]; then
+  echo "Doing ALL"
+  X_MAX=100
+  MAX_ITER=25
+  MEMORY=24.0  # Larger machine...
+fi
 
 DIR=./data/glove/
-CORPUS=${DIR}${PREFIX}_corpus.txt
+CORPUS=${DIR}${PREFIX}_0-corpus.txt
 
 if [ ! -e ${CORPUS} ]; then
   echo "Need to prepare corpus ${CORPUS} !"
@@ -20,30 +27,35 @@ if [ ! -e ${CORPUS} ]; then
 #  rm ${CORPUS}.zip
 fi
 
-VOCAB_FILE=${DIR}${PREFIX}vocab.txt
-COOCCURRENCE_FILE=${DIR}${PREFIX}cooccurrence.bin
-COOCCURRENCE_SHUF_FILE=${DIR}${PREFIX}cooccurrence.shuf.bin
-SAVE_FILE=${DIR}${PREFIX}vectors
+VOCAB_FILE=${DIR}${PREFIX}_1-vocab.txt
+COOCCURRENCE_FILE=${DIR}${PREFIX}_2-cooccurrence.bin
+COOCCURRENCE_SHUF_FILE=${DIR}${PREFIX}_2-cooccurrence.shuf.bin
+SAVE_FILE=${DIR}${PREFIX}_3-vectors
 VERBOSE=2
-MEMORY=4.0
 VOCAB_MIN_COUNT=5
 VECTOR_SIZE=240
-MAX_ITER=15
+#MAX_ITER=15
 WINDOW_SIZE=15
 BINARY=2
 NUM_THREADS=8
 GLOVE=./glove/
 
 date
-${GLOVE}/vocab_count -min-count $VOCAB_MIN_COUNT -verbose $VERBOSE < $CORPUS > $VOCAB_FILE
+if [ ! -e ${VOCAB_FILE} ]; then
+  ${GLOVE}/vocab_count -min-count $VOCAB_MIN_COUNT -verbose $VERBOSE < $CORPUS > $VOCAB_FILE
+fi
 if [[ $? -eq 0 ]]
 then
   date
-  ${GLOVE}/cooccur -memory $MEMORY -vocab-file $VOCAB_FILE -verbose $VERBOSE -window-size $WINDOW_SIZE < $CORPUS > $COOCCURRENCE_FILE
+  if [ ! -e ${COOCCURRENCE_FILE} ]; then
+    ${GLOVE}/cooccur -memory $MEMORY -vocab-file $VOCAB_FILE -verbose $VERBOSE -window-size $WINDOW_SIZE < $CORPUS > $COOCCURRENCE_FILE
+  fi
   if [[ $? -eq 0 ]]
   then
     date
-    ${GLOVE}/shuffle -memory $MEMORY -verbose $VERBOSE < $COOCCURRENCE_FILE > $COOCCURRENCE_SHUF_FILE
+    if [ ! -e ${COOCCURRENCE_SHUF_FILE} ]; then
+      ${GLOVE}/shuffle -memory $MEMORY -verbose $VERBOSE < $COOCCURRENCE_FILE > $COOCCURRENCE_SHUF_FILE
+    fi
     if [[ $? -eq 0 ]]
     then
       date

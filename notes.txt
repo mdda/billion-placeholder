@@ -32,14 +32,16 @@ mkdir -p data/{orig,glove,gaps,fill}
 
 date
 ##  1MM 19s (laptop), 1MM 10s (holland)
-#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/1MM_corpus.txt --lines 1000000
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/1MM_0-corpus.txt --lines 1000000
 ##  10MM 3m25s
-#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/10MM_corpus.txt --lines 10000000
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/10MM_0-corpus.txt --lines 10000000
 ##   ALL 10m03s (laptop),  ALL 5m50s (holland)
-#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/ALL_corpus.txt
+#python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/ALL_0-corpus.txt
 date
 
-./src/corpus-glove.sh 1MM 10 > data/glove/1MM__log.txt
+# 0.0722 -> 0.021555 in 12m (holland), 25m (laptop)
+./src/corpus-glove.sh 1MM 
+./src/corpus-glove.sh ALL 
 
-python src/make_gaps_training.py --input data/glove/1MM_corpus.txt --vocab data/glove/1MM_vocab.txt --output data/gaps/1MM_train.txt 
+python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
 
