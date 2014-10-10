@@ -4,7 +4,7 @@ import sys
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Parses training file in to Corpus (for GloVe)')
+parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
 parser.add_argument('-i','--input', help='Input file name', required=True)
 parser.add_argument('--vocab', help='Vocab file name', required=True)
 parser.add_argument('-o','--output', help='Output file name', required=True)

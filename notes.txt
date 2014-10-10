@@ -25,7 +25,7 @@ wc data/orig/test_v2.txt
 #   numbers spelled out as digits
 #   apostrophes->spaces
 
-mkdir -p data/{orig,glove,gaps,fill}
+mkdir -p data/{orig,glove,gaps,fill,holdout}
 
 ## Move the Kaggle training and test data into the right place
 #rsync -avz --progress data/orig andrewsm@holland.herald:/home/andrewsm/sketchpad/kaggle/1-billion-words/data/
@@ -39,9 +39,11 @@ date
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/ALL_0-corpus.txt
 date
 
-# 0.0722 -> 0.021555 in 12m (holland), 25m (laptop)
+# 0.0457 -> 0.0123 in 12m (holland), 25m (laptop)
 ./src/corpus-glove.sh 1MM 
-./src/corpus-glove.sh ALL 
+# 0.0287 -> 0.0ABC in XhYm (holland)
+./src/corpus-glove.sh ALL
 
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
 
+python src/make_holdout_files.py --input data/glove/ALL_0-corpus.txt --orig data/holdout/orig.txt --test data/holdout/test.txt 
