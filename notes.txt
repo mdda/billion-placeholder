@@ -1,9 +1,33 @@
 sudo yum update bash
-sudo yum install python-virtualenv
+sudo yum install python-virtualenv 
+
+sudo yum install libyaml-devel
+sudo yum install openblas-devel atlas-devel gcc-gfortran
+
 virtualenv env
 . env/bin/activate
 ##pip install python-Levenshtein
 pip install editdistance
+
+
+## python environment installation : start
+pip install cython numpy
+
+cd env
+
+  git clone git://github.com/Theano/Theano.git
+  cd Theano
+    python setup.py develop
+  cd ..
+
+  git clone git://github.com/lisa-lab/pylearn2.git
+  cd pylearn2
+    python setup.py develop
+  cd ..
+
+cd ..
+## python environment installation : end
+
 
 GloVe from :: http://www-nlp.stanford.edu/projects/glove/
 
