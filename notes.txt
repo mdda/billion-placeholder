@@ -46,4 +46,5 @@ date
 
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
 
-python src/make_holdout_files.py --input data/glove/ALL_0-corpus.txt --orig data/holdout/orig.txt --test data/holdout/test.txt 
+
+python src/make_holdout_files.py --input data/orig/train_v2.txt --orig data/holdout/orig.txt --test data/holdout/test.txt 

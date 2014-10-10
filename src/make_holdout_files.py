@@ -4,8 +4,8 @@ import sys
 
 import argparse
 
-parser = argparse.ArgumentParser(description='Creates Holdout files from Corpus file')
-parser.add_argument('-i','--input', help='Input Corpus file name', required=True)
+parser = argparse.ArgumentParser(description='Creates Holdout files from original training file')
+parser.add_argument('-i','--input', help='Input original training file name', required=True)
 parser.add_argument('-o','--orig', help='Holdout data file name for "truth"', required=True)
 parser.add_argument('-t','--test', help='Holdout data file name for "test"', required=True)
 
@@ -14,6 +14,9 @@ args = parser.parse_args()
 inputfile = open(args.input)
 origfile = open(args.orig, 'w')
 testfile = open(args.test, 'w')
+
+origfile.write('"id","sentence"\n')
+testfile.write('"id","sentence"\n')
 
 for l, line in enumerate(inputfile):  
   if not 0 == l % 10000:
