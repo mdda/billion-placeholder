@@ -29,10 +29,22 @@ for l, line in enumerate(subsfile):
     exit()
   
   ## Now compare text to text_orig, and total up differences
-  
-  
+  total += billion.util.levenshtein(text, text_orig)  # Shorter one first...
   total_cnt+=1
+  
+  print l, float(total)/total_cnt
   
   
 origfile.close()
 subsfile.close()
+
+"""
+71620 5.54362547298
+71621 5.54360392058
+71622 5.54358236879
+71623 5.5435608176
+71624 5.54352530541
+71625 5.54353167844
+71626 5.54349616765
+71627 5.54351650193
+"""

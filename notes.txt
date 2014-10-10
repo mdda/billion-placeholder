@@ -1,3 +1,5 @@
+virtualenv env
+. env/bin/activate
 
 GloVe from :: http://www-nlp.stanford.edu/projects/glove/
 
@@ -45,7 +47,7 @@ date
 
 # 0.0457 -> 0.0123 in 12m (holland), 25m (laptop)
 ./src/corpus-glove.sh 1MM 
-# 0.0287 -> 0.0ABC in XhYm (holland)
+# 0.0287 -> 0.0ABC in 3h45m (holland)
 ./src/corpus-glove.sh ALL
 
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
