@@ -1,8 +1,14 @@
 #!/bin/bash
 
-DIR=./data/glove/
-PREFIX=1MM
+PREFIX=$1
+#PREFIX=1MM
 #PREFIX=ALL
+
+X_MAX=$2
+#X_MAX=10  # For 1MM
+#X_MAX=10  # For ALL
+
+DIR=./data/glove/
 CORPUS=${DIR}${PREFIX}_corpus.txt
 
 if [ ! -e ${CORPUS} ]; then
@@ -26,7 +32,6 @@ MAX_ITER=15
 WINDOW_SIZE=15
 BINARY=2
 NUM_THREADS=8
-X_MAX=10
 GLOVE=./glove/
 
 date

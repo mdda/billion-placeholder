@@ -31,7 +31,7 @@ mkdir -p data/{orig,glove,gaps,fill}
 #rsync -avz --progress data/orig andrewsm@holland.herald:/home/andrewsm/sketchpad/kaggle/1-billion-words/data/
 
 date
-##  1MM 19s (laptop), 1MM 12s (holland)
+##  1MM 19s (laptop), 1MM 10s (holland)
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/1MM_corpus.txt --lines 1000000
 ##  10MM 3m25s
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/10MM_corpus.txt --lines 10000000
@@ -39,7 +39,7 @@ date
 #python src/make_corpus.py --input data/orig/train_v2.txt --output data/glove/ALL_corpus.txt
 date
 
-./src/corpus-glove.sh > data/glove/1MM__log.txt
+./src/corpus-glove.sh 1MM 10 > data/glove/1MM__log.txt
 
 python src/make_gaps_training.py --input data/glove/1MM_corpus.txt --vocab data/glove/1MM_vocab.txt --output data/gaps/1MM_train.txt 
 
