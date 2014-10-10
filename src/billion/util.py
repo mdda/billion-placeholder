@@ -53,3 +53,14 @@ def print_thousands(s, l, overwrite=True):
     print '\x1b[0G',
   print s, commas, "          ",  # Nice over-writing (no newline)
   sys.stdout.flush()
+
+_test_line = re.compile(r'([\d\.]+),\"(.*)\"')  # NB no \" after the line (comments allowed)
+
+def stringize_test(s):
+  return s.replace('"', '""') # Our format for the test file should have \"\" not \"
+
+def parse_test(line):
+  m = _test_line.match(line)
+  if m.groups:
+    return float(m.group(1)), m.group(2).replace('""', '"')
+  return 0,""

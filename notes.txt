@@ -50,3 +50,6 @@ date
 
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
 
+
+## Test to see what the holdout test sample scores vs its own source data
+python src/score_vs_holdout.py --orig data/holdout/orig.txt --submission data/holdout/test.txt 

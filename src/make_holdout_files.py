@@ -25,8 +25,8 @@ for l, line in enumerate(inputfile):
   billion.util.print_thousands("Line # ", l)
   # Use this iter :: it's going into our 'holdout set'
 
-  words = line.split()
-    
+  words = billion.util.stringize_test(line).split()
+
   for i in range(1, len(words)-1):
     # i is the word we're going to drop, not first or last...
     
