@@ -1,6 +1,6 @@
 #! python
-
 import billion
+import sys
  
 ## https://docs.python.org/3/library/argparse.html
 import argparse
@@ -15,7 +15,7 @@ args = parser.parse_args()
 ## show values ##
 #print("Input file: %s" % args.input )
 #print("Output file: %s" % args.output )
-print("Lines : %d\n" % args.lines )
+print("Lines : %d" % args.lines )
 
 inputfile = open(args.input)
 outputfile = open(args.output, 'w')
@@ -24,7 +24,9 @@ regularize=billion.util.regularize
 
 for l, line in enumerate(inputfile):  
   if 0 == l % 10000:
-    print "\033[19GLine : ", l   # Nice over-writing
+    #print('\x1b[0G', 'Line : ', l, end="")   # Nice over-writing (no newline)
+    print '\x1b[0G', 'Line : ', l, # Nice over-writing (no newline)
+    sys.stdout.flush()
   
   words = regularize(line)
   
@@ -33,6 +35,8 @@ for l, line in enumerate(inputfile):
   
   #print(' '.join(words))
   if l>args.lines: break
-  
+
+print("\nDone")
+
 inputfile.close()
 outputfile.close()

@@ -1,7 +1,7 @@
 #! python
-
 import billion
- 
+import sys
+
 import argparse
 
 parser = argparse.ArgumentParser(description='Parses training file in to Corpus (for GloVe)')
@@ -29,7 +29,9 @@ print(missing_ones, "\n")
 
 for l, line in enumerate(inputfile):  
   if 0 == l % 10000:
-    print "\033[19GLine : ", l  # Nice overwriting
+    print '\x1b[0G', 'Line : ', l, # Nice over-writing (no newline)
+    sys.stdout.flush()
+
     
   words = regularize(line)
   vocab_indices = [ vocab_index[w] for w in words ]
