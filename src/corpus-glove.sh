@@ -1,8 +1,8 @@
 #!/bin/bash
 
 DIR=./data/glove/
-#CORPUS=${DIR}corpus_1MM.txt
-CORPUS=${DIR}corpus_ALL.txt
+CORPUS=${DIR}corpus_1MM.txt
+#CORPUS=${DIR}corpus_ALL.txt
 
 if [ ! -e ${CORPUS} ]; then
   echo "Need to prepare corpus!"
