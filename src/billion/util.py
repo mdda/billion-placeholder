@@ -3,6 +3,9 @@ import re
 import sys # for Flush
 from collections import defaultdict
 
+# import Levenshtein  # GPL = no thanks, today
+import editdistance
+
 # sample text string, just for demonstration to let you know how the data looks like
 my_train = """
 Fish , ranked 98th in the world , fired 22 aces en route to a 6-3 , 6-7 ( 5 / 7 ) , 7-6 ( 7 / 4 ) win over seventh-seeded Argentinian David Nalbandian .
@@ -47,11 +50,11 @@ def load_vocab(filename):
   
   return v
 
-def print_thousands(s, l, overwrite=True):
+def print_thousands(s_before, l, s_after="   ", overwrite=True):
   commas = "{:,}".format(l)
   if overwrite:  # http://en.wikipedia.org/wiki/ANSI_escape_code
     print '\x1b[0G',
-  print s, commas, "          ",  # Nice over-writing (no newline)
+  print s_before, commas, s_after,   # Nice over-writing (no newline)
   sys.stdout.flush()
 
 _test_line = re.compile(r'([\d\.]+),\"(.*)\"')  # NB no \" after the line (comments allowed)
@@ -68,7 +71,7 @@ def parse_test(line):
 
 ## http://hetland.org/coding/python/levenshtein.py
 # Only used briefly : Prefer the C PyPi module 'python-Levenshtein'
-def levenshtein(a,b):
+def levenshtein_python(a,b):
     "Calculates the Levenshtein distance between a and b."
     n, m = len(a), len(b)
     if n > m:
@@ -87,3 +90,7 @@ def levenshtein(a,b):
             current[j] = min(add, delete, change)
             
     return current[n]
+
+## levenshtein distance measure
+#levenshtein=Levenshtein.distance
+levenshtein=editdistance.eval

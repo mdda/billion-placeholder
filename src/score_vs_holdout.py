@@ -1,6 +1,7 @@
 #! python
 import billion
 import sys
+import math
 
 import argparse
 
@@ -16,8 +17,13 @@ subsfile = open(args.submission)
 header_orig = origfile.readline()
 header_subs = subsfile.readline()
 
-total, total_cnt = 0, 0
+def pretty_print(l, total, total2, total_cnt):
+  mean = float(total)/total_cnt
+  sd   = float(total2)/total_cnt - mean*mean
+  conf = math.sqrt(sd/total_cnt)
+  billion.util.print_thousands("Lines = ", l, " -> %7.5f  1SD=(%7.5f, %7.5f)" % (mean, mean-conf, mean+conf))
 
+total, total2, total_cnt = 0, 0, 0
 for l, line in enumerate(subsfile):  
   line_orig = origfile.readline()
   
@@ -29,16 +35,22 @@ for l, line in enumerate(subsfile):
     exit()
   
   ## Now compare text to text_orig, and total up differences
-  total += billion.util.levenshtein(text, text_orig)  # Shorter one first...
+  dist = billion.util.levenshtein(text, text_orig)  # Shorter one first...
+  total  += dist
+  total2 += dist*dist
   total_cnt+=1
   
-  print l, float(total)/total_cnt
-  
-  
+  if 0 == l % 1000:
+    pretty_print(l, total, total2, total_cnt)
+
+pretty_print(l, total, total2, total_cnt)
+
 origfile.close()
 subsfile.close()
 
 """
+Benchmark 
+PurePython
 71620 5.54362547298
 71621 5.54360392058
 71622 5.54358236879
@@ -47,4 +59,15 @@ subsfile.close()
 71625 5.54353167844
 71626 5.54349616765
 71627 5.54351650193
+
+EditDistance
+71620 5.54362547298
+71621 5.54360392058
+71622 5.54358236879
+71623 5.5435608176
+71624 5.54352530541
+71625 5.54353167844
+71626 5.54349616765
+71627 5.54351650193
+
 """
