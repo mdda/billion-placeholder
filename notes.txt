@@ -1,14 +1,14 @@
 sudo yum update bash
 sudo yum install python-virtualenv 
 
-sudo yum install libyaml-devel
+## For 'pylearn2' and 'ipython notebook' ::
+sudo yum install libyaml-devel zeromq-devel
+
+## For SciPy :: 
 sudo yum install openblas-devel atlas-devel gcc-gfortran
 
 virtualenv env
 . env/bin/activate
-##pip install python-Levenshtein
-pip install editdistance
-
 
 ## python environment installation : start
 pip install cython numpy
@@ -27,6 +27,16 @@ cd env
 
 cd ..
 ## python environment installation : end
+
+## ipython notebook : start
+pip install ipython pyzmq jinja2 tornado
+
+## ipython notebook : end
+
+
+##pip install python-Levenshtein
+pip install editdistance
+
 
 
 GloVe from :: http://www-nlp.stanford.edu/projects/glove/
