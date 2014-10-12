@@ -1,43 +1,8 @@
-sudo yum update bash
-sudo yum install python-virtualenv 
-
-## For 'pylearn2' and 'ipython notebook' ::
-sudo yum install libyaml-devel zeromq-devel
-
-## For SciPy :: 
-sudo yum install openblas-devel atlas-devel gcc-gfortran
-
-virtualenv env
-. env/bin/activate
-
-## python environment installation : start
-pip install cython numpy
-
-cd env
-
-  git clone git://github.com/Theano/Theano.git
-  cd Theano
-    python setup.py develop
-  cd ..
-
-  git clone git://github.com/lisa-lab/pylearn2.git
-  cd pylearn2
-    python setup.py develop
-  cd ..
-
-cd ..
-## python environment installation : end
-
-## ipython notebook : start
-pip install ipython pyzmq jinja2 tornado matplotlib
-
-## ipython notebook : end
-
+## Notes on ipython notebook install :: 
+#  http://blog.mdda.net/oss/2014/10/13/ipython-on-fedora/
 
 ##pip install python-Levenshtein
 pip install editdistance
-
-
 
 GloVe from :: http://www-nlp.stanford.edu/projects/glove/
 
