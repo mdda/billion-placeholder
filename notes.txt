@@ -71,3 +71,14 @@ python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab dat
 
 
 https://bitbucket.org/kostialopuhin/word-models/src/ba4b00bb03c7eee83b11dc729fd4f6a58ab21fb6/word_embeddings.py?at=default
+
+
+"""
+Battle Los Angeles
+Edge of Tomorrow
+Malavita
+Last Vegas
+Jane Eyre
+The Pirate Fairy
+Lego Movie
+"""
