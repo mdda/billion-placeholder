@@ -63,15 +63,15 @@ date
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/glove/ALL_1-vocab.txt data/glove/
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/glove/ALL_3-vectors.txt data/glove/
 
-
 python src/make_gaps_training.py --input data/glove/1MM_0-corpus.txt --vocab data/glove/1MM_1-vocab.txt --output data/gaps/1MM_train.txt 
-
 
 # Dig into :: http://deeplearning.net/software/pylearn2/index.html
 
-
 https://bitbucket.org/kostialopuhin/word-models/src/ba4b00bb03c7eee83b11dc729fd4f6a58ab21fb6/word_embeddings.py?at=default
 
+# @author Jonathan Raiman
+# Messing around with Stanford's GloVe words
+https://gist.github.com/JonathanRaiman/0d45d1ab214119cf45eb
 
 """
 Battle Los Angeles
@@ -82,3 +82,4 @@ Jane Eyre
 The Pirate Fairy
 Lego Movie
 """
+
