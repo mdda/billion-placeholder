@@ -32,8 +32,9 @@ wc data/orig/test_v2.txt
 
 mkdir -p data/{0-orig,1-holdout,2-glove,3-gaps,4-fill}
 
-## Move the Kaggle training and test data into the right place
+## Move the Kaggle training and test data into the right place on the faster machine
 #rsync -avz --progress data/0-orig andrewsm@holland.herald:/home/andrewsm/sketchpad/kaggle/1-billion-words/data/
+
 
 
 ## Create a 1-holdout/{orig,test} set, so we can benchmark ourselves locally
@@ -42,6 +43,7 @@ python src/make_holdout_files.py --input data/0-orig/train_v2.txt --orig data/1-
 ## Test to see what the holdout test sample scores vs its own source data
 python src/score_vs_holdout.py --orig data/1-holdout/orig.txt --submission data/1-holdout/test.txt 
 # End result is 71627 cases : 5.54351 distance 1SD=(5.53332, 5.55372) (ideal = 5.55211)
+
 
 
 ## Create preprocessed corpus files that can be fed to GloVe directly
@@ -54,16 +56,21 @@ date
 #python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/ALL_0-corpus.txt
 date
 
+## Now run GloVE (on a couple of machine to see the speed difference) :
 # 0.0457 -> 0.0123 in 12m (holland), 25m (laptop)
 ./src/corpus-glove.sh 1MM 
 # 0.0287 -> 0.0083 in 3h45m (holland)
 ./src/corpus-glove.sh ALL
 
-# Move pre-computed vectors back to laptop
+## Move pre-computed vectors back to laptop
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_1-vocab.txt data/2-glove/
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_3-vectors.txt data/2-glove/
 
+
+## Derive the 'gap' training data from the corpus (choose which one according to taste/time...)
 python src/make_gaps_training.py --input data/2-glove/1MM_0-corpus.txt --vocab data/2-glove/1MM_1-vocab.txt --output data/3-gaps/1MM_train.txt 
+
+
 
 # Dig into :: http://deeplearning.net/software/pylearn2/index.html
 
