@@ -97,7 +97,11 @@ Theano :
     
   http://nbviewer.ipython.org/github/lisa-lab/pylearn2/blob/master/pylearn2/scripts/tutorials/multilayer_perceptron/multilayer_perceptron.ipynb
 
-
-
+  GloVE
+	https://github.com/maciejkula/glove-python/
+	http://radimrehurek.com/2014/12/making-sense-of-word2vec
+	
+	
+http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
 
 
