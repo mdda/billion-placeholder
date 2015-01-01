@@ -87,10 +87,12 @@ Theano :
   (Multi-layer Hidden&ReLu + LogisticOutput) with ADAgrad 
 	http://nbviewer.ipython.org/github/dawenl/deep_tagging/blob/master/code/deep_tagging.ipynb
 	https://github.com/dawenl/deep_tagging
+	  GPL3 licensed
     
   Deep Learning Tutorial : NLP/word-embedding
     http://deeplearning.net/tutorial/rnnslu.html
     https://github.com/mesnilgr/is13/blob/master/rnn/elman.py
+      Creative Commons Attribution-NonCommercial 4.0 International License.
     
   GloVE
 	https://github.com/maciejkula/glove-python/
