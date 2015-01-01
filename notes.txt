@@ -97,6 +97,7 @@ Theano :
   GloVE
 	https://github.com/maciejkula/glove-python/
 	http://radimrehurek.com/2014/12/making-sense-of-word2vec
+	  Apache 2
 
   Similar to Bengio 2003 :
 	https://bitbucket.org/kostialopuhin/word-models
@@ -106,9 +107,12 @@ Theano :
 	
   nntools (now Lasagne?) (FF-NN focussed, but no embedding?)
     https://github.com/benanne/Lasagne
+      MIT License
    
   blocks : (More RNN-focussed)
     http://blocks.readthedocs.org/en/latest/
+      MIT License
+    
   
   py2learn :  (Heavily dependent on structure YAML - rather than code - apparently)
 	http://nbviewer.ipython.org/github/lisa-lab/pylearn2/blob/master/pylearn2/scripts/tutorials/multilayer_perceptron/multilayer_perceptron.ipynb
