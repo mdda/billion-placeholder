@@ -52,7 +52,7 @@ date
 #python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/1MM_0-corpus.txt --lines 1000000
 ##  10MM 3m25s
 #python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/10MM_0-corpus.txt --lines 10000000
-##   ALL 10m03s (laptop),  ALL 5m50s (holland)
+##   ALL 10m03s (laptop),  ALL 5m50s (holland) :: 20% of words have >=100 occurrences
 #python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/ALL_0-corpus.txt
 date
 
@@ -73,12 +73,6 @@ python src/make_gaps_training.py --input data/2-glove/1MM_0-corpus.txt --vocab d
 
 
 # Dig into :: http://deeplearning.net/software/pylearn2/index.html
-
-https://bitbucket.org/kostialopuhin/word-models/src/ba4b00bb03c7eee83b11dc729fd4f6a58ab21fb6/word_embeddings.py?at=default
-
-# @author Jonathan Raiman
-# Messing around with Stanford's GloVe words
-https://gist.github.com/JonathanRaiman/0d45d1ab214119cf45eb
 
 
 
@@ -101,6 +95,11 @@ Theano :
   GloVE
 	https://github.com/maciejkula/glove-python/
 	http://radimrehurek.com/2014/12/making-sense-of-word2vec
+
+  Similar to Bengio 2003 :
+	https://bitbucket.org/kostialopuhin/word-models
+	  word_embeddings.py
+
 	
 	
   nntools (now Lasagne?) (FF-NN focussed, but no embedding?)
@@ -114,5 +113,10 @@ Theano :
 
 	
 http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
+
+# @author Jonathan Raiman
+# Messing around with Stanford's GloVe words
+https://gist.github.com/JonathanRaiman/0d45d1ab214119cf45eb
+
 
 
