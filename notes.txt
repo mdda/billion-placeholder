@@ -91,6 +91,7 @@ Theano :
     https://github.com/Fematich/nn_ner
   Deep Learning Tutorial : NLP/word-embedding
     http://deeplearning.net/tutorial/rnnslu.html
+    https://github.com/mesnilgr/is13/blob/master/rnn/elman.py
     
   (Multi-layer Hidden&ReLu + LogisticOutput) with ADAgrad 
 	http://nbviewer.ipython.org/github/dawenl/deep_tagging/blob/master/code/deep_tagging.ipynb
