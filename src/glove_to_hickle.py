@@ -21,5 +21,6 @@ inputfile = open(args.input)
 #vectors=np.
 for line in inputfile:
 	i = line.index(' ')
-	arr = np.fromstring(line.[i+1:], df=np.float32, sep=' ', count=args.size)
-	
+	arr = np.fromstring(line[i+1:], df=np.float32, sep=' ', count=args.size)
+	print arr
+	continue
