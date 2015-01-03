@@ -57,6 +57,7 @@ date
 date
 
 ## Now run GloVE (on a couple of machine to see the speed difference) :
+## Vector size is 240 floats
 # 0.0457 -> 0.0123 in 12m (holland), 25m (laptop)
 ./src/corpus-glove.sh 1MM 
 # 0.0287 -> 0.0083 in 3h45m (holland)
@@ -65,6 +66,9 @@ date
 ## Move pre-computed vectors back to laptop
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_1-vocab.txt data/2-glove/
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_3-vectors.txt data/2-glove/
+
+python src/glove_to_hickle.py --input data/2-glove/ALL_3-vectors.txt --output data/2-glove/ALL_3-vectors.hickle --size 240
+
 
 
 ## Derive the 'gap' training data from the corpus (choose which one according to taste/time...)
