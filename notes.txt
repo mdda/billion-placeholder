@@ -72,17 +72,11 @@ python src/make_gaps_training.py --input data/2-glove/1MM_0-corpus.txt --vocab d
 
 
 
-# Dig into :: http://deeplearning.net/software/pylearn2/index.html
-
-
-
-
-
-
 
 Theano : 
   Theano implementation of SENNA NER network
     https://github.com/Fematich/nn_ner
+      (asked about licensing)
     
   (Multi-layer Hidden&ReLu + LogisticOutput) with ADAgrad 
 	http://nbviewer.ipython.org/github/dawenl/deep_tagging/blob/master/code/deep_tagging.ipynb
@@ -116,6 +110,8 @@ Theano :
   
   py2learn :  (Heavily dependent on structure YAML - rather than code - apparently)
 	http://nbviewer.ipython.org/github/lisa-lab/pylearn2/blob/master/pylearn2/scripts/tutorials/multilayer_perceptron/multilayer_perceptron.ipynb
+	# Dig into :: http://deeplearning.net/software/pylearn2/index.html
+
 
 	
 http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
@@ -123,6 +119,4 @@ http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-fun
 # @author Jonathan Raiman
 # Messing around with Stanford's GloVe words
 https://gist.github.com/JonathanRaiman/0d45d1ab214119cf45eb
-
-
 
