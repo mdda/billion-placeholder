@@ -3,6 +3,7 @@
 
 ##pip install python-Levenshtein
 pip install editdistance
+pip install hickle
 
 GloVe from :: http://www-nlp.stanford.edu/projects/glove/
 
