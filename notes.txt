@@ -68,6 +68,7 @@ date
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_1-vocab.txt data/2-glove/
 rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_3-vectors.txt data/2-glove/
 
+python src/glove_to_hickle.py --input data/2-glove/1MM_3-vectors.txt --output data/2-glove/1MM_3-vectors.hickle --size 240
 python src/glove_to_hickle.py --input data/2-glove/ALL_3-vectors.txt --output data/2-glove/ALL_3-vectors.hickle --size 240
 
 

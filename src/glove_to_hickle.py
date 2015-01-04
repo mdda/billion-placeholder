@@ -31,3 +31,4 @@ to_hickle = dict(
   vectors = vectors,
 )
 hickle.dump(to_hickle, args.output, mode='w', compression='gzip')
+
