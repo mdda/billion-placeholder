@@ -14,7 +14,9 @@ import theano.tensor as T
 
 NUM_EPOCHS = 500
 BATCH_SIZE = 600
+
 NUM_HIDDEN_UNITS = 512
+
 LEARNING_RATE = 0.01
 MOMENTUM = 0.9
 
@@ -34,13 +36,17 @@ def load_data():
     return dict(
         X_train=theano.shared(lasagne.utils.floatX(X_train)),
         y_train=T.cast(theano.shared(y_train), 'int32'),
+        
         X_valid=theano.shared(lasagne.utils.floatX(X_valid)),
         y_valid=T.cast(theano.shared(y_valid), 'int32'),
+        
         X_test=theano.shared(lasagne.utils.floatX(X_test)),
         y_test=T.cast(theano.shared(y_test), 'int32'),
+        
         num_examples_train=X_train.shape[0],
         num_examples_valid=X_valid.shape[0],
         num_examples_test=X_test.shape[0],
+        
         input_dim=X_train.shape[1],
         output_dim=10,
 	)
@@ -81,12 +87,14 @@ def build_model(input_dim, output_dim,
 def create_iter_functions(dataset, output_layer,
                           X_tensor_type=T.matrix,
                           batch_size=BATCH_SIZE,
-                          learning_rate=LEARNING_RATE, momentum=MOMENTUM):
+                          learning_rate=LEARNING_RATE, momentum=MOMENTUM
+                         ):
     batch_index = T.iscalar('batch_index')
     X_batch = X_tensor_type('x')
     y_batch = T.ivector('y')
     batch_slice = slice(
-        batch_index * batch_size, (batch_index + 1) * batch_size)
+        batch_index * batch_size, (batch_index + 1) * batch_size
+    )
 
     def loss(output):
         return -T.mean(T.log(output)[T.arange(y_batch.shape[0]), y_batch])
@@ -95,12 +103,14 @@ def create_iter_functions(dataset, output_layer,
     loss_eval = loss(output_layer.get_output(X_batch, deterministic=True))
 
     pred = T.argmax(
-        output_layer.get_output(X_batch, deterministic=True), axis=1)
+        output_layer.get_output(X_batch, deterministic=True), axis=1
+    )
     accuracy = T.mean(T.eq(pred, y_batch))
 
     all_params = lasagne.layers.get_all_params(output_layer)
     updates = lasagne.updates.nesterov_momentum(
-        loss_train, all_params, learning_rate, momentum)
+        loss_train, all_params, learning_rate, momentum
+    )
 
     iter_train = theano.function(
         [batch_index], loss_train,
