@@ -13,12 +13,21 @@ import theano
 import theano.tensor as T
 
 NUM_EPOCHS = 500
-BATCH_SIZE = 600
 
-NUM_HIDDEN_UNITS = 512
+# The vectors will be stored on GPU all the time
+# Blocks of training data will be 'mini-batched' and also paged in
+# in units of 'BULK_SIZE'
+BULK_SIZE = 1000000  # Training Records to read in blocks off disk
 
-LEARNING_RATE = 0.01
-MOMENTUM = 0.9
+# These are the mini-batches over which SGD takes place
+MINIBATCH_SIZE = 500
+
+NUM_HIDDEN_UNITS = 240
+
+#LEARNING_RATE = 0.01
+#MOMENTUM = 0.9
+
+TODO()
 
 def _load_data(url=DATA_URL, filename=DATA_FILENAME):
     urllib.urlretrieve(url, filename)
