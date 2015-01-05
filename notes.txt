@@ -47,10 +47,11 @@ mkdir -p data/{0-orig,1-holdout,2-glove,3-gaps,4-fill}
 
 
 ## Create a 1-holdout/{orig,test} set, so we can benchmark ourselves locally
-python src/make_holdout_files.py --input data/0-orig/train_v2.txt --orig data/1-holdout/orig.txt --test data/1-holdout/test.txt 
+python src/make_holdout_files.py --input data/0-orig/train_v2.txt --train data/1-holdout/train.txt \
+                                 --heldout data/1-holdout/heldout.txt --valid data/1-holdout/valid.txt 
 
 ## Test to see what the holdout test sample scores vs its own source data
-python src/score_vs_holdout.py --orig data/1-holdout/orig.txt --submission data/1-holdout/test.txt 
+python src/score_vs_holdout.py --orig data/1-holdout/heldout.txt --submission data/1-holdout/valid.txt 
 # End result is 71627 cases : 5.54351 distance 1SD=(5.53332, 5.55372) (ideal = 5.55211)
 
 

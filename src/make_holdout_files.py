@@ -5,21 +5,28 @@ import sys
 import argparse
 
 parser = argparse.ArgumentParser(description='Creates Holdout files from original training file')
-parser.add_argument('-i','--input', help='Input original training file name', required=True)
-parser.add_argument('-o','--orig', help='Holdout data file name for "truth"', required=True)
-parser.add_argument('-t','--test', help='Holdout data file name for "test"', required=True)
+parser.add_argument('-i','--input',  help='Input original training file name', required=True)
+parser.add_argument('-t','--train',  help='Output original training file name (no heldout lines)', required=True)
+
+parser.add_argument(     '--heldout', help='Holdout data file name for "truth"', required=True)
+parser.add_argument(     '--valid',   help='Holdout data file name for "validition"', required=True)
 
 args = parser.parse_args()
 
-inputfile = open(args.input)
-origfile = open(args.orig, 'w')
-testfile = open(args.test, 'w')
+input_file = open(args.input)
+train_file = open(args.train, 'w')
 
-origfile.write('"id","sentence"\n')
-testfile.write('"id","sentence"\n')
+heldout_file = open(args.heldout, 'w')
+validation_file = open(args.valid, 'w')
 
-for l, line in enumerate(inputfile):  
+
+heldout_file.write('"id","sentence"\n')
+validation_file.write('"id","sentence"\n')
+
+for l, line in enumerate(input_file):
   if not 0 == l % 10000:
+	# Write into train_file - this is Ok for training
+    train_file.write(line)
     continue
     
   billion.util.print_thousands("Line # ", l)
@@ -33,9 +40,10 @@ for l, line in enumerate(inputfile):
     word_dropped = list(words)
     del word_dropped[i]
     
-    origfile.write('%f,"%s"\n' % (l+(i/100.0), ' '.join(words), ))
-    testfile.write('%f,"%s"\n' % (l+(i/100.0), ' '.join(word_dropped), ))
+    heldout_file.write(   '%f,"%s"\n' % (l+(i/100.0), ' '.join(words), ))
+    validation_file.write('%f,"%s"\n' % (l+(i/100.0), ' '.join(word_dropped), ))
   
-inputfile.close()
-origfile.close()
-testfile.close()
+input_file.close()
+train_file.close()
+heldout_file.close()
+validation_file.close()
