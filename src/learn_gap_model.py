@@ -12,7 +12,7 @@ import lasagne
 import theano
 import theano.tensor as T
 
-NUM_EPOCHS = 500
+NUM_EPOCHS = 10
 
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
@@ -24,17 +24,9 @@ MINIBATCH_SIZE = 500
 
 NUM_HIDDEN_UNITS = 240
 
-#LEARNING_RATE = 0.01
-#MOMENTUM = 0.9
+# This will use ADAGRAD, rather than momentum, etc
 
 TODO()
-
-def _load_data(url=DATA_URL, filename=DATA_FILENAME):
-    urllib.urlretrieve(url, filename)
-    with gzip.open(filename, 'rb') as f:
-        data = pickle.load(f)
-    return data
-
 
 def load_data():
     data = _load_data()
