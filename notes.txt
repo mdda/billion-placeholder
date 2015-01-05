@@ -59,11 +59,11 @@ python src/score_vs_holdout.py --orig data/1-holdout/heldout.txt --submission da
 ## Create preprocessed corpus files that can be fed to GloVe directly
 date
 ##  1MM 19s (laptop), 1MM 10s (holland)
-#python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/1MM_0-corpus.txt --lines 1000000
+#python src/make_corpus.py --input data/1-holdout/train.txt --output data/2-glove/1MM_0-corpus.txt --lines 1000000
 ##  10MM 3m25s
-#python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/10MM_0-corpus.txt --lines 10000000
+#python src/make_corpus.py --input data/1-holdout/train.txt --output data/2-glove/10MM_0-corpus.txt --lines 10000000
 ##   ALL 10m03s (laptop),  ALL 5m50s (holland) :: 20% of words have >=100 occurrences
-#python src/make_corpus.py --input data/0-orig/train_v2.txt --output data/2-glove/ALL_0-corpus.txt
+#python src/make_corpus.py --input data/1-holdout/train.txt --output data/2-glove/ALL_0-corpus.txt
 date
 
 ## Now run GloVE (on a couple of machine to see the speed difference) :

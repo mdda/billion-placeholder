@@ -15,7 +15,7 @@ args = parser.parse_args()
 ## show values ##
 #print("Input file: %s" % args.input )
 #print("Output file: %s" % args.output )
-print("Lines : %d" % args.lines )
+billion.util.print_thousands("Lines : ", args.lines, "\n", overwrite=False)
 
 inputfile = open(args.input)
 outputfile = open(args.output, 'w')

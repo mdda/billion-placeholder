@@ -15,7 +15,7 @@ if [ ${PREFIX} == "ALL" ]; then
   MEMORY=24.0  # Larger machine...
 fi
 
-DIR=./data/glove/
+DIR=./data/2-glove/
 CORPUS=${DIR}${PREFIX}_0-corpus.txt
 
 if [ ! -e ${CORPUS} ]; then
