@@ -3,3 +3,4 @@ glove.tar.gz
 data/
 .geany/session.ini
 
+*.pyc
