@@ -14,7 +14,7 @@ args = parser.parse_args()
 
 inputfile = open(args.input)
 outputfile = open(args.output, 'w')
-small_limit = args.small 
+small_limit = int(args.small)
 
 regularize=billion.util.regularize
 vocab_index = billion.util.load_vocab(args.vocab)
