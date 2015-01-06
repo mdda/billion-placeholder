@@ -17,7 +17,10 @@ NUM_EPOCHS = 10
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
-BULK_SIZE = 1000000  # Training Records to read in blocks off disk
+BULK_SIZE = 1000*1000  # Training Records to read in blocks off disk
+
+## Hmm : Maybe the examples should be created dynamically by generators
+## since the files (for ALL in particular) will get stupidly large
 
 # These are the mini-batches over which SGD takes place
 MINIBATCH_SIZE = 500
