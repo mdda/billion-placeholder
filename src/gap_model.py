@@ -1,4 +1,6 @@
-from __future__ import print_function
+#! python
+
+#from __future__ import print_function
 
 #import cPickle as pickle
 #import gzip
@@ -13,6 +15,29 @@ import theano
 import theano.tensor as T
 
 NUM_EPOCHS = 10
+
+import billion
+import sys
+
+import argparse
+
+parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
+parser.add_argument(     '--vocab', help='Vocab file name', required=True)
+parser.add_argument(     '--vectors', help='Word Embedding Vectors file name', required=True)
+parser.add_argument(     '--small', help='Number of "small words" to capture', required=False, default=32)
+
+parser.add_argument('-m','--mode',  help='{train|test}', required=True)
+
+parser.add_argument(     '--train', help='Training text file name', )
+parser.add_argument(     '--valid', help='Validation text file name', )
+
+parser.add_argument(     '--test',  help='Test text file name', )
+parser.add_argument(     '--output',  help='Submission file name to write', )
+
+parser.add_argument(     '--load',  help='File to load model from', )
+parser.add_argument(     '--save',  help='File to save model to', )
+
+args = parser.parse_args()
 
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
