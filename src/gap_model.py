@@ -56,7 +56,15 @@ NUM_HIDDEN_UNITS = 240
 # This will use ADAGRAD, rather than momentum, etc
 
 
-
+def load_language(vocab, vectors, small):
+    d = hickle.load(vectors)
+    vectors = theano.shared(lasagne.utils.floatX(d['vectors']))
+    
+    return dict(
+      vectors = vectors,
+      gaps = Gaps(vocab, small),
+    )
+    
 def load_data():
     data = _load_data()
     X_train, y_train = data[0]
@@ -228,9 +236,13 @@ def main(num_epochs=NUM_EPOCHS):
 
 
 if __name__ == '__main__':
+    if args.mode != 'train' and args.mode != 'test':
+        args.print_help()
+        exit(1)
+        
+    language = load_language(args.vocab, args.vectors, args.small)
+    
     if args.mode == 'train':
         main()
-    elif args.mode == 'test':
+    if args.mode == 'test':
         pass
-    else:
-        args.print_help()
