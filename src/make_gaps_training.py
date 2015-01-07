@@ -1,3 +1,5 @@
+error "OBSOLETE!"
+
 #! python
 import billion
 import sys

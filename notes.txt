@@ -92,15 +92,24 @@ python src/glove_to_hickle.py --input data/2-glove/ALL_3-vectors.txt \
                               --output data/2-glove/ALL_3-vectors.hickle --size 240
 
 
-
+## NO : Don't do this - there's no need for intermediate file to be stored...
 ## Derive the 'gap' training data from the corpus (choose which one according to taste/time...)
 ## 1MM takes <4mins
-python src/make_gaps_training.py --input data/2-glove/1MM_0-corpus.txt --vocab data/2-glove/1MM_1-vocab.txt \
-                                 --output data/3-gaps/1MM_train.txt --small 32
+##python src/make_gaps_training.py --input data/2-glove/1MM_0-corpus.txt --vocab data/2-glove/1MM_1-vocab.txt \
+##                                 --output data/3-gaps/1MM_train.txt --small 32
+##python src/make_gaps_training.py --input data/2-glove/1MM_4-heldout.txt --vocab data/2-glove/1MM_1-vocab.txt \
+##                                 --output data/3-gaps/1MM_valid.txt --small 32
 
-python src/make_gaps_training.py --input data/2-glove/1MM_4-heldout.txt --vocab data/2-glove/1MM_1-vocab.txt \
-                                 --output data/3-gaps/1MM_valid.txt --small 32
+# Invocation intended...
+python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
+						  --mode train \
+						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
+						  --save data/3-gaps/1MM_model.hickle
 
+python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
+						  --mode test \
+						  --load data/3-gaps/1MM_model.hickle \
+						  --test data/0-orig/test.txt --output data/3-gaps/1MM_submission.txt
 
 
 Theano : 
