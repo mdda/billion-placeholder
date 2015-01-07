@@ -7,10 +7,7 @@ import sys
 
 import hickle 
 
-#import cPickle as pickle
-#import gzip
-import itertools
-#import urllib
+#import itertools
 
 import numpy as np
 
@@ -65,6 +62,9 @@ def load_language(vocab, vectors, small):
     
     return dict(
       vectors = vectors,
+      vocab_size = vectors.shape[0],
+      vector_width = vectors.shape[1],
+      
       gaps = billion.gaps.Gaps(vocab, small),
     )
 
@@ -288,7 +288,8 @@ if __name__ == '__main__':
         training_set = create_training_set(args.train, language['gaps'])
         validation_set = load_validation_set(args.valid, language['gaps'])
         loaded = load_training_set_inplace(training_set)
-        print "Loaded = ", loaded
+        print "Loaded Training = ", loaded
+        
         #main()
     if args.mode == 'test':
         pass
