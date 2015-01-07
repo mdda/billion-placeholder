@@ -136,6 +136,9 @@ def load_validation_set(valid, gaps):  # Will load all
 def build_model(input_dim, output_dim,
                 batch_size=MINIBATCH_SIZE, num_hidden_units=NUM_HIDDEN_UNITS):
 
+    # Need to understand InputLayer structure (how does l_out keep a reference to it?)
+    # And then need to take out [int32] and convert it into concatinated embedding vectors
+
     l_in = lasagne.layers.InputLayer(
         shape=(batch_size, input_dim),
 	)
