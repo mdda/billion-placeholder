@@ -99,10 +99,10 @@ def load_validation_set(valid, gaps):  # Will load all
     X = np.array([x for (x,y) in arr], dtype=np.int)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
     
-    #print X[40:60]
-    #print Y[40:60]
+    print X[0:60]
+    print Y[0:60]
     
-    print X.shape[0]
+    #print X.shape[0]
 
     return dict(
         X = theano.shared(X),
