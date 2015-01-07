@@ -22,11 +22,11 @@ import sys
 import argparse
 
 parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
+parser.add_argument('-m','--mode',  help='{train|test}', required=True)
+
 parser.add_argument(     '--vocab', help='Vocab file name', required=True)
 parser.add_argument(     '--vectors', help='Word Embedding Vectors file name', required=True)
-parser.add_argument(     '--small', help='Number of "small words" to capture', required=False, default=32)
-
-parser.add_argument('-m','--mode',  help='{train|test}', required=True)
+parser.add_argument(     '--small', help='Number of "small words" to capture', required=False, default=32, type=int)
 
 parser.add_argument(     '--train', help='Training text file name', )
 parser.add_argument(     '--valid', help='Validation text file name', )
@@ -38,6 +38,7 @@ parser.add_argument(     '--load',  help='File to load model from', )
 parser.add_argument(     '--save',  help='File to save model to', )
 
 args = parser.parse_args()
+
 
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
@@ -54,7 +55,7 @@ NUM_HIDDEN_UNITS = 240
 
 # This will use ADAGRAD, rather than momentum, etc
 
-TODO()
+
 
 def load_data():
     data = _load_data()
@@ -227,4 +228,9 @@ def main(num_epochs=NUM_EPOCHS):
 
 
 if __name__ == '__main__':
-    main()
+    if args.mode == 'train':
+        main()
+    elif args.mode == 'test':
+        pass
+    else:
+        args.print_help()
