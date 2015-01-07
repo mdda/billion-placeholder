@@ -162,6 +162,12 @@ def build_model(input_dim, output_dim,
         num_units=output_dim,
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
+    
+    # Perhaps this need a different output layer
+    # a = NotMissing
+    # b = Missing (complex + simple)
+    # c-x = Missing a simple word (take shift into account)
+    
     return l_out
 
 
