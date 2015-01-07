@@ -69,12 +69,23 @@ def load_language(vocab, vectors, small):
     )
 
 
+def data_loader(f, gaps, comment):
+    inputfile = open(f)
+    for l, line in enumerate(inputfile):  
+        if 0 == l % 10000:
+            billion.util.print_thousands(comment+" Line # ", l)
+        for p in gaps.generate_training(line):
+            yield p
+    inputfile.close()
+    
 def create_training_set(train, gaps):  # BULK_SIZE
     # These are just 'sized' - will be loaded dynamically due to GPU size constraints
-    X = np.zeroes( (2, BULK_SIZE), dtype='int32')
-    Y = np.zeroes( (1, BULK_SIZE), dtype='int8' )
+    X = np.empty( (2, BULK_SIZE), dtype=np.int32)
+    Y = np.empty( (BULK_SIZE), dtype=np.int8)
     
     return dict(
+        loader = data_loader(train, gaps, "Training Data"),
+        
         X = theano.shared(X),
         Y = T.cast(theano.shared(Y), dtype='int8'),
         
@@ -84,25 +95,32 @@ def create_training_set(train, gaps):  # BULK_SIZE
         output_dim = 1 + gaps.small_limit,
 	)
 
-def load_validation_set(valid, gaps):  # Will load all
-    def g(f, comment):
-        inputfile = open(f)
-        for l, line in enumerate(inputfile):  
-            if 0 == l % 10000:
-                billion.util.print_thousands(comment+" Line # ", l)
-            for p in gaps.generate_training(line):
-                yield p
-        inputfile.close()
-
-    arr = [ p for p in g(valid, "Validation") ]
+def load_training_set_inplace(training_set):  
+    """ 
+    Load in next piece of 'HUGE' dataset - returns False if insufficient data remains in file
+    """
+    g = training_set['loader']
+    try:
+        arr = [ g.next() for i in range(0, BULK_SIZE) ]
+    except StopIteration:
+        return False # This is a failure to load
     
-    X = np.array([x for (x,y) in arr], dtype=np.int)
+    X = np.array([x for (x,y) in arr], dtype=np.int32)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
     
-    print X[0:60]
-    print Y[0:60]
+    #print X[0:60]
+    #print Y[0:60]
     
-    #print X.shape[0]
+    training_set['X'].set_value(X, borrow=True)
+    training_set['Y'].set_value(Y, borrow=True)
+
+    return True
+    
+def load_validation_set(valid, gaps):  # Will load all
+    arr = [ p for p in data_loader(valid, gaps, "Validation Data") ]
+    
+    X = np.array([x for (x,y) in arr], dtype=np.int32)
+    Y = np.array([y for (x,y) in arr], dtype=np.int8)
 
     return dict(
         X = theano.shared(X),
@@ -267,7 +285,10 @@ if __name__ == '__main__':
     language = load_language(args.vocab, args.vectors, args.small)
     
     if args.mode == 'train':
-        validation = load_validation_set(args.valid, language['gaps'])
+        training_set = create_training_set(args.train, language['gaps'])
+        validation_set = load_validation_set(args.valid, language['gaps'])
+        loaded = load_training_set_inplace(training_set)
+        print "Loaded = ", loaded
         #main()
     if args.mode == 'test':
         pass
