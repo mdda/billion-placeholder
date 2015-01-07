@@ -4,9 +4,9 @@ import billion
 
 regularize=billion.util.regularize
 
-class Gaps:
-  def __init__(vocab, small_limit):
-    self.vocab_index = billion.util.load_vocab(args.vocab)
+class Gaps(object):
+  def __init__(self, vocab, small_limit):
+    self.vocab_index = billion.util.load_vocab(vocab)
     self.small_limit = small_limit
 
     if False:
@@ -24,6 +24,8 @@ class Gaps:
     words = regularize(line)
     vocab_indices = [ self.vocab_index[w] for w in words ]
     
+    #print "Words in Line : %d" % (len(words),)
+    
     for i in range(len(words)-2):
       if vocab_indices[i] is None or vocab_indices[i+1] is None or vocab_indices[i+2] is None:
         continue
@@ -38,10 +40,10 @@ class Gaps:
       
       # Pick out small words for 'easy' identification
       missing = vocab_indices[i+1]
-      a = (missing+1) if missing<small_limit else 1
+      a = (missing+1) if missing<self.small_limit else 1
       
       # So, a==1 if this is a 'complex' word
-      # a>1 if this is a 'simple' word
+      # small_limit+1>a>1 if this is a 'simple' word
       # i.e. a>0 => there is some word missing
       
       yield (x, a)

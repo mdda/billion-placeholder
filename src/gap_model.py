@@ -65,22 +65,23 @@ def load_language(vocab, vectors, small):
     
     return dict(
       vectors = vectors,
-      gaps = Gaps(vocab, small),
+      gaps = billion.gaps.Gaps(vocab, small),
     )
+
 
 def create_training_set(train, gaps):  # BULK_SIZE
     # These are just 'sized' - will be loaded dynamically due to GPU size constraints
-    X = np.zeroes( (2, BULK_SIZE) )
-    Y = np.zeroes( (1, BULK_SIZE) )
+    X = np.zeroes( (2, BULK_SIZE), dtype='int32')
+    Y = np.zeroes( (1, BULK_SIZE), dtype='int8' )
     
     return dict(
-        X = theano.shared(X, dtype='int32'),
-        Y = T.cast(theano.shared(Y, dtype='int8')),
+        X = theano.shared(X),
+        Y = T.cast(theano.shared(Y), dtype='int8'),
         
         num_examples=X.shape[0],
         
         input_dim = X.shape[1],
-        output_dim = 1 + gaps.small,
+        output_dim = 1 + gaps.small_limit,
 	)
 
 def load_validation_set(valid, gaps):  # Will load all
@@ -91,24 +92,25 @@ def load_validation_set(valid, gaps):  # Will load all
                 billion.util.print_thousands(comment+" Line # ", l)
             for p in gaps.generate_training(line):
                 yield p
-        close(inputfile)
+        inputfile.close()
 
     arr = [ p for p in g(valid, "Validation") ]
     
     X = np.array([x for (x,y) in arr], dtype=np.int)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
+    
+    #print X[40:60]
+    #print Y[40:60]
 
     return dict(
-        X = theano.shared(X, dtype='int32'),
-        Y = T.cast(theano.shared(Y, dtype='int8')),
+        X = theano.shared(X),
+        Y = T.cast(theano.shared(Y), dtype='int8'),
         
         num_examples=X.shape[0],
         
         input_dim = X.shape[1],
-        output_dim = 1 + gaps.small,
+        output_dim = 1 + gaps.small_limit,
 	)
-
-
 
 
 def build_model(input_dim, output_dim,
@@ -263,7 +265,7 @@ if __name__ == '__main__':
     language = load_language(args.vocab, args.vectors, args.small)
     
     if args.mode == 'train':
-        validation = load_validation_set(args.valid, language.gaps)
+        validation = load_validation_set(args.valid, language['gaps'])
         #main()
     if args.mode == 'test':
         pass
