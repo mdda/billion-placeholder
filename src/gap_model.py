@@ -101,6 +101,8 @@ def load_validation_set(valid, gaps):  # Will load all
     
     #print X[40:60]
     #print Y[40:60]
+    
+    print X.shape[0]
 
     return dict(
         X = theano.shared(X),

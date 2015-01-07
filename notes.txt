@@ -46,12 +46,14 @@ mkdir -p data/{0-orig,1-holdout,2-glove,3-gaps,4-fill}
 
 
 
-## Create a 1-holdout/{orig,test} set, so we can benchmark ourselves locally
-python src/make_holdout_files.py --input data/0-orig/train_v2.txt --train data/1-holdout/train.txt \
-                                 --heldout data/1-holdout/heldout.txt --valid data/1-holdout/valid.txt 
+## Create a 1-holdout/{train,heldout} set, so we can benchmark ourselves locally 
+## This includes a synthetic truth/valid set, using the heldout data
+python src/make_holdout_files.py --input data/0-orig/train_v2.txt \
+								 --train data/1-holdout/train.txt --heldout data/1-holdout/heldout.txt \
+                                 --truth data/1-holdout/truth.txt --valid data/1-holdout/valid.txt 
 
-## Test to see what the holdout test sample scores vs its own source data
-python src/score_vs_holdout.py --orig data/1-holdout/heldout.txt --submission data/1-holdout/valid.txt 
+## Test to see what the holdout test sample scores vs its own source data (synthetic data from above)
+python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission data/1-holdout/valid.txt 
 # End result is 71627 cases : 5.54351 distance 1SD=(5.53332, 5.55372) (ideal = 5.55211)
 
 
@@ -62,9 +64,6 @@ date
 ##  1MM 19s (laptop), 1MM 10s (holland)
 #python src/make_corpus.py --input data/1-holdout/train.txt --output data/2-glove/1MM_0-corpus.txt --lines 1000000
 #python src/make_corpus.py --input data/1-holdout/heldout.txt --output data/2-glove/1MM_4-heldout.txt --lines 1000000
-
-####  10MM 3m25s
-###python src/make_corpus.py --input data/1-holdout/train.txt --output data/2-glove/10MM_0-corpus.txt --lines 10000000
 
 ##   ALL 10m03s (laptop),  ALL 5m50s (holland) :: 20% of words have >=100 occurrences (heldout file is same as 1MM)
 #python src/make_corpus.py --input data/1-holdout/train.txt --output data/2-glove/ALL_0-corpus.txt
