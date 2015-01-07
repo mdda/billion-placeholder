@@ -38,9 +38,13 @@ class Gaps:
       
       # Pick out small words for 'easy' identification
       missing = vocab_indices[i+1]
-      a = missing if missing<small_limit else 0
+      a = (missing+1) if missing<small_limit else 1
       
-      yield (x, [1,a])
+      # So, a==1 if this is a 'complex' word
+      # a>1 if this is a 'simple' word
+      # i.e. a>0 => there is some word missing
+      
+      yield (x, a)
     
     for i in range(len(words)-1):
       if vocab_indices[i] is None or vocab_indices[i+1] is None:
@@ -49,7 +53,7 @@ class Gaps:
       # Word not missing
       x = [ vocab_indices[i], vocab_indices[i+1] ]
       
-      yield (x, [0,0])
+      yield (x, 0)
 
 """
 for l, line in enumerate(inputfile):  

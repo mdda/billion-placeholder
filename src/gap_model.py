@@ -2,6 +2,11 @@
 
 #from __future__ import print_function
 
+import billion
+import sys
+
+import hickle 
+
 #import cPickle as pickle
 #import gzip
 import itertools
@@ -15,9 +20,6 @@ import theano
 import theano.tensor as T
 
 NUM_EPOCHS = 10
-
-import billion
-import sys
 
 import argparse
 
@@ -57,6 +59,7 @@ NUM_HIDDEN_UNITS = 240
 
 
 def load_language(vocab, vectors, small):
+    print("Vectors file = %s" % (vectors,))
     d = hickle.load(vectors)
     vectors = theano.shared(lasagne.utils.floatX(d['vectors']))
     
@@ -64,34 +67,52 @@ def load_language(vocab, vectors, small):
       vectors = vectors,
       gaps = Gaps(vocab, small),
     )
+
+def create_training_set(train, gaps):  # BULK_SIZE
+    # These are just 'sized' - will be loaded dynamically due to GPU size constraints
+    X = np.zeroes( (2, BULK_SIZE) )
+    Y = np.zeroes( (1, BULK_SIZE) )
     
-def load_data():
-    data = _load_data()
-    X_train, y_train = data[0]
-    X_valid, y_valid = data[1]
-    X_test, y_test = data[2]
+    return dict(
+        X = theano.shared(X, dtype='int32'),
+        Y = T.cast(theano.shared(Y, dtype='int8')),
+        
+        num_examples=X.shape[0],
+        
+        input_dim = X.shape[1],
+        output_dim = 1 + gaps.small,
+	)
+
+def load_validation_set(valid, gaps):  # Will load all
+    def g(f, comment):
+        inputfile = open(f)
+        for l, line in enumerate(inputfile):  
+            if 0 == l % 10000:
+                billion.util.print_thousands(comment+" Line # ", l)
+            for p in gaps.generate_training(line):
+                yield p
+        close(inputfile)
+
+    arr = [ p for p in g(valid, "Validation") ]
+    
+    X = np.array([x for (x,y) in arr], dtype=np.int)
+    Y = np.array([y for (x,y) in arr], dtype=np.int8)
 
     return dict(
-        X_train=theano.shared(lasagne.utils.floatX(X_train)),
-        y_train=T.cast(theano.shared(y_train), 'int32'),
+        X = theano.shared(X, dtype='int32'),
+        Y = T.cast(theano.shared(Y, dtype='int8')),
         
-        X_valid=theano.shared(lasagne.utils.floatX(X_valid)),
-        y_valid=T.cast(theano.shared(y_valid), 'int32'),
+        num_examples=X.shape[0],
         
-        X_test=theano.shared(lasagne.utils.floatX(X_test)),
-        y_test=T.cast(theano.shared(y_test), 'int32'),
-        
-        num_examples_train=X_train.shape[0],
-        num_examples_valid=X_valid.shape[0],
-        num_examples_test=X_test.shape[0],
-        
-        input_dim=X_train.shape[1],
-        output_dim=10,
+        input_dim = X.shape[1],
+        output_dim = 1 + gaps.small,
 	)
 
 
+
+
 def build_model(input_dim, output_dim,
-                batch_size=BATCH_SIZE, num_hidden_units=NUM_HIDDEN_UNITS):
+                batch_size=MINIBATCH_SIZE, num_hidden_units=NUM_HIDDEN_UNITS):
 
     l_in = lasagne.layers.InputLayer(
         shape=(batch_size, input_dim),
@@ -124,8 +145,7 @@ def build_model(input_dim, output_dim,
 
 def create_iter_functions(dataset, output_layer,
                           X_tensor_type=T.matrix,
-                          batch_size=BATCH_SIZE,
-                          learning_rate=LEARNING_RATE, momentum=MOMENTUM
+                          batch_size=MINIBATCH_SIZE
                          ):
     batch_index = T.iscalar('batch_index')
     X_batch = X_tensor_type('x')
@@ -182,7 +202,7 @@ def create_iter_functions(dataset, output_layer,
 	)
 
 
-def train(iter_funcs, dataset, batch_size=BATCH_SIZE):
+def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     num_batches_train = dataset['num_examples_train'] // batch_size
     num_batches_valid = dataset['num_examples_valid'] // batch_size
     num_batches_test = dataset['num_examples_test'] // batch_size
@@ -243,6 +263,7 @@ if __name__ == '__main__':
     language = load_language(args.vocab, args.vectors, args.small)
     
     if args.mode == 'train':
-        main()
+        validation = load_validation_set(args.valid, language.gaps)
+        #main()
     if args.mode == 'test':
         pass
