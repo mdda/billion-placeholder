@@ -185,13 +185,15 @@ def build_model(input_dim, output_dim,
 
 
 def create_iter_functions(dataset, output_layer,
+                          vectors, 
                           X_tensor_type=T.matrix,
                           batch_size=MINIBATCH_SIZE
                          ):
     batch_index = T.iscalar('batch_index')
     X_batch = X_tensor_type('x')
     
-    X_batch_flat_vectors = X_batch
+    # See http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
+    X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )
     
     y_batch = T.ivector('y')
     batch_slice = slice(
