@@ -154,21 +154,23 @@ def build_model(input_dim, output_dim,
         num_units=num_hidden_units,
 		nonlinearity=lasagne.nonlinearities.rectify,
 	)
-    l_hidden1_dropout = lasagne.layers.DropoutLayer(
-        l_hidden1,
-        p=0.5,
-	)
-    l_hidden2 = lasagne.layers.DenseLayer(
-        l_hidden1_dropout,
-        num_units=num_hidden_units,
-        nonlinearity=lasagne.nonlinearities.rectify,
-	)
-    l_hidden2_dropout = lasagne.layers.DropoutLayer(
-        l_hidden2,
-        p=0.5,
-	)
+    if False:
+        l_hidden1_dropout = lasagne.layers.DropoutLayer(
+            l_hidden1,
+            p=0.5,
+        )
+        l_hidden2 = lasagne.layers.DenseLayer(
+            l_hidden1_dropout,
+            num_units=num_hidden_units,
+            nonlinearity=lasagne.nonlinearities.rectify,
+        )
+        l_hidden2_dropout = lasagne.layers.DropoutLayer(
+            l_hidden2,
+            p=0.5,
+        )
     l_out = lasagne.layers.DenseLayer(
-        l_hidden2_dropout,
+        #l_hidden2_dropout,
+        l_hidden1,
         num_units=output_dim,
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
@@ -291,8 +293,8 @@ def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
 
 def main(dataset, num_epochs=NUM_EPOCHS):
     output_layer = build_model(
-        input_dim  = CONTEXT_LENGTH * dataset['language']['vector_width'],
-        output_dim = dataset['language']['small_limit'] + 2,
+        CONTEXT_LENGTH * dataset['language']['vector_width'],  # input_dim
+        dataset['language']['gaps'].small_limit + 2,           # output_dim
     )
     iter_funcs = create_iter_functions(dataset, output_layer)
 
