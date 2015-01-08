@@ -185,7 +185,6 @@ def build_model(input_dim, output_dim,
 
 
 def create_iter_functions(dataset, output_layer,
-                          vectors, 
                           X_tensor_type=T.matrix,
                           batch_size=MINIBATCH_SIZE
                          ):
@@ -193,6 +192,7 @@ def create_iter_functions(dataset, output_layer,
     X_batch = X_tensor_type('x')
     
     # See http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
+    vectors = dataset['language']['vectors']
     X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )
     
     y_batch = T.ivector('y')
@@ -222,42 +222,46 @@ def create_iter_functions(dataset, output_layer,
         loss_train, all_params #, learning_rate, momentum
     )
 
-    iter_train = theano.function(
-        [batch_index], loss_train,
-        updates=updates,
-        givens={
-            X_batch: dataset['X_train'][batch_slice],
-            y_batch: dataset['y_train'][batch_slice],
-		},
-	)
+    iters={}
+    
+    if 'train' in dataset:
+        d=dataset['train']
+        iters['train'] = theano.function(
+            [batch_index], loss_train,
+            updates=updates,
+            givens={
+                X_batch: d['X'][batch_slice],
+                y_batch: d['y'][batch_slice],
+            },
+        )
 
-    iter_valid = theano.function(
-        [batch_index], [loss_eval, accuracy],
-        givens={
-            X_batch: dataset['X_valid'][batch_slice],
-            y_batch: dataset['y_valid'][batch_slice],
-		},
-	)
+    if 'valid' in dataset:
+        d=dataset['valid']
+        iters['valid'] = theano.function(
+            [batch_index], [loss_eval, accuracy],
+            givens={
+                X_batch: d['X'][batch_slice],
+                y_batch: d['y'][batch_slice],
+            },
+        )
 
-    iter_test = theano.function(
-        [batch_index], [loss_eval, accuracy],
-        givens={
-            X_batch: dataset['X_test'][batch_slice],
-            y_batch: dataset['y_test'][batch_slice],
-		},
-	)
+    if 'test' in dataset:
+        d=dataset['test']
+        iters['test'] = theano.function(
+            [batch_index], [loss_eval, accuracy],
+            givens={
+                X_batch: d['X'][batch_slice],
+                y_batch: d['y'][batch_slice],
+            },
+        )
 
-    return dict(
-        train=iter_train,
-        valid=iter_valid,
-        test=iter_test,
-	)
+    return iters
 
 
 def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
-    num_batches_train = dataset['num_examples_train'] // batch_size
-    num_batches_valid = dataset['num_examples_valid'] // batch_size
-    num_batches_test = dataset['num_examples_test'] // batch_size
+    num_batches_train = dataset['train']['num_examples'] // batch_size
+    num_batches_valid = dataset['valid']['num_examples'] // batch_size
+    num_batches_test  = dataset['test' ]['num_examples'] // batch_size
 
     for epoch in itertools.count(1):
         batch_train_losses = []
@@ -311,13 +315,14 @@ if __name__ == '__main__':
     if args.mode != 'train' and args.mode != 'test':
         args.print_help()
         exit(1)
-        
+
     language = load_language(args.vocab, args.vectors, args.small)
+    dataset = dict( language = language )
     
     if args.mode == 'train':
-        training_set = create_training_set(args.train, language['gaps'])
-        validation_set = load_validation_set(args.valid, language['gaps'])
-        loaded = load_training_set_inplace(training_set)
+        dataset['train'] = create_training_set(args.train, language['gaps'])
+        dataset['valid'] = load_validation_set(args.valid, language['gaps'])
+        loaded = load_training_set_inplace(dataset['train'])
         print "Loaded Training = ", loaded
         
         #main()
