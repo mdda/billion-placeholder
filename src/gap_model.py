@@ -64,8 +64,8 @@ def load_language(vocab, vectors, small):
     
     return dict(
       vectors = vectors,
-      vocab_size = vectors.shape[0],
-      vector_width = vectors.shape[1],
+      vocab_size = d['vectors'].shape[0],
+      vector_width = d['vectors'].shape[1],
       
       gaps = billion.gaps.Gaps(vocab, small),
     )
@@ -149,6 +149,7 @@ def build_model(input_dim, output_dim,
     l_in = lasagne.layers.InputLayer(
         shape=(batch_size, input_dim),
 	)
+    
     l_hidden1 = lasagne.layers.DenseLayer(
         l_in,
         num_units=num_hidden_units,
