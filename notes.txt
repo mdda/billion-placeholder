@@ -1,11 +1,17 @@
 ## Notes on ipython notebook install :: 
 #  http://blog.mdda.net/oss/2014/10/13/ipython-on-fedora/
 
+ADD : 
+yum install gcc-c++
+
+
 . env/bin/activate
 
 ##pip install python-Levenshtein
 pip install editdistance
 pip install hickle
+
+
 
 cd env
 git clone https://github.com/benanne/Lasagne.git
