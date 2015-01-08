@@ -52,6 +52,8 @@ MINIBATCH_SIZE = 500
 
 NUM_HIDDEN_UNITS = 240
 
+CONTEXT_LENGTH = 2
+
 # This will use ADAGRAD, rather than momentum, etc
 
 
@@ -80,7 +82,7 @@ def data_loader(f, gaps, comment):
     
 def create_training_set(train, gaps):  # BULK_SIZE
     # These are just 'sized' - will be loaded dynamically due to GPU size constraints
-    X = np.empty( (2, BULK_SIZE), dtype=np.int32)
+    X = np.empty( (CONTEXT_LENGTH, BULK_SIZE), dtype=np.int32)
     Y = np.empty( (BULK_SIZE), dtype=np.int8)
     
     return dict(
@@ -92,7 +94,7 @@ def create_training_set(train, gaps):  # BULK_SIZE
         num_examples=X.shape[0],
         
         input_dim = X.shape[1],
-        output_dim = 1 + gaps.small_limit,
+        output_dim = 2 + gaps.small_limit,
 	)
 
 def load_training_set_inplace(training_set):  
@@ -129,15 +131,20 @@ def load_validation_set(valid, gaps):  # Will load all
         num_examples=X.shape[0],
         
         input_dim = X.shape[1],
-        output_dim = 1 + gaps.small_limit,
+        output_dim = 2 + gaps.small_limit,
 	)
 
 
 def build_model(input_dim, output_dim,
-                batch_size=MINIBATCH_SIZE, num_hidden_units=NUM_HIDDEN_UNITS):
+                batch_size=MINIBATCH_SIZE, 
+                num_hidden_units=NUM_HIDDEN_UNITS):
 
-    # Need to understand InputLayer structure (how does l_out keep a reference to it?)
+    # Need to understand InputLayer structure 
+    # (how does l_out keep a reference to it? = This is tracked through whole network)
     # And then need to take out [int32] and convert it into concatinated embedding vectors
+    
+    # input_dim = CONTEXT_LENGTH # of int32
+    # processed_input_dim = CONTEXT_LENGTH * language['vector_width'] # of floatX
 
     l_in = lasagne.layers.InputLayer(
         shape=(batch_size, input_dim),
@@ -192,7 +199,7 @@ def create_iter_functions(dataset, output_layer,
         return -T.mean(T.log(output)[T.arange(y_batch.shape[0]), y_batch])
 
     loss_train = loss(output_layer.get_output(X_batch))
-    loss_eval = loss(output_layer.get_output(X_batch, deterministic=True))
+    loss_eval  = loss(output_layer.get_output(X_batch, deterministic=True))
 
     pred = T.argmax(
         output_layer.get_output(X_batch, deterministic=True), axis=1
