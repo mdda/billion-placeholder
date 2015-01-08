@@ -40,11 +40,12 @@ class Gaps(object):
       
       # Pick out small words for 'easy' identification
       missing = vocab_indices[i+1]
-      a = (missing+1) if missing<self.small_limit else 1
+      a = (missing+2) if missing<self.small_limit else 1
       
       # So, a==1 if this is a 'complex' word
-      # small_limit+1>a>1 if this is a 'simple' word
-      # i.e. a>0 => there is some word missing
+      # small_limit+2>a>1 if this is a 'simple' word
+      # i.e. a>0  => there is some word missing
+      #      a==0 => no word missing
       
       yield (x, a)
     
