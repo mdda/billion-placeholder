@@ -190,6 +190,9 @@ def create_iter_functions(dataset, output_layer,
                          ):
     batch_index = T.iscalar('batch_index')
     X_batch = X_tensor_type('x')
+    
+    X_batch_flat_vectors = X_batch
+    
     y_batch = T.ivector('y')
     batch_slice = slice(
         batch_index * batch_size, (batch_index + 1) * batch_size
@@ -198,17 +201,23 @@ def create_iter_functions(dataset, output_layer,
     def loss(output):
         return -T.mean(T.log(output)[T.arange(y_batch.shape[0]), y_batch])
 
-    loss_train = loss(output_layer.get_output(X_batch))
-    loss_eval  = loss(output_layer.get_output(X_batch, deterministic=True))
+    loss_train = loss(output_layer.get_output(X_batch_flat_vectors))
+    loss_eval  = loss(output_layer.get_output(X_batch_flat_vectors, deterministic=True))
 
     pred = T.argmax(
-        output_layer.get_output(X_batch, deterministic=True), axis=1
+        output_layer.get_output(X_batch_flat_vectors, deterministic=True), axis=1
     )
     accuracy = T.mean(T.eq(pred, y_batch))
 
     all_params = lasagne.layers.get_all_params(output_layer)
-    updates = lasagne.updates.nesterov_momentum(
-        loss_train, all_params, learning_rate, momentum
+    
+    #updates = lasagne.updates.nesterov_momentum(
+    #    loss_train, all_params, learning_rate, momentum
+    #)
+    
+    #def adagrad(loss, all_params, learning_rate=1.0, epsilon=1e-6):
+    updates = lasagne.updates.adagrad(
+        loss_train, all_params #, learning_rate, momentum
     )
 
     iter_train = theano.function(
