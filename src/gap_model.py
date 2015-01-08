@@ -289,11 +289,10 @@ def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
 		}
 
 
-def main(num_epochs=NUM_EPOCHS):
-    dataset = load_data()
+def main(dataset, num_epochs=NUM_EPOCHS):
     output_layer = build_model(
-        input_dim=dataset['input_dim'],
-        output_dim=dataset['output_dim'],
+        input_dim  = CONTEXT_LENGTH * dataset['language']['vector_width'],
+        output_dim = dataset['language']['small_limit'] + 2,
     )
     iter_funcs = create_iter_functions(dataset, output_layer)
 
@@ -322,9 +321,11 @@ if __name__ == '__main__':
     if args.mode == 'train':
         dataset['train'] = create_training_set(args.train, language['gaps'])
         dataset['valid'] = load_validation_set(args.valid, language['gaps'])
+        
         loaded = load_training_set_inplace(dataset['train'])
         print "Loaded Training = ", loaded
         
-        #main()
+        main(dataset)
+        
     if args.mode == 'test':
         pass
