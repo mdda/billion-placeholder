@@ -171,6 +171,9 @@ def build_model(input_dim, output_dim,
     # b = Missing (complex + simple)
     # c-x = Missing a simple word (take shift into account)
     
+    # But this (for the first runs) easy to model as a soft-max thing 
+    # from 0=(nogap), 1=(complex), 2..(small_limit+2)=small-word
+    
     return l_out
 
 
