@@ -4,6 +4,9 @@
 ADD : 
 yum install gcc-c++
 ## But:: gcc versions 4.9 and up are not supported...
+# See Fix on :: https://devtalk.nvidia.com/default/topic/793839/ubuntu-14-04-1-lts-cuda-6-5-gcc-4-9/
+# On Fedora 21, requires commenting out lines 77-87 of /usr/local/cuda-6.5/include/host_config.h
+
 ## Also :: Why is this compiling for CUDA without being asked?
 
 . env/bin/activate
