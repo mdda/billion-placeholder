@@ -3,7 +3,8 @@
 
 ADD : 
 yum install gcc-c++
-
+## But:: gcc versions 4.9 and up are not supported...
+## Also :: Why is this compiling for CUDA without being asked?
 
 . env/bin/activate
 
