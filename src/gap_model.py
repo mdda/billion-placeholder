@@ -3,11 +3,8 @@
 #from __future__ import print_function
 
 import billion
-import sys
 
 import hickle 
-
-#import itertools
 
 import numpy as np
 
@@ -16,9 +13,8 @@ import lasagne
 import theano
 import theano.tensor as T
 
-NUM_EPOCHS = 10
-
 import argparse
+import itertools
 
 parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
 parser.add_argument('-m','--mode',  help='{train|test}', required=True)
@@ -29,6 +25,7 @@ parser.add_argument(     '--small', help='Number of "small words" to capture', r
 
 parser.add_argument(     '--train', help='Training text file name', )
 parser.add_argument(     '--valid', help='Validation text file name', )
+parser.add_argument(     '--epochs', help='Number of Epochs', required=False, default=10, type=int)
 
 parser.add_argument(     '--test',  help='Test text file name', )
 parser.add_argument(     '--output',  help='Submission file name to write', )
@@ -261,17 +258,29 @@ def create_iter_functions(dataset, output_layer,
 
     return iters
 
+def set_up_complete_model(dataset):
+    output_layer = build_model(
+        CONTEXT_LENGTH * dataset['language']['vector_width'],  # input_dim
+        dataset['language']['gaps'].small_limit + 2,           # output_dim
+    )
+    print("Creating IterFunctions...")
+    iter_funcs = create_iter_functions(dataset, output_layer)
+    
+    return iter_funcs
 
-def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
+def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     num_batches_train = dataset['train']['num_examples'] // batch_size
     num_batches_valid = dataset['valid']['num_examples'] // batch_size
     #num_batches_test  = dataset['test' ]['num_examples'] // batch_size
 
-    for epoch in itertools.count(1):
+    for epoch in itertools.count(1):  # This just allows us to enumerate epoch_results
         batch_train_losses = []
+        
+        # Add loop for loading addtional training data
         for b in range(num_batches_train):
             batch_train_loss = iter_funcs['train'](b)
             batch_train_losses.append(batch_train_loss)
+        # Add loop for loading addtional training data
 
         avg_train_loss = np.mean(batch_train_losses)
 
@@ -292,28 +301,16 @@ def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
             'valid_accuracy': avg_valid_accuracy,
 		}
 
-def set_up_complete_model(dataset):
-    output_layer = build_model(
-        CONTEXT_LENGTH * dataset['language']['vector_width'],  # input_dim
-        dataset['language']['gaps'].small_limit + 2,           # output_dim
-    )
-    print("Creating IterFunctions...")
-    iter_funcs = create_iter_functions(dataset, output_layer)
-    
-    return iter_funcs
-
-def main(dataset, num_epochs=NUM_EPOCHS):
-    iter_funcs = set_up_complete_model(dataset)
-
+def train_and_validate_all(iter_funcs, dataset, num_epochs):
     print("Starting training...")
-    for epoch in train(iter_funcs, dataset):
-        print("Epoch %d of %d" % (epoch['number'], num_epochs))
-        print("  training loss:\t\t%.6f" % epoch['train_loss'])
-        print("  validation loss:\t\t%.6f" % epoch['valid_loss'])
+    for epoch_results in train_and_validate(iter_funcs, dataset):
+        print("Epoch %d of %d" % (epoch_results['number'], num_epochs))
+        print("  training loss:\t\t%.6f" % epoch_results['train_loss'])
+        print("  validation loss:\t\t%.6f" % epoch_results['valid_loss'])
         print("  validation accuracy:\t\t%.2f %%" %
-              (epoch['valid_accuracy'] * 100))
+              (epoch_results['valid_accuracy'] * 100))
 
-        if epoch['number'] >= num_epochs:
+        if epoch_results['number'] >= num_epochs:
             break
 
 
@@ -333,6 +330,7 @@ if __name__ == '__main__':
         print "Loaded Training = ", loaded
         
         iter_funcs = set_up_complete_model(dataset)
+        train_and_validate_all(iter_funcs, dataset, num_epochs=args.epochs)
         
         print "*** Need to iterate over training_sets too ***"
         
