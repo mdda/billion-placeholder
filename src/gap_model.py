@@ -198,13 +198,13 @@ def create_iter_functions(dataset, output_layer,
     vectors = dataset['language']['vectors']
     X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )
     
-    y_batch = T.ivector('y')
+    Y_batch = T.ivector('y')
     batch_slice = slice(
         batch_index * batch_size, (batch_index + 1) * batch_size
     )
 
     def loss(output):
-        return -T.mean(T.log(output)[T.arange(y_batch.shape[0]), y_batch])
+        return -T.mean(T.log(output)[T.arange(Y_batch.shape[0]), Y_batch])
 
     loss_train = loss(output_layer.get_output(X_batch_flat_vectors))
     loss_eval  = loss(output_layer.get_output(X_batch_flat_vectors, deterministic=True))
@@ -212,7 +212,7 @@ def create_iter_functions(dataset, output_layer,
     pred = T.argmax(
         output_layer.get_output(X_batch_flat_vectors, deterministic=True), axis=1
     )
-    accuracy = T.mean(T.eq(pred, y_batch))
+    accuracy = T.mean(T.eq(pred, Y_batch))
 
     all_params = lasagne.layers.get_all_params(output_layer)
     
@@ -234,7 +234,7 @@ def create_iter_functions(dataset, output_layer,
             updates=updates,
             givens={
                 X_batch: d['X'][batch_slice],
-                y_batch: d['Y'][batch_slice],
+                Y_batch: d['Y'][batch_slice],
             },
         )
 
@@ -244,7 +244,7 @@ def create_iter_functions(dataset, output_layer,
             [batch_index], [loss_eval, accuracy],
             givens={
                 X_batch: d['X'][batch_slice],
-                y_batch: d['Y'][batch_slice],
+                Y_batch: d['Y'][batch_slice],
             },
         )
 
@@ -254,7 +254,7 @@ def create_iter_functions(dataset, output_layer,
             [batch_index], [loss_eval, accuracy],
             givens={
                 X_batch: d['X'][batch_slice],
-                y_batch: d['Y'][batch_slice],
+                Y_batch: d['Y'][batch_slice],
             },
         )
 
