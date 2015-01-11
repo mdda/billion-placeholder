@@ -188,7 +188,7 @@ def build_model(input_dim, output_dim,
 
 
 def create_iter_functions(dataset, output_layer,
-                          X_tensor_type=T.matrix,
+                          X_tensor_type=T.imatrix,
                           batch_size=MINIBATCH_SIZE
                          ):
     batch_index = T.iscalar('batch_index')
@@ -234,7 +234,7 @@ def create_iter_functions(dataset, output_layer,
             updates=updates,
             givens={
                 X_batch: d['X'][batch_slice],
-                y_batch: d['y'][batch_slice],
+                y_batch: d['Y'][batch_slice],
             },
         )
 
@@ -244,7 +244,7 @@ def create_iter_functions(dataset, output_layer,
             [batch_index], [loss_eval, accuracy],
             givens={
                 X_batch: d['X'][batch_slice],
-                y_batch: d['y'][batch_slice],
+                y_batch: d['Y'][batch_slice],
             },
         )
 
@@ -254,7 +254,7 @@ def create_iter_functions(dataset, output_layer,
             [batch_index], [loss_eval, accuracy],
             givens={
                 X_batch: d['X'][batch_slice],
-                y_batch: d['y'][batch_slice],
+                y_batch: d['Y'][batch_slice],
             },
         )
 
