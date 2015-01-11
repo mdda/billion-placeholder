@@ -198,7 +198,8 @@ def create_iter_functions(dataset, output_layer,
     vectors = dataset['language']['vectors']
     X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )
     
-    Y_batch = T.ivector('y')
+    #Y_batch = T.ivector('y') 
+    Y_batch = T.bvector('y') # This is smaller...
     batch_slice = slice(
         batch_index * batch_size, (batch_index + 1) * batch_size
     )
