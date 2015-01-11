@@ -265,7 +265,7 @@ def create_iter_functions(dataset, output_layer,
 def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     num_batches_train = dataset['train']['num_examples'] // batch_size
     num_batches_valid = dataset['valid']['num_examples'] // batch_size
-    num_batches_test  = dataset['test' ]['num_examples'] // batch_size
+    #num_batches_test  = dataset['test' ]['num_examples'] // batch_size
 
     for epoch in itertools.count(1):
         batch_train_losses = []
@@ -292,13 +292,18 @@ def train(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
             'valid_accuracy': avg_valid_accuracy,
 		}
 
-
-def main(dataset, num_epochs=NUM_EPOCHS):
+def set_up_complete_model(dataset):
     output_layer = build_model(
         CONTEXT_LENGTH * dataset['language']['vector_width'],  # input_dim
         dataset['language']['gaps'].small_limit + 2,           # output_dim
     )
+    print("Creating IterFunctions...")
     iter_funcs = create_iter_functions(dataset, output_layer)
+    
+    return iter_funcs
+
+def main(dataset, num_epochs=NUM_EPOCHS):
+    iter_funcs = set_up_complete_model(dataset)
 
     print("Starting training...")
     for epoch in train(iter_funcs, dataset):
@@ -310,8 +315,6 @@ def main(dataset, num_epochs=NUM_EPOCHS):
 
         if epoch['number'] >= num_epochs:
             break
-
-    return output_layer
 
 
 if __name__ == '__main__':
@@ -329,7 +332,10 @@ if __name__ == '__main__':
         loaded = load_training_set_inplace(dataset['train'])
         print "Loaded Training = ", loaded
         
-        main(dataset)
+        iter_funcs = set_up_complete_model(dataset)
+        
+        print "*** Need to iterate over training_sets too ***"
+        
         
     if args.mode == 'test':
         pass
