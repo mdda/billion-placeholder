@@ -14,6 +14,9 @@ import itertools
 
 import hickle 
 
+import warnings
+warnings.simplefilter("error", RuntimeWarning)
+
 parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
 parser.add_argument('-m','--mode',  help='{train|test}', required=True)
 
@@ -73,11 +76,12 @@ def data_loader(f, gaps, comment):
             billion.util.print_thousands(comment+" Line # ", l)
         for p in gaps.generate_training(line):
             yield p
+    billion.util.print_thousands(comment+" Line # ", l, s_after="    \n")
     inputfile.close()
     
 def create_training_set(train, gaps):  # BULK_SIZE
     # These are just 'sized' - will be loaded dynamically due to GPU size constraints
-    X = np.empty( (CONTEXT_LENGTH, BULK_SIZE), dtype=np.int32)
+    X = np.empty( (BULK_SIZE, CONTEXT_LENGTH), dtype=np.int32)
     Y = np.empty( (BULK_SIZE), dtype=np.int8)
     
     return dict(
@@ -105,8 +109,8 @@ def load_training_set_inplace(training_set):
     X = np.array([x for (x,y) in arr], dtype=np.int32)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
     
-    print X[0:60]
-    print Y[0:60]
+    #print X[0:60]
+    #print Y[0:60]
     
     training_set['X'].set_value(X, borrow=True)
     training_set['Y'].set_value(Y, borrow=True)
@@ -274,11 +278,11 @@ def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     for epoch in itertools.count(1):  # This just allows us to enumerate epoch_results
         batch_train_losses = []
         
-        # Add loop for loading addtional training data
+        # Add loop for loading additional training data
         for b in range(num_batches_train):
             batch_train_loss = iter_funcs['train'](b)
             batch_train_losses.append(batch_train_loss)
-        # Add loop for loading addtional training data
+        # Add loop for loading additional training data
 
         avg_train_loss = np.mean(batch_train_losses)
 

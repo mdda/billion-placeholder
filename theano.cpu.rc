@@ -1,0 +1,24 @@
+# Usage : THEANORC=theano.cpu.rc python src/....
+
+[global]
+floatX=float32
+warn_float64=warn 
+
+device=cpu
+
+#openmp=1
+#openmp_elemwise_minsize=200000
+
+exception_verbosity=high
+optimizer=fast_compile
+
+mode=FAST_RUN
+#mode=DebugMode
+#nocleanup=True
+
+profile=True
+profile_memory=True
+profile_optimizer=True
+
+[blas]
+
