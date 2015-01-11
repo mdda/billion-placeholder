@@ -69,8 +69,8 @@ def load_language(vocab, vectors, small):
     )
 
 
-def data_loader(f, gaps, comment):
-    inputfile = open(f)
+def data_loader(filename, gaps, comment):
+    inputfile = open(filename)
     for l, line in enumerate(inputfile):  
         if 0 == l % 10000:
             billion.util.print_thousands(comment+" Line # ", l)
@@ -79,13 +79,18 @@ def data_loader(f, gaps, comment):
     billion.util.print_thousands(comment+" Line # ", l, s_after="    \n")
     inputfile.close()
     
+def reset_training_set_loader(training_set, gaps):
+    print "Resetting TrainingSet.loader"
+    training_set['loader'] = data_loader(training_set['filename'], gaps, "Training Data")
+    
 def create_training_set(train, gaps):  # BULK_SIZE
     # These are just 'sized' - will be loaded dynamically due to GPU size constraints
     X = np.empty( (BULK_SIZE, CONTEXT_LENGTH), dtype=np.int32)
     Y = np.empty( (BULK_SIZE), dtype=np.int8)
     
     return dict(
-        loader = data_loader(train, gaps, "Training Data"),
+        filename = train,
+        #loader = data_loader(train, gaps, "Training Data"),
         
         X = theano.shared(X),
         Y = T.cast(theano.shared(Y), dtype='int8'),
@@ -278,11 +283,17 @@ def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     for epoch in itertools.count(1):  # This just allows us to enumerate epoch_results
         batch_train_losses = []
         
-        # Add loop for loading additional training data
-        for b in range(num_batches_train):
-            batch_train_loss = iter_funcs['train'](b)
-            batch_train_losses.append(batch_train_loss)
-        # Add loop for loading additional training data
+        reset_training_set_loader(dataset['train'], dataset['language']['gaps'])
+        
+        while True:  # Loop for loading additional training data
+            loaded = load_training_set_inplace(dataset['train'])
+            print " full = ", loaded            
+            if not loaded: # There wasn't enough data for a full 'BULK' so ditch attempt
+                break
+            
+            for b in range(num_batches_train):
+                batch_train_loss = iter_funcs['train'](b)
+                batch_train_losses.append(batch_train_loss)
 
         avg_train_loss = np.mean(batch_train_losses)
 
@@ -325,16 +336,14 @@ if __name__ == '__main__':
     dataset = dict( language = language )
     
     if args.mode == 'train':
-        dataset['train'] = create_training_set(args.train, language['gaps'])
-        dataset['valid'] = load_validation_set(args.valid, language['gaps'])
+        # Training data loads progressively, since it is so large
+        dataset['train'] = create_training_set(args.train, language['gaps'])  
         
-        loaded = load_training_set_inplace(dataset['train'])
-        print "Loaded Training = ", loaded
+        # Validation data loads immediately, since it is fairly small
+        dataset['valid'] = load_validation_set(args.valid, language['gaps'])  
         
         iter_funcs = set_up_complete_model(dataset)
         train_and_validate_all(iter_funcs, dataset, num_epochs=args.epochs)
-        
-        print "*** Need to iterate over training_sets too ***"
         
         
     if args.mode == 'test':
