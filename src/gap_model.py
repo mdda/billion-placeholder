@@ -1,20 +1,18 @@
 #! python
-
 #from __future__ import print_function
-
 import billion
 
-import hickle 
-
 import numpy as np
-
-import lasagne
 
 import theano
 import theano.tensor as T
 
+import lasagne
+
 import argparse
 import itertools
+
+import hickle 
 
 parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
 parser.add_argument('-m','--mode',  help='{train|test}', required=True)
@@ -107,8 +105,8 @@ def load_training_set_inplace(training_set):
     X = np.array([x for (x,y) in arr], dtype=np.int32)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
     
-    #print X[0:60]
-    #print Y[0:60]
+    print X[0:60]
+    print Y[0:60]
     
     training_set['X'].set_value(X, borrow=True)
     training_set['Y'].set_value(Y, borrow=True)
