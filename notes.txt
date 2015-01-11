@@ -115,6 +115,21 @@ python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
 						  --save data/3-gaps/1MM_model.hickle
 
+# TODO :
+measure memory footprint of shared vector and training blocks
+run on GPU/old-CUDA (benchmark speedup)
+save model to disk 
+run on GPU/new-CUDA (benchmark speedup)
+
+load model from disk
+run test data - and build submission (with / without small words)
+
+gather 'confidence' level for each answer (size of max output) or (ratio of 1st place to 2nd place), etc
+
+
+
+
+
 python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
 						  --mode test \
 						  --load data/3-gaps/1MM_model.hickle \

@@ -42,7 +42,10 @@ args = parser.parse_args()
 # in units of 'BULK_SIZE'
 BULK_SIZE = 1000*1000  # Training Records to read in blocks off disk
 
-## Hmm : Maybe the examples should be created dynamically by generators
+# Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
+#              = (CONTEXT_LENGTH * 4 + 1) * BULK_SIZE
+
+## The examples are being created dynamically by generators
 ## since the files (for ALL in particular) will get stupidly large
 
 # These are the mini-batches over which SGD takes place
