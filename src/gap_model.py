@@ -137,6 +137,9 @@ def load_validation_set(valid, gaps):  # Will load all
     X = np.array([x for (x,y) in arr], dtype=np.int32)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
 
+    print("  Valid.X.nbytes \t= \t", billion.util.comma_000(X.nbytes))
+    print("  Valid.Y.nbytes \t= \t    ", billion.util.comma_000(Y.nbytes))
+    
     return dict(
         X = theano.shared(X),
         Y = T.cast(theano.shared(Y), dtype='int8'),
