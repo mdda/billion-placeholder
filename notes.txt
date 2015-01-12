@@ -116,7 +116,6 @@ python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-
 						  --save data/3-gaps/1MM_model.hickle
 
 # TODO :
-#measure memory footprint of shared vector and training blocks (approx)
 run on GPU/old-CUDA (benchmark speedup)
 save model to disk 
 run on GPU/new-CUDA (benchmark speedup)
