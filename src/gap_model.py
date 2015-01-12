@@ -64,7 +64,7 @@ def load_language(vocab, vectors, small):
     d = hickle.load(vectors)
     vectors = theano.shared(lasagne.utils.floatX(d['vectors']))
     
-    print("  Vectors.nbytes = ", billion.util.comma_000(d['vectors'].nbytes))
+    print("  Vectors.nbytes \t= \t", billion.util.comma_000(d['vectors'].nbytes))
     
     return dict(
       vectors = vectors,
@@ -93,6 +93,9 @@ def create_training_set(train, gaps):  # BULK_SIZE
     # These are just 'sized' - will be loaded dynamically due to GPU size constraints
     X = np.empty( (BULK_SIZE, CONTEXT_LENGTH), dtype=np.int32)
     Y = np.empty( (BULK_SIZE), dtype=np.int8)
+
+    print("  Training.X.nbytes \t= \t", billion.util.comma_000(X.nbytes))
+    print("  Training.Y.nbytes \t= \t", billion.util.comma_000(Y.nbytes))
     
     return dict(
         filename = train,

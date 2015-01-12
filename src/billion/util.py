@@ -51,7 +51,8 @@ def load_vocab(filename):
   return v
 
 def comma_000(l):
-  return "{:,}".format(l)
+  c = "    {:,}".format(l)
+  return c[-(4*(len(c) // 4)):]  # Make it align in 000s too
   
 def print_thousands(s_before, l, s_after="   ", overwrite=True):
   if overwrite:  # http://en.wikipedia.org/wiki/ANSI_escape_code
