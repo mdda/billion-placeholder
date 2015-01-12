@@ -116,9 +116,12 @@ python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-
 						  --save data/3-gaps/1MM_model.hickle
 
 # TODO :
-??run on GPU/old-CUDA (benchmark speedup)
-??:: Prepend :
-??THEANORC=theano.cuda-sandbox.rc optirun python ...
+
+## To run on GPU/old-CUDA (benchmark speedup 464 vs 1175, ie: 2.5x faster than CPU)
+## Prepend :
+THEANORC=theano.cuda-sandbox.rc optirun python ...
+
+
 
 save model to disk 
 run on GPU/new-CUDA (benchmark speedup)

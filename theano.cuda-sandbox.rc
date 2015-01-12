@@ -11,6 +11,6 @@ mode=FAST_RUN
 #mode=DebugMode
 #nocleanup=True
 
-profile=True
-profile_memory=True
-profile_optimizer=True
+#profile=True
+#profile_memory=True
+#profile_optimizer=True
