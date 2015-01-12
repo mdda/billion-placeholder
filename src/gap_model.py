@@ -1,5 +1,6 @@
 #! python
-#from __future__ import print_function
+from __future__ import print_function
+
 import billion
 
 import numpy as np
@@ -63,6 +64,8 @@ def load_language(vocab, vectors, small):
     d = hickle.load(vectors)
     vectors = theano.shared(lasagne.utils.floatX(d['vectors']))
     
+    print("  Vectors.nbytes = ", billion.util.comma_000(d['vectors'].nbytes))
+    
     return dict(
       vectors = vectors,
       vocab_size = d['vectors'].shape[0],
@@ -83,7 +86,7 @@ def data_loader(filename, gaps, comment):
     inputfile.close()
     
 def reset_training_set_loader(training_set, gaps):
-    print "Resetting TrainingSet.loader"
+    print("Resetting TrainingSet.loader")
     training_set['loader'] = data_loader(training_set['filename'], gaps, "Training Data")
     
 def create_training_set(train, gaps):  # BULK_SIZE
@@ -117,8 +120,8 @@ def load_training_set_inplace(training_set):
     X = np.array([x for (x,y) in arr], dtype=np.int32)
     Y = np.array([y for (x,y) in arr], dtype=np.int8)
     
-    #print X[0:60]
-    #print Y[0:60]
+    #print(X[0:60])
+    #print(Y[0:60])
     
     training_set['X'].set_value(X, borrow=True)
     training_set['Y'].set_value(Y, borrow=True)
@@ -290,7 +293,7 @@ def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
         
         while True:  # Loop for loading additional training data
             loaded = load_training_set_inplace(dataset['train'])
-            print " full = ", loaded            
+            print(" full = ", loaded)
             if not loaded: # There wasn't enough data for a full 'BULK' so ditch attempt
                 break
             

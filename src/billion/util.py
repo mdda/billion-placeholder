@@ -50,11 +50,13 @@ def load_vocab(filename):
   
   return v
 
+def comma_000(l):
+  return "{:,}".format(l)
+  
 def print_thousands(s_before, l, s_after="   ", overwrite=True):
-  commas = "{:,}".format(l)
   if overwrite:  # http://en.wikipedia.org/wiki/ANSI_escape_code
     print '\x1b[0G',
-  print s_before, commas, s_after,   # Nice over-writing (no newline)
+  print s_before, comma_000(l), s_after,   # Nice over-writing (no newline)
   sys.stdout.flush()
 
 _test_line = re.compile(r'([\d\.]+),\"(.*)\"')  # NB no \" after the line (comments allowed)
