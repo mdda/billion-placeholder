@@ -1,8 +1,6 @@
 #! python
 from __future__ import print_function
 
-import billion
-
 import numpy as np
 
 import theano
@@ -12,11 +10,13 @@ import lasagne
 
 import argparse
 import itertools
-
-import hickle 
+import time
 
 import warnings
 warnings.simplefilter("error", RuntimeWarning)
+
+import billion
+import hickle 
 
 parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
 parser.add_argument('-m','--mode',  help='{train|test}', required=True)
@@ -293,6 +293,8 @@ def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     #num_batches_test  = dataset['test' ]['num_examples'] // batch_size
 
     for epoch in itertools.count(1):  # This just allows us to enumerate epoch_results
+        t_start = time.time()
+        
         batch_train_losses = []
         
         reset_training_set_loader(dataset['train'], dataset['language']['gaps'])
@@ -324,12 +326,13 @@ def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
             'train_loss': avg_train_loss,
             'valid_loss': avg_valid_loss,
             'valid_accuracy': avg_valid_accuracy,
+            'elapsed' : time.time() - t_start,
 		}
 
 def train_and_validate_all(iter_funcs, dataset, num_epochs):
     print("Starting training...")
     for epoch_results in train_and_validate(iter_funcs, dataset):
-        print("Epoch %d of %d" % (epoch_results['number'], num_epochs))
+        print("Epoch %d of %d (%6.2f secs)" % (epoch_results['number'], num_epochs, epoch_results['elapsed']))
         print("  training loss:\t\t%.6f" % epoch_results['train_loss'])
         print("  validation loss:\t\t%.6f" % epoch_results['valid_loss'])
         print("  validation accuracy:\t\t%.2f %%" %
