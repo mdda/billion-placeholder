@@ -1,0 +1,472 @@
+<!doctype html>
+<html lang="en">
+
+ <head>
+  <meta charset="utf-8">
+
+  <title>Deep-Learning : With a bit of JS</title>
+
+  <meta name="description" content="Presentation on Deep Learning for the TalkJS MeetUp">
+  <meta name="author" content="Martin Andrews">
+
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <link rel="stylesheet" href="css/reveal.min.css">
+  <link rel="stylesheet" xhref="css/theme/default.css" href="css/theme/sky.css" id="theme">
+
+  <!-- For syntax highlighting -->
+  <link rel="stylesheet" href="lib/css/zenburn.css">
+
+  <!-- If the query includes 'print-pdf', include the PDF print sheet -->
+  <script>
+   if( window.location.search.match( /print-pdf/gi ) ) {
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = 'css/print/pdf.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+   }
+  </script>
+
+  <!--[if lt IE 9]>
+  <script src="lib/js/html5shiv.js"></script>
+  <![endif]-->
+ </head>
+
+ <body>
+  <div class="reveal">
+   <!-- Any section element inside of this container is displayed as a slide -->
+   <div class="slides">
+    
+<style>
+table.table-fix {
+ margin-left:auto;  margin-right:auto; border-collapse:collapse; cell-padding:5px;
+ margin-top:20px;
+}
+.table-fix td,.table-fix th {
+ padding: 6px;
+}
+.table-fix th {
+ border-bottom:1pt solid black;
+}
+.fix-spacing li {
+ margin-bottom:16pt;
+}
+</style>
+
+<!--
+xDeep-Learning Intro : Motivation
+x  Slides from Google deck
+x  Plus ConvNetJS
+x  Plus some asm.js trickery
+
+Current applications  
+x  p6 : House Numbers
+x  p38 : Audio application
+x  pXX : Auto-labelling 'statue'
+  
+Basic approach
+x  p12 : Pic of cat -> -> "cat"
+?  p14 : Neural Network = transform
+x  p15 : One Neuron
+x  p17 : Multilayer
+x  p22 : Learning Algorithm
+x  p23 : Gradient descent
+x  p25 : 10 steps only
+
+ConvNetJS demo Start
+x  MNIST 
+x  Kick off
+  
+Current research
+x  p39 : ConvNet
+x  other image trickery (shifting, etc)
+  
+ConvNet asm.js-style speed-up
+x  Explain type hinting
+
+Show ConvNetJS 
+x  Look back at progress  
+  
+Frontier
+  p5 : ImageNet identifications
+  p40 : DeeepConvNet
+  p75-78 : Word Captions from Photos
+  p49 : WordEmbedding Start
+  
+End
+!-->
+
+<section>
+ <h1>Deep Learning</h1>
+ <h3>with a bit of Javascript</h3>
+ <p>
+  <small><a href="http://mdda.net">Martin Andrews</a> / <a href="http://twitter.com/redcatlabs">@redcatlabs</a></small>
+ </p>
+ <p>
+  <small>18 December 2014</small>
+ </p>
+</section>
+
+<section>
+ <h2>Motivation</h2>
+ <ul class="fix-spacing">
+  <li>My focus : Machine Learning</li>
+  <li>Recent presentation from Google covered a lot :</li>
+  <li style="list-style-type:none">
+    <ul>
+      <li><a target="_blank" href="http://static.googleusercontent.com/media/research.google.com/en/us/people/jeff/CIKM-keynote-Nov2014.pdf">Large Scale Deep Learning</a></li>
+      <li>Jeff Dean, Google</li>
+    </ul>
+  </li>
+  <li>There's a good JS implementation : </li>
+  <li style="list-style-type:none">
+    <ul>
+      <li><a target="_blank" href="https://github.com/karpathy/convnetjs">ConvnetJS</a> by Andrej Karpathy at Stanford</li>
+      <li>.. complete with a <a target="_blank" href="http://cs.stanford.edu/people/karpathy/convnetjs/">beautiful website</a></li>
+      <li>I did some code optimizing</li>
+    </ul>
+  </li>
+ </ul>
+</section>
+
+<section>
+  <section>
+   <h2>Current Applications</h2>
+   <ul class="fix-spacing">
+    <li>"Deep Learning" is a hot topic</li>
+    <li>Not just research : currently being used</li>
+   </ul>
+  </section>
+
+  <section>
+   <h2>House Numbers</h2>
+   <p>Google Street-View (and ReCaptchas)</p>
+   <img width="598" height="400" src="img/house-numbers_598x400.png" alt="House Numbers" xstyle="border:none;box-shadow:none">
+  </section>
+
+  <section>
+   <h2>Speech Recognition</h2>
+   <p>In Android phones now (since Jellybean, 2012)</p>
+   <img width="444" height="360" src="img/speech_444x360.png" alt="Speech Recognition" xstyle="border:none;box-shadow:none">
+   <p>Trained in &lt;5 days on 800 machine cluster</p>
+  </section>
+
+  <section>
+   <h2>Auto-Labelling</h2>
+   <p>Part of Google+</p>
+   <img width="713" height="360" src="img/auto-label_713x360.png" alt="Auto-Label" xstyle="border:none;box-shadow:none">
+  </section>
+</section>
+
+<section>
+  <section>
+   <h2>Basic Approach</h2>
+   <ul class="fix-spacing">
+    <li>Same as original Neural Networks in 1980s/1990s</li>
+    <li>Simple mathematical units combine to compute a complex function</li>
+   </ul>
+   <img width="700" height="131" src="img/img-to-cat_700x131.png" alt="Image to Cat" style="border:none;box-shadow:none">
+   <p>Supervised; Unsupervised; and Reinforcement Learning</p>
+  </section>
+
+  <section>
+   <h2>Single "Neuron"</h2>
+   <p>Different weights compute different functions</p>
+   <img width="602" height="381" src="img/one-neuron_602x381.png" alt="One Neuron" style="border:none;box-shadow:none">
+  </section>
+
+  <section>
+   <h2>Multi-Layer</h2>
+   <p>Layers of neurons combine and <br/>can form more complex functions</p>
+   <img width="356" height="324" src="img/multi-layer_356x324.png" alt="Multi-Layer" style="border:none;box-shadow:none">
+  </section>
+
+  <section>
+   <h2>Supervised Learning</h2>
+   <ul class="fix-spacing">
+    <li><strong>while</strong> not done :</li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Pick a random training case (<code>x</code> &rarr; <code>target_y</code>)</li>
+        <li>Evaluate <code>output_y</code> from the <code>x</code></li>
+        <li>Modify the weights so that <code>output_y</code> is closer to <code>target_y</code> for that <code>x</code></li>
+      </ul>
+    </li>
+   </ul>
+  </section>
+
+  <section>
+   <h2>Gradient Descent</h2>
+   <p>Follow the gradient of the error <br />w.r.t the connection weights</p>
+   <img width="364" height="306" src="img/gradient-descent_364x306.png" alt="Gradient-Descent" style="border:none;box-shadow:none">
+  </section>
+  
+  <section>
+   <h2>10 Step Program</h2>
+   <p>Real neurons aren't particularly fast...</p>
+   <img width="648" height="360" src="img/10-steps_648x360.png" alt="10 Steps max" style="border:none;box-shadow:none">
+  </section>
+</section>
+
+<section>
+ <h2>ConvnetJS</h2>
+ <ul class="fix-spacing">
+  <li>Clean code on <a href="https://github.com/karpathy/convnetjs" target="_blank">karpathy's GitHub</a></li>
+  <li>And an excellent <a href="http://cs.stanford.edu/people/karpathy/convnetjs/" target="_blank">demo site</a> :</li>
+  <li style="list-style-type:none">
+    <ul>
+      <li>Sample <i>LIVE</i> demos</li>
+      <li>Background Reading</li>
+      <li>Documentation</li>
+    </ul>
+  </li>
+  <li>MNIST description (and 10secs of demo!)</li>
+ </ul>
+</section>
+
+<section>
+  <section>
+   <h2>Some more Details</h2>
+   <img width="602" height="400" src="img/convolutions_602x400.png" alt="Convolution" style="border:none;box-shadow:none">
+  </section>
+
+  <section>
+   <h2>Other 'tricks'</h2>
+   <ol class="fix-spacing">
+    <li>Use LOTS of real data</li>
+    <li>'Create' data : </li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Change the data in ways that have no visual effect</li>
+        <li>Ask the Internet to label images for you</li>
+      </ul>
+    </li>
+    <li value="3">Clusters, GPUs, clusters-of-GPUs</li>
+   </ol>
+  </section>
+</section>
+
+<section>
+  <section>
+   <h2>ConvnetJS efficiency</h2>
+   <ul class="fix-spacing">
+    <li>Matrix multiplies are a big part of ConvNets</li>
+    <li>Straight JS does more house-keeping than necessary</li>
+    <li>Possible to optimize in several ways</li>
+   </ul>
+  </section>
+  
+  <section>
+   <h2>Precompute stuff</h2>
+   <p>Avoid unnecessary object manipulation</p>
+   <pre><code data-trim contenteditable>
+- if(oy&gt;=0 && oy&lt;V.sy && ox&gt;=0 && ox&lt;V.sx) {
+  
++ if(oy&gt;=0 && oy&lt;V_sy && ox&gt;=0 && ox&lt;V_sx) {  
+   </code></pre>
+  </section>
+  
+  <section>
+   <h2>Type Hinting</h2>
+   <p>This is an idea from asm.js</p>
+   <pre><code data-trim contenteditable>
+- var A = new Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
+
++ var A = new Vol(this.out_sx |0, this.out_sy |0, this.out_depth |0, 0.0);
++
++ var V_sx = V.sx |0;
++ var V_sy = V.sy |0;
++ var xy_stride = this.stride |0;  
+   </code></pre>
+  </section>
+  
+  <section>
+   <h2>Index Shuffling</h2>
+   <ul class="fix-spacing">
+    <li>Get the data to fit into on-chip caches</li>
+    <li>And move code out of loops if possible</li>
+   </ul>
+   <pre><code data-trim contenteditable>
+- for(var fx=0;fx&lt;f.sx;fx++) {
+-   for(var fy=0;fy&lt;f.sy;fy++) {
+-     for(var fd=0;fd&lt;f.depth;fd++) {
+-       var oy = y+fy; // coordinates in the original input array coordinates
+-       var ox = x+fx;
+
++ for(var fy=0;fy&lt;f.sy;fy++) {
++   var oy = y+fy; // coordinates in the original input array coordinates
++   for(var fx=0;fx&lt;f.sx;fx++) {
++     var ox = x+fx;
++     for(var fd=0;fd&lt;f.depth;fd++) {
+  
+        a += f.w[((f.sx * fy)+fx)*f.depth+fd] * V.w[((V_sx * oy)+ox)*V.depth+fd];
+   </code></pre>
+  </section>
+  
+  <section>
+   <h2>Net Result</h2>
+   <ul class="fix-spacing">
+    <li>Speed-up Factor : <strong>2x</strong></li>
+    <li>NB: No change in functionality</li>
+   </ul>
+  </section>
+</section>
+
+<section>
+ <h2>Back to Demo</h2>
+ <ul class="fix-spacing">
+  <li>The <a href="http://cs.stanford.edu/people/karpathy/convnetjs/" target="_blank">demo site</a> should now show :</li>
+  <li style="list-style-type:none">
+    <ul>
+      <li>How it actually learns</li>
+      <li>Results of the training</li>
+      <li>How the net is actually 'deeper'</li>
+    </ul>
+  </li>
+ </ul>
+</section>
+
+<section>
+ <h2>The Frontier</h2>
+ <ul class="fix-spacing">
+  <li>ImageNet Competition</li>
+  <li>Natural Language Processing : Word Embedding</li>
+  <li>Other stuff : </li>
+  <li style="list-style-type:none">
+    <ul>
+      <li>Reinforcement Learning (DeepMind ~ Atari)</li>
+      <li>Images and Words</li>
+    </ul>
+  </li>
+ </ul>
+</section>
+
+<section>
+  <section>
+   <h2>ImageNet Competition</h2>
+   <p>Typical images</p>
+   <img width="511" height="380" src="img/imagenet_511x380.png" alt="ImageNet" style="border:none;box-shadow:none">
+  </section>
+  
+  <section>
+   <h2>Deep ConvNet</h2>
+   <ul class="fix-spacing">
+    <li>Google won 2014 ImageNet</li>
+    <li>24 layer deep network</li>
+    <li>6.66% Top-5 error rate</li>
+   </ul>
+   <img width="698" height="217" src="img/google-imagenet_698x217.png" alt="Google ImageNet" style="border:none;box-shadow:none">
+  </section>
+  
+  <section>
+   <h2>Good Classification</h2>
+   <img width="656" height="360" src="img/flowers_656x360.png" alt="ImageNet Flowers" style="border:none;box-shadow:none">
+   <p>"hibiscus" vs. "dahlia"</p>
+  </section>
+  <section>
+   <h2>Good Generalization</h2>
+   <p>Both recognized as 'Meal'</p>
+   <img width="800" height="268" src="img/meal_800x268.png" alt="ImageNet Meal" style="border:none;box-shadow:none">
+  </section>
+  <section>
+   <h2>Surprising</h2>
+   <img width="386" height="380" src="img/yoda_386x380.png" alt="Image Search Yoda" style="border:none;box-shadow:none">
+  </section>
+
+</section>
+
+<section>
+  <section>
+   <h2>Word Embedding</h2>
+   <p>How to handle 'discrete' things like Words?</p>
+   <img width="732" height="360" src="img/word-embedding_732x360.png" alt="Word Embedding" style="border:none;box-shadow:none">
+  </section>
+  <section>
+   <h2>Trainable on Wikipedia</h2>
+   <img width="700" height="267" src="img/embedding-training_700x267.png" alt="Word Embedding Training" style="border:none;box-shadow:none">
+   <p>5.7MM documents, 5.4Bn terms<br />&rarr; 155k words, 500-D embedding</p>
+  </section>
+  <section>
+   <h2>Finds Relationships</h2>
+   <img width="446" height="360" src="img/facts_446x360.png" alt="Word Embedding Facts" style="border:none;box-shadow:none">
+  </section>
+  <section>
+   <h2>Semantic too</h2>
+   <img width="535" height="289" src="img/grammar_535x289.png" alt="Word Embedding Grammar" style="border:none;box-shadow:none">
+  </section>
+</section>
+
+<section>
+ <h2>Wrap-up</h2>
+ <ul class="fix-spacing">
+  <li>Deep Learning is 'hot' for a reason</li>
+  <li>Main difference from the past : </li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Quantity of Data available</li>
+        <li>Amount of Compute power available</li>
+      </ul>
+    </li>
+  <li>Have fun with ConvnetJS ...</li>
+ </ul>
+</section>
+
+
+<section>
+ <h1>- QUESTIONS -</h1>
+ <br>
+ <h3>Martin.Andrews @<br> RedCatLabs.com</h3>
+ <br>
+ <p>( <a href="https://github.com/mdda">'mdda' on GitHub!</a> )</p>
+</section>
+
+   </div>
+  </div>
+
+<div id="redcatlabs-logo" style="background: url(img/redcatlabs_logo1_280x39.png);
+                                  position: absolute;
+                                  bottom: 50px;
+                                  left: 50px;
+                                  width: 280px;
+                                  height: 39px;">
+</div>  
+
+  <script src="lib/js/head.min.js"></script>
+  <script src="js/reveal.min.js"></script>
+
+  <script>
+
+   // Full list of configuration options available here:
+   // https://github.com/hakimel/reveal.js#configuration
+   Reveal.initialize({
+    controls: true,
+    progress: true,
+    history: true,
+    center: true,
+
+    theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+    transition: Reveal.getQueryHash().transition || 'default', // default/cube/page/concave/zoom/linear/fade/none
+
+    // Parallax scrolling
+    // parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+    // parallaxBackgroundSize: '2100px 900px',
+
+    // Optional libraries used to extend on reveal.js
+    dependencies: [
+     { src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+     { src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+     { src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+     { src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+     { src: 'plugin/zoom-js/zoom.js', async: true, condition: function() { return !!document.body.classList; } },
+     { src: 'plugin/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } }
+    ]
+   });
+
+  </script>
+
+ </body>
+</html>
