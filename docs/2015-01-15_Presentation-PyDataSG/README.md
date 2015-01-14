@@ -26,9 +26,9 @@ presentation on a [publicly visible server](RedCatLabs.com/2015-01-15_Presentati
 
 {% highlight bash %}
 nginx.conf ::
-        location ~ ^/2015-01-15_Presentation-PySG/ {
-                root    ...full-path-to-repo.../docs/2015-01-15_Presentation-PySG/reveal.js-2.6.2/;
-                rewrite ^/2015-01-15_Presentation-PySG/$ /presentation.html break;
-                rewrite ^/2015-01-15_Presentation-PySG/(.+)$ /$1 break;
+        location ~ ^/2015-01-15_Presentation-PyDataSG/ {
+                root    ...full-path-to-repo.../docs/2015-01-15_Presentation-PyDataSG/reveal.js-2.6.2/;
+                rewrite ^/2015-01-15_Presentation-PyDataSG/$ /presentation.html break;
+                rewrite ^/2015-01-15_Presentation-PyDataSG/(.+)$ /$1 break;
         }
 {% endhighlight %}
