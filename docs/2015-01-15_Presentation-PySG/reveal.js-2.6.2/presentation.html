@@ -63,13 +63,39 @@ table.table-fix {
 Intro : Motivation
 
 Explain Kaggle competition
+  Training set
+    1Bn word Corpus 
+  Test set
+    100k sentences each with 1 word missing
+    Levenshtein distance (character errors)
+  "State of Play"
+    End date
+    Lack of entries
 
 Explain Approach
   WordEmbedding
+    How this is exciting
+  Getting the vectors
+    word2vec
+    GloVE
 
 Explain Theano
+  Python module that describes relationships
+  Implements through numpy and GPU
+  GPU : CUDA and OpenCL routes
+  'lasagne' deep learning setup too
+  
+Explain Theano Implementation
+  GPU consideration : Bus bandwidth
+  Need to do Word Embedding trick on-GPU
+  Paging in of training set
 
-Show Results
+Status
+  What exists
+    Already learning gap-detection
+  Next Steps
+    Maybe also do fill-in model
+    Open Source in ~ 1 week
 
 End
 !-->
