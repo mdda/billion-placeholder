@@ -125,7 +125,7 @@ End
    <ul class="fix-spacing">
     <li>Finance / Startups / Machine Learning</li>
     <li>Moved to Singapore in Sep-2013</li>
-    <li>The past year = 'fun' :</li>
+    <li>The past year (2014) = 'fun' :</li>
     <li style="list-style-type:none">
       <ul>
         <li>Machine Learning Reading : Deep Learning, NLP</li>
@@ -183,12 +183,12 @@ End
     <li>"1 billion" word corpus :</li>
     <li style="list-style-type:none">
       <ul>
-        <li>4.1Gb of data, 769 million words</li>
+        <li>769 million words = 4.1Gb of data</li>
         <li>30 million sentences</li>
         <li>Drawn from many different sources</li>
       </ul>
     </li>
-    <li>No other knowledge should be used</li>
+    <li>Only knowledge derived from this data is allowed</li>
    </ul>
   </section>
   <section>
@@ -323,24 +323,9 @@ l_out = lasagne.layers.DenseLayer( l_dropout, num_units=output_dim,
   <section>
    <h2>1Bn Words ...</h2>
    <ul class="fix-spacing">
-    <li>Word-Embedding is 'new'</li>
     <li>Size of DataSet is a problem</li>
+    <li>Word-Embedding is 'new'</li>
     <li>Playing around with 'gaps' objective</li>
-   </ul>
-  </section>
-  <section>
-   <h2>Word Embedding</h2>
-   <ul class="fix-spacing">
-    <li>vocab.size &gt; 65k &rArr; word[&middot;] : int32</li>
-    <li>'Expand' word-context on-the-fly</li>
-    <li>Training examples :</li>
-    <li style="list-style-type:none">
-     <ul>
-      <li>{word[i-1], word[i], gap_type=0}</li>
-      <li>{word[i-1], word[i+1], gap_type>0}</li>
-     </ul>
-    </li>
-    <li>Store 240-D vectors on GPU (150Mb)</li>
    </ul>
   </section>
   <section>
@@ -348,21 +333,36 @@ l_out = lasagne.layers.DenseLayer( l_dropout, num_units=output_dim,
    <ul class="fix-spacing">
     <li>Reduce training set to manageable size during dev.</li>
     <li>Even so : 1MM sentences &rArr; 70MM training examples</li>
-    <li>Will need to page data into GPU</li>
+    <li>Will eventually need to page data into GPU</li>
     <li>Need to consider PCI bus bandwidth (epochs, etc)</li>
+   </ul>
+  </section>
+  <section>
+   <h2>Word Embedding</h2>
+   <ul class="fix-spacing">
+    <li>vocab.size &gt; 65k &rArr; word[&middot;] : int32</li>
+    <li>Training examples :</li>
+    <li style="list-style-type:none">
+     <ul>
+      <li>( word[i-1], word[i] ) &rarr; ( gap_type=0 )</li>
+      <li>( word[i-1], word[i+1] ) &rarr; ( gap_type>0 )</li>
+     </ul>
+    </li>
+    <li>Store 240-D vectors on GPU (150Mb)</li>
+    <li>Expand word-context to 480-D input vector</li>
    </ul>
   </section>
   <section>
    <h2>Gaps objective</h2>
    <ul class="fix-spacing">
-    <li>Softmax output over 2+32 classes : </li>
+    <li><code>gap_type</code> is softmax over 2+32 classes : </li>
     <li style="list-style-type:none">
       <ul>
         <li>{ NoGap, ComplexGap } ++ </li>
-        <li>{ the , . to of a and in {N} " that 's for on is was with }</li>
+        <li>{ the , . to of a and in {N} " that 's for on is was with ... }</li>
       </ul>
     </li>
-    <li>Base case for 'best gap' &rArr; add a space</li>
+    <li>Base case for <code>gap.best</code> &rArr; add a space</li>
     <li>Filling known gap with uncertain word &rArr; Risky</li>
    </ul>
    <ximg width="700" height="131" src="img/img-to-cat_700x131.png" alt="Image to Cat" style="border:none;box-shadow:none">
@@ -376,12 +376,13 @@ l_out = lasagne.layers.DenseLayer( l_dropout, num_units=output_dim,
     <li>Kaggle Competitions are Cool</li>
     <li>Word Embedding is Surprising</li>
     <li>Theano makes GPUs Python-friendly</li>
+    <li><em>Will Open Source ASAP</em></li>
    </ul>
   </section>
   <section>
    <h2>The Future</h2>
    <ul class="fix-spacing">
-    <li>This coming year = 'serious' :</li>
+    <li>This coming year (2015) = 'serious' :</li>
     <li style="list-style-type:none">
       <ul>
         <li>Working for Local Company</li>
