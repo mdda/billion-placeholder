@@ -260,6 +260,7 @@ End
    <h2>Theano : Basic</h2>
    <p>Function 'built up', then evaluated</p>
    <pre><code data-trim contenteditable>
+import theano.tensor as T
 x = T.matrix("x") # Declare Theano symbolic variables
 y = T.vector("y")
 w = theano.shared(rng.randn(feats), name="w")
@@ -294,19 +295,26 @@ for i in xrange(training_steps):
    <p>Iteration mechanism built-in</p>
   </section>
   <section>
-   <h2>Theano : Basic</h2>
-   <ul class="fix-spacing">
-    <li>Optimised Numerical Computation in Python</li>
-    <li>Works in conjunction with <code>numpy</code></li>
-    <li>Computation is 'described' in Python code: </li>
-    <li style="list-style-type:none">
-      <ul>
-        <li>Theano operates on expression tree itself</li>
-        <li>Optimizes the tree for operations it knows</li>
-        <li>Spits out code in <code>C/C++</code> or <code>CUDA</code> (or <code>OpenCL</code>)</li>
-      </ul>
-    </li>
-   </ul>
+   <h2>Theano : Lasagne</h2>
+   <p>Thin 'NN' layer on top of regular Theano</p>
+   <pre><code data-trim contenteditable>
+l_in = lasagne.layers.InputLayer(
+    shape=(batch_size, 1, input_width, input_height) )
+    
+l_conv2 = cuda_convnet.Conv2DCCLayer( l_in,
+    num_filters=32, filter_size=(5, 5),
+    nonlinearity=lasagne.nonlinearities.rectify )
+    
+l_pool2 = cuda_convnet.MaxPool2DCCLayer( l_conv2, ds=(2, 2))
+
+l_hidden = lasagne.layers.DenseLayer( l_pool2, num_units=256,
+    nonlinearity=lasagne.nonlinearities.rectify )
+
+l_dropout = lasagne.layers.DropoutLayer(l_hidden, p=0.5)
+
+l_out = lasagne.layers.DenseLayer( l_dropout, num_units=output_dim,
+    nonlinearity=lasagne.nonlinearities.softmax )
+   </code></pre>
   </section>
 
 
