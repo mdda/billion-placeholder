@@ -113,59 +113,48 @@ End
 
 
 
-
-
-
-<section>
- <h2>Motivation</h2>
- <ul class="fix-spacing">
-  <li>My focus : Machine Learning</li>
-  <li>Recent presentation from Google covered a lot :</li>
-  <li style="list-style-type:none">
-    <ul>
-      <li><a target="_blank" href="http://static.googleusercontent.com/media/research.google.com/en/us/people/jeff/CIKM-keynote-Nov2014.pdf">Large Scale Deep Learning</a></li>
-      <li>Jeff Dean, Google</li>
-    </ul>
-  </li>
-  <li>There's a good JS implementation : </li>
-  <li style="list-style-type:none">
-    <ul>
-      <li><a target="_blank" href="https://github.com/karpathy/convnetjs">ConvnetJS</a> by Andrej Karpathy at Stanford</li>
-      <li>.. complete with a <a target="_blank" href="http://cs.stanford.edu/people/karpathy/convnetjs/">beautiful website</a></li>
-      <li>I did some code optimizing</li>
-    </ul>
-  </li>
- </ul>
-</section>
-
 <section>
   <section>
-   <h2>Current Applications</h2>
+   <h2>Background</h2>
    <ul class="fix-spacing">
-    <li>"Deep Learning" is a hot topic</li>
-    <li>Not just research : currently being used</li>
+    <li>Finance / Startups / Machine Learning</li>
+    <li>Moved to Singapore in Sep-2013</li>
+    <li>The past year = 'fun' :</li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Machine Learning Reading : Deep Learning, NLP</li>
+        <li>Languages : Python, Go, Scala, NodeJS, Haskell, Python</li>
+        <li>"MeetUp Pro" / Novice Kaggler</li>
+      </ul>
+    </li>
    </ul>
   </section>
-
   <section>
-   <h2>House Numbers</h2>
-   <p>Google Street-View (and ReCaptchas)</p>
-   <img width="598" height="400" src="img/house-numbers_598x400.png" alt="House Numbers" xstyle="border:none;box-shadow:none">
-  </section>
-
-  <section>
-   <h2>Speech Recognition</h2>
-   <p>In Android phones now (since Jellybean, 2012)</p>
-   <img width="444" height="360" src="img/speech_444x360.png" alt="Speech Recognition" xstyle="border:none;box-shadow:none">
-   <p>Trained in &lt;5 days on 800 machine cluster</p>
-  </section>
-
-  <section>
-   <h2>Auto-Labelling</h2>
-   <p>Part of Google+</p>
-   <img width="713" height="360" src="img/auto-label_713x360.png" alt="Auto-Label" xstyle="border:none;box-shadow:none">
+   <h2>Motivation</h2>
+   <ul class="fix-spacing">
+    <li>Goals :</li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Do some real-world-scale NLP</li>
+        <li>Use Theano</li>
+        <li>Improve Theano (OpenCL)</li>
+      </ul>
+    </li>
+    <li>Magic Solution : Kaggle Competition</li>
+   </ul>
   </section>
 </section>
+
+<section>
+  <section>
+   <h2>1Bn Word Imputation</h2>
+   <h3>Kaggle Competition</h3>
+   <a href="http://www.kaggle.com/c/billion-word-imputation" target=_blank>
+     <img width="800" height="284" src="img/KaggleScreenshot_800x284.png" alt="Kaggle Screenshot">
+   </a>
+  </section>
+</section>
+
 
 <section>
   <section>
@@ -177,214 +166,6 @@ End
    <img width="700" height="131" src="img/img-to-cat_700x131.png" alt="Image to Cat" style="border:none;box-shadow:none">
    <p>Supervised; Unsupervised; and Reinforcement Learning</p>
   </section>
-
-  <section>
-   <h2>Single "Neuron"</h2>
-   <p>Different weights compute different functions</p>
-   <img width="602" height="381" src="img/one-neuron_602x381.png" alt="One Neuron" style="border:none;box-shadow:none">
-  </section>
-
-  <section>
-   <h2>Multi-Layer</h2>
-   <p>Layers of neurons combine and <br/>can form more complex functions</p>
-   <img width="356" height="324" src="img/multi-layer_356x324.png" alt="Multi-Layer" style="border:none;box-shadow:none">
-  </section>
-
-  <section>
-   <h2>Supervised Learning</h2>
-   <ul class="fix-spacing">
-    <li><strong>while</strong> not done :</li>
-    <li style="list-style-type:none">
-      <ul>
-        <li>Pick a random training case (<code>x</code> &rarr; <code>target_y</code>)</li>
-        <li>Evaluate <code>output_y</code> from the <code>x</code></li>
-        <li>Modify the weights so that <code>output_y</code> is closer to <code>target_y</code> for that <code>x</code></li>
-      </ul>
-    </li>
-   </ul>
-  </section>
-
-  <section>
-   <h2>Gradient Descent</h2>
-   <p>Follow the gradient of the error <br />w.r.t the connection weights</p>
-   <img width="364" height="306" src="img/gradient-descent_364x306.png" alt="Gradient-Descent" style="border:none;box-shadow:none">
-  </section>
-  
-  <section>
-   <h2>10 Step Program</h2>
-   <p>Real neurons aren't particularly fast...</p>
-   <img width="648" height="360" src="img/10-steps_648x360.png" alt="10 Steps max" style="border:none;box-shadow:none">
-  </section>
-</section>
-
-<section>
- <h2>ConvnetJS</h2>
- <ul class="fix-spacing">
-  <li>Clean code on <a href="https://github.com/karpathy/convnetjs" target="_blank">karpathy's GitHub</a></li>
-  <li>And an excellent <a href="http://cs.stanford.edu/people/karpathy/convnetjs/" target="_blank">demo site</a> :</li>
-  <li style="list-style-type:none">
-    <ul>
-      <li>Sample <i>LIVE</i> demos</li>
-      <li>Background Reading</li>
-      <li>Documentation</li>
-    </ul>
-  </li>
-  <li>MNIST description (and 10secs of demo!)</li>
- </ul>
-</section>
-
-<section>
-  <section>
-   <h2>Some more Details</h2>
-   <img width="602" height="400" src="img/convolutions_602x400.png" alt="Convolution" style="border:none;box-shadow:none">
-  </section>
-
-  <section>
-   <h2>Other 'tricks'</h2>
-   <ol class="fix-spacing">
-    <li>Use LOTS of real data</li>
-    <li>'Create' data : </li>
-    <li style="list-style-type:none">
-      <ul>
-        <li>Change the data in ways that have no visual effect</li>
-        <li>Ask the Internet to label images for you</li>
-      </ul>
-    </li>
-    <li value="3">Clusters, GPUs, clusters-of-GPUs</li>
-   </ol>
-  </section>
-</section>
-
-<section>
-  <section>
-   <h2>ConvnetJS efficiency</h2>
-   <ul class="fix-spacing">
-    <li>Matrix multiplies are a big part of ConvNets</li>
-    <li>Straight JS does more house-keeping than necessary</li>
-    <li>Possible to optimize in several ways</li>
-   </ul>
-  </section>
-  
-  <section>
-   <h2>Precompute stuff</h2>
-   <p>Avoid unnecessary object manipulation</p>
-   <pre><code data-trim contenteditable>
-- if(oy&gt;=0 && oy&lt;V.sy && ox&gt;=0 && ox&lt;V.sx) {
-  
-+ if(oy&gt;=0 && oy&lt;V_sy && ox&gt;=0 && ox&lt;V_sx) {  
-   </code></pre>
-  </section>
-  
-  <section>
-   <h2>Type Hinting</h2>
-   <p>This is an idea from asm.js</p>
-   <pre><code data-trim contenteditable>
-- var A = new Vol(this.out_sx, this.out_sy, this.out_depth, 0.0);
-
-+ var A = new Vol(this.out_sx |0, this.out_sy |0, this.out_depth |0, 0.0);
-+
-+ var V_sx = V.sx |0;
-+ var V_sy = V.sy |0;
-+ var xy_stride = this.stride |0;  
-   </code></pre>
-  </section>
-  
-  <section>
-   <h2>Index Shuffling</h2>
-   <ul class="fix-spacing">
-    <li>Get the data to fit into on-chip caches</li>
-    <li>And move code out of loops if possible</li>
-   </ul>
-   <pre><code data-trim contenteditable>
-- for(var fx=0;fx&lt;f.sx;fx++) {
--   for(var fy=0;fy&lt;f.sy;fy++) {
--     for(var fd=0;fd&lt;f.depth;fd++) {
--       var oy = y+fy; // coordinates in the original input array coordinates
--       var ox = x+fx;
-
-+ for(var fy=0;fy&lt;f.sy;fy++) {
-+   var oy = y+fy; // coordinates in the original input array coordinates
-+   for(var fx=0;fx&lt;f.sx;fx++) {
-+     var ox = x+fx;
-+     for(var fd=0;fd&lt;f.depth;fd++) {
-  
-        a += f.w[((f.sx * fy)+fx)*f.depth+fd] * V.w[((V_sx * oy)+ox)*V.depth+fd];
-   </code></pre>
-  </section>
-  
-  <section>
-   <h2>Net Result</h2>
-   <ul class="fix-spacing">
-    <li>Speed-up Factor : <strong>2x</strong></li>
-    <li>NB: No change in functionality</li>
-   </ul>
-  </section>
-</section>
-
-<section>
- <h2>Back to Demo</h2>
- <ul class="fix-spacing">
-  <li>The <a href="http://cs.stanford.edu/people/karpathy/convnetjs/" target="_blank">demo site</a> should now show :</li>
-  <li style="list-style-type:none">
-    <ul>
-      <li>How it actually learns</li>
-      <li>Results of the training</li>
-      <li>How the net is actually 'deeper'</li>
-    </ul>
-  </li>
- </ul>
-</section>
-
-<section>
- <h2>The Frontier</h2>
- <ul class="fix-spacing">
-  <li>ImageNet Competition</li>
-  <li>Natural Language Processing : Word Embedding</li>
-  <li>Other stuff : </li>
-  <li style="list-style-type:none">
-    <ul>
-      <li>Reinforcement Learning (DeepMind ~ Atari)</li>
-      <li>Images and Words</li>
-    </ul>
-  </li>
- </ul>
-</section>
-
-<section>
-  <section>
-   <h2>ImageNet Competition</h2>
-   <p>Typical images</p>
-   <img width="511" height="380" src="img/imagenet_511x380.png" alt="ImageNet" style="border:none;box-shadow:none">
-  </section>
-  
-  <section>
-   <h2>Deep ConvNet</h2>
-   <ul class="fix-spacing">
-    <li>Google won 2014 ImageNet</li>
-    <li>24 layer deep network</li>
-    <li>6.66% Top-5 error rate</li>
-   </ul>
-   <img width="698" height="217" src="img/google-imagenet_698x217.png" alt="Google ImageNet" style="border:none;box-shadow:none">
-  </section>
-  
-  <section>
-   <h2>Good Classification</h2>
-   <img width="656" height="360" src="img/flowers_656x360.png" alt="ImageNet Flowers" style="border:none;box-shadow:none">
-   <p>"hibiscus" vs. "dahlia"</p>
-  </section>
-  <section>
-   <h2>Good Generalization</h2>
-   <p>Both recognized as 'Meal'</p>
-   <img width="800" height="268" src="img/meal_800x268.png" alt="ImageNet Meal" style="border:none;box-shadow:none">
-  </section>
-  <section>
-   <h2>Surprising</h2>
-   <img width="386" height="380" src="img/yoda_386x380.png" alt="Image Search Yoda" style="border:none;box-shadow:none">
-  </section>
-
-</section>
-
-<section>
   <section>
    <h2>Word Embedding</h2>
    <p>How to handle 'discrete' things like Words?</p>
@@ -419,6 +200,19 @@ End
   <li>Have fun with ConvnetJS ...</li>
  </ul>
 </section>
+
+  <section>
+   <h2>The Future</h2>
+   <ul class="fix-spacing">
+    <li>This coming year = 'serious' :</li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Working for Local Company</li>
+        <li>Sole Focus : NLP (financial documents + relationships)</li>
+      </ul>
+    </li>
+   </ul>
+  </section>
 
 
 <section>
