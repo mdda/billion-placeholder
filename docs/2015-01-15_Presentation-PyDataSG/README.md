@@ -20,7 +20,7 @@ echo `pwd`/reveal.js-2.6.2/presentation.html
 ### nginx configuration 
 
 There's no need to do this, unless you *really* want to host the 
-presentation on a [publicly visible server](RedCatLabs.com/2015-01-15_Presentation-PySG/):
+presentation on a [publicly visible server](RedCatLabs.com/2015-01-15_Presentation-PyDataSG/):
 
 ```
 nginx.conf ::
