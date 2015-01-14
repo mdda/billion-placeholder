@@ -63,11 +63,11 @@ table.table-fix {
 Intro : Motivation
 
 Explain Kaggle competition
-  Training set
-    1Bn word Corpus 
   Test set
     100k sentences each with 1 word missing
     Levenshtein distance (character errors)
+  Training set
+    1Bn word Corpus 
   "State of Play"
     End date
     Lack of entries
@@ -153,15 +153,61 @@ End
      <img width="800" height="284" src="img/KaggleScreenshot_800x284.png" alt="Kaggle Screenshot">
    </a>
   </section>
+  <section>
+   <h2>Test Set</h2>
+   <ul class="fix-spacing">
+    <li>~300k sentences, each with 1 word missing</li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Answer with each sentence filled-in</li>
+      </ul>
+    </li>
+    <li>Scoring : </li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Levenshtein distance = character-based errors</li>
+        <li>Linguistically odd objective function</li>
+      </ul>
+    </li>
+   </ul>
+  </section>
+  <section>
+   <h2>Training Set</h2>
+   <ul class="fix-spacing">
+    <li>1 billion word corpus :</li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>4.1Gb of data</li>
+        <li>30 million sentences</li>
+        <li>Drawn from many different sources</li>
+      </ul>
+    </li>
+    <li>No other knowledge should be used</li>
+   </ul>
+  </section>
+  <section>
+   <h2>Kaggle Status</h2>
+   <ul class="fix-spacing">
+    <li>Competition ends in May-2015</li>
+    <li>But activity has ground to a stop : </li>
+    <li style="list-style-type:none">
+      <ul>
+        <li>Impressive groups with CPU clusters</li>
+        <li>Data size is also a hurdle</li>
+      </ul>
+    </li>
+    <li>Will release 'Getting Started' Code for laptop</li>
+   </ul>
+  </section>
 </section>
 
 
 <section>
   <section>
-   <h2>Basic Approach</h2>
+   <h2>My Basic Approach</h2>
    <ul class="fix-spacing">
-    <li>Same as original Neural Networks in 1980s/1990s</li>
-    <li>Simple mathematical units combine to compute a complex function</li>
+    <li>Find where there's a word missing</li>
+    <li>For that position think up a word</li>
    </ul>
    <img width="700" height="131" src="img/img-to-cat_700x131.png" alt="Image to Cat" style="border:none;box-shadow:none">
    <p>Supervised; Unsupervised; and Reinforcement Learning</p>
