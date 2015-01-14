@@ -85,10 +85,10 @@ Explain Theano
     GPU : CUDA and OpenCL routes
   Simple idea
     Code example  
-  'lasagne' deep learning setup too
-    Code example
   Show updates
     Symbolic differentiation 'for free'
+    Code example
+  'lasagne' deep learning setup too
     Code example
   
 Explain Theano Implementation
@@ -257,11 +257,44 @@ End
    </ul>
   </section>
   <section>
-   <h2>Theano : Example</h2>
-   
-   
-   
-   
+   <h2>Theano : Basic</h2>
+   <p>Function 'built up', then evaluated</p>
+   <pre><code data-trim contenteditable>
+x = T.matrix("x") # Declare Theano symbolic variables
+y = T.vector("y")
+w = theano.shared(rng.randn(feats), name="w")
+b = theano.shared(0., name="b")
+
+# Construct Theano expression graph
+p_1 = 1 / (1 + T.exp(-T.dot(x, w) - b))   # Probability that target = 1
+prediction = p_1 > 0.5                    # The prediction thresholded
+
+predict = theano.function(inputs=[x], outputs=prediction)
+
+print predict( [0.1, .02, ... , -7.4, 3.2] )
+   </code></pre>
+  </section>
+  <section>
+   <h2>Theano : Iterative</h2>
+   <p>Gradients come 'free'</p>
+   <pre><code data-trim contenteditable>
+xent = -y * T.log(p_1) - (1-y) * T.log(1-p_1) # Cross-entropy loss fn
+cost = xent.mean() + 0.01 * (w ** 2).sum()    # Minimize this
+
+gw, gb = T.grad(cost, [w, b])  # Compute the gradient of the cost
+
+train = theano.function( 
+          inputs=[x,y],
+          outputs=[prediction, xent],
+          updates=((w, w - 0.1 * gw), (b, b - 0.1 * gb)))
+
+for i in xrange(training_steps):
+    pred, err = train(data_X, data_y)   
+   </code></pre>
+   <p>Iteration mechanism built-in</p>
+  </section>
+  <section>
+   <h2>Theano : Basic</h2>
    <ul class="fix-spacing">
     <li>Optimised Numerical Computation in Python</li>
     <li>Works in conjunction with <code>numpy</code></li>
