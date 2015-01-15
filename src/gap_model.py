@@ -212,6 +212,7 @@ def create_iter_functions(dataset, output_layer,
     X_batch     = T.imatrix('x')
     
     # See http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
+    # And https://bitbucket.org/kostialopuhin/word-models/src/ba4b00bb03c7eee83b11dc729fd4f6a58ab21fb6/word_embeddings.py?at=default
     vectors = dataset['language']['vectors']
     X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )
     
@@ -280,8 +281,8 @@ def create_iter_functions(dataset, output_layer,
 
 def set_up_complete_model(dataset):
     output_layer = build_model(
-        CONTEXT_LENGTH * dataset['language']['vector_width'],  # input_dim
-        dataset['language']['gaps'].small_limit + 2,           # output_dim
+        processed_input_dim = CONTEXT_LENGTH * dataset['language']['vector_width'], 
+        output_dim = dataset['language']['gaps'].small_limit + 2,
     )
     print("Creating IterFunctions...")
     iter_funcs = create_iter_functions(dataset, output_layer)
@@ -364,3 +365,19 @@ if __name__ == '__main__':
         
     if args.mode == 'test':
         pass
+
+"""
+Test reshape idea for concatinating vectors : 
+>>> import numpy as np
+>>> vocab = np.zeros( (500,33) )
+>>> batch = slice( 0, 10 )
+>>> batch
+slice(0, 10, None)
+>>> x = np.zeros( (1000,2), dtype=np.int )
+>>> x_batch.shape
+(10, 2)
+>>> x_batch = x[batch]
+>>> x_batch_flat_vectors =  vocab[x_batch].reshape( (x_batch.shape[0], -1) )
+>>> x_batch_flat_vectors.shape
+(10, 66)
+"""
