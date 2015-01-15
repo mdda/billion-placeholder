@@ -60,7 +60,7 @@ mkdir -p data/{0-orig,1-holdout,2-glove,3-gaps,4-fill}
 ## This includes a synthetic truth/valid set, using the heldout data
 python src/make_holdout_files.py --input data/0-orig/train_v2.txt \
 								 --train data/1-holdout/train.txt --heldout data/1-holdout/heldout.txt \
-                                 --truth data/1-holdout/truth.txt --valid data/1-holdout/valid.txt 
+                 --truth data/1-holdout/truth.txt --valid data/1-holdout/valid.txt 
 
 ## Test to see what the holdout test sample scores vs its own source data (synthetic data from above)
 python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission data/1-holdout/valid.txt 

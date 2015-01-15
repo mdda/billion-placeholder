@@ -41,7 +41,7 @@ args = parser.parse_args()
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
-BULK_SIZE = 10*1000*1000  # Training Records to read in blocks off disk
+BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
 
 # Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
 #              = (CONTEXT_LENGTH * 4 + 1) * BULK_SIZE
@@ -50,7 +50,7 @@ BULK_SIZE = 10*1000*1000  # Training Records to read in blocks off disk
 ## since the files (for ALL in particular) will get stupidly large
 
 # These are the mini-batches over which SGD takes place
-MINIBATCH_SIZE = 500
+MINIBATCH_SIZE = 256
 
 NUM_HIDDEN_UNITS = 240
 

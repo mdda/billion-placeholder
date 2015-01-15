@@ -34,6 +34,7 @@ for l, line in enumerate(inputfile):
   #print(' '.join(words))
   if l>args.lines: break
 
+billion.util.print_thousands("Line # ", l)
 print("\nDone")
 
 inputfile.close()
