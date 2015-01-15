@@ -120,10 +120,11 @@ python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-
 THEANORC=theano.cuda-sandbox.rc optirun python ...
 
 # Check ReShape() is as expected : see end of gap_model.py
-# Check scale of initial W(,), b() : W=init.Uniform(), b=init.Constant(0.)
+# Check default scale of initial W(,), b() : W=init.Uniform(), b=init.Constant(0.), which is a little odd
 
 # TODO :
-# Check scale of vectors (and scale of initial W(,), b())
+# Check scale of GloVE vectors : N(0, 0.5) at 'top' of vocab, N(0, 0.07) at 'end' of vocab !!! 
+#   See end of gap_model.py - may be a reason to try word2vec, maybe
 
 
 save model to disk 

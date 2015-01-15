@@ -194,6 +194,7 @@ def build_model(processed_input_dim, output_dim,
         #l_hidden1,
         l_in, # Single layer : just for testing
         num_units=output_dim,
+        W=lasagne.init.Normal(std=0.5),
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
     
@@ -226,7 +227,9 @@ def create_iter_functions(dataset, output_layer,
     # c-x = Missing a simple word (take shift into account)
     
     def loss(output):
-        return -T.mean(T.log(output)[T.arange(Y_batch.shape[0]), Y_batch])
+        # This pulls out log(output) at the correct index position for each element of the mini-batch,
+        # and takes the mean
+        return -T.mean(T.log(output)[T.arange(Y_batch.shape[0]), Y_batch])  
 
     loss_train = loss(output_layer.get_output(X_batch_flat_vectors))
     loss_eval  = loss(output_layer.get_output(X_batch_flat_vectors, deterministic=True))
@@ -385,4 +388,46 @@ slice(0, 10, None)
 >>> x_batch_flat_vectors =  vocab[x_batch].reshape( (x_batch.shape[0], -1) )
 >>> x_batch_flat_vectors.shape
 (10, 66)
+"""
+
+
+"""
+>>> import hickle
+>>> d = hickle.load("data/2-glove/1MM_3-vectors.hickle")
+>>> v=d['vectors']
+>>> v.shape
+(82905, 240)
+>>> import numpy as np
+>>> np.mean(v)
+-0.0005894294
+>>> np.std(v)
+0.16272192
+>>> np.std(v[0,:])
+0.54684573
+>>> np.std(v[10000,:])
+0.33092719
+>>> np.std(v[20000,:])
+0.13763601
+>>> np.std(v[70000,:])
+0.080936581
+>>> np.std(v[:,0])
+0.18658806
+>>> np.std(v[:,1])
+0.14074703
+>>> np.std(v[:,123])
+0.13710497
+"""
+
+"""
+>>> import numpy as np
+>>> a = np.array( [ [1,2,3], [4,5,6] ] )
+>>> a
+array([[1, 2, 3],
+       [4, 5, 6]])
+>>> a[ [0,1], [2,0] ]
+array([3, 4])
+>>> a[ [0,1], [2,1] ]
+array([3, 5])
+>>> a[ [1,1], [2,1] ]
+array([6, 5])
 """
