@@ -30,30 +30,25 @@ class Gaps(object):
       if vocab_indices[i] is None or vocab_indices[i+1] is None or vocab_indices[i+2] is None:
         continue
         
-      # Middle word missing
+      # Middle word missing :: So ans>0
       x = [ vocab_indices[i], vocab_indices[i+2] ]
         
-      #missing_word = words[i+1]
-      #a=0
-      #if missing_word in missing_ones:
-      #  a = self.missing_ones.index(missing_word)
-      
       # Pick out small words for 'easy' identification
       missing = vocab_indices[i+1]
-      a = (missing+2) if missing<self.small_limit else 1
+      ans = (missing+2) if missing<self.small_limit else 1
       
-      # So, a==1 if this is a 'complex' word
-      # small_limit+2>a>1 if this is a 'simple' word
-      # i.e. a>0  => there is some word missing
-      #      a==0 => no word missing
+      # So, ans==1 if this is a 'complex' word
+      # small_limit+2>ans>1 if this is a 'simple' word
+      # i.e. ans>0  => there is some word missing
+      #      ans==0 => no word missing
       
-      yield (x, a)
+      yield (x, ans)
     
     for i in range(len(words)-1):
       if vocab_indices[i] is None or vocab_indices[i+1] is None:
         continue
         
-      # Word not missing
+      # Word not missing :: So ans==0
       x = [ vocab_indices[i], vocab_indices[i+1] ]
       
       yield (x, 0)
