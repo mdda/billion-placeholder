@@ -65,6 +65,7 @@ def load_language(vocab, vectors, small):
     vectors = theano.shared(lasagne.utils.floatX(d['vectors']))
     
     print("  Vectors.nbytes \t= \t", billion.util.comma_000(d['vectors'].nbytes))
+    print("  Vectors.shape  \t= \t", d['vectors'].shape)   # (vocab.size, embedding.size)
     
     return dict(
       vectors = vectors,
@@ -151,7 +152,7 @@ def load_validation_set(valid, gaps):  # Will load all
 	)
 
 
-def build_model(input_dim, output_dim,
+def build_model(processed_input_dim, output_dim,
                 batch_size=MINIBATCH_SIZE, 
                 num_hidden_units=NUM_HIDDEN_UNITS):
 
@@ -163,7 +164,7 @@ def build_model(input_dim, output_dim,
     # processed_input_dim = CONTEXT_LENGTH * language['vector_width'] # of floatX
 
     l_in = lasagne.layers.InputLayer(
-        shape=(batch_size, input_dim),
+        shape=(batch_size, processed_input_dim),
 	)
     
     l_hidden1 = lasagne.layers.DenseLayer(
@@ -185,6 +186,7 @@ def build_model(input_dim, output_dim,
             l_hidden2,
             p=0.5,
         )
+        
     l_out = lasagne.layers.DenseLayer(
         #l_hidden2_dropout,
         l_hidden1,
@@ -204,11 +206,10 @@ def build_model(input_dim, output_dim,
 
 
 def create_iter_functions(dataset, output_layer,
-                          X_tensor_type=T.imatrix,
                           batch_size=MINIBATCH_SIZE
                          ):
     batch_index = T.iscalar('batch_index')
-    X_batch = X_tensor_type('x')
+    X_batch     = T.imatrix('x')
     
     # See http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
     vectors = dataset['language']['vectors']
