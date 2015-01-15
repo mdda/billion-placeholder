@@ -85,14 +85,14 @@ python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission data
 # 0.0457 -> 0.0123 in 12:45m (holland), 25m (laptop) - 61MM contexts(?), 83k vocab
 ./src/corpus-glove.sh 1MM 
 
-# 0.0287 -> 0.0083 in 3h45m (holland, HD) hm (holland, SSD) 768MM words, 2.14MM unique words, vocab(>=5)=511k words
+# 0.0287 -> 0.0083 in 3h45m (holland, HD) 3h42m (holland, SSD) 768MM words, 2.14MM unique words, vocab(>=5)=511k words
 # "TRAINING MODEL" stage (only) uses all cores of machine
 ./src/corpus-glove.sh ALL
 
 
 ## Move pre-computed vectors back to laptop
-rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_1-vocab.txt data/2-glove/
-rsync -avz --progress andrewsm@holland.herald:~/sketchpad/kaggle/1-billion-words/data/2-glove/ALL_3-vectors.txt data/2-glove/
+rsync -avz --progress andrewsm@holland.herald:~/OpenSource/1-billion-words/data/2-glove/ALL_1-vocab.txt data/2-glove/
+rsync -avz --progress andrewsm@holland.herald:~/OpenSource/1-billion-words/data/2-glove/ALL_3-vectors.txt data/2-glove/
 
 python src/glove_to_hickle.py --input data/2-glove/1MM_3-vectors.txt \
                               --output data/2-glove/1MM_3-vectors.hickle --size 240
