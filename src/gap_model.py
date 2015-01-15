@@ -214,7 +214,9 @@ def create_iter_functions(dataset, output_layer,
     # See http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-function
     # And https://bitbucket.org/kostialopuhin/word-models/src/ba4b00bb03c7eee83b11dc729fd4f6a58ab21fb6/word_embeddings.py?at=default
     vectors = dataset['language']['vectors']
-    X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )
+    
+    #X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], -1) )  # next line is more explicit, for safety
+    X_batch_flat_vectors =  vectors[X_batch].reshape( (X_batch.shape[0], vectors.shape[1]*X_batch.shape[1] ) )
     
     #Y_batch = T.ivector('y') 
     Y_batch = T.bvector('y') # This is smaller...

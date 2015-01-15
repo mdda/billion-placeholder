@@ -1,0 +1,9 @@
+See LICENSE.txt file in root directory of repo
+
+EXCEPT FOR : 
+
+'redcatlabs_logo1_280x39.png'
+  : which is a Logo of RedCatLabs (owned by Cambridge Business Solutions Pte Ltd, based in Singapore).  
+  : and may be copied with this distribution, but not altered, or used
+  : except as part of this presentation. 
+
