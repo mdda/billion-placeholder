@@ -120,10 +120,11 @@ python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-
 THEANORC=theano.cuda-sandbox.rc optirun python ...
 
 # Check ReShape() is as expected : see end of gap_model.py
+# Check scale of initial W(,), b() : W=init.Uniform(), b=init.Constant(0.)
 
 # TODO :
+# Check scale of vectors (and scale of initial W(,), b())
 
-Check scale of vectors (and scale of initial W(,), b())
 
 save model to disk 
 

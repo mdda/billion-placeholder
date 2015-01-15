@@ -167,11 +167,13 @@ def build_model(processed_input_dim, output_dim,
         shape=(batch_size, processed_input_dim),
 	)
     
-    l_hidden1 = lasagne.layers.DenseLayer(
-        l_in,
-        num_units=num_hidden_units,
-		nonlinearity=lasagne.nonlinearities.rectify,
-	)
+    if False:
+        l_hidden1 = lasagne.layers.DenseLayer(
+            l_in,
+            num_units=num_hidden_units,
+            nonlinearity=lasagne.nonlinearities.rectify,
+        )
+    
     if False:
         l_hidden1_dropout = lasagne.layers.DropoutLayer(
             l_hidden1,
@@ -189,7 +191,8 @@ def build_model(processed_input_dim, output_dim,
         
     l_out = lasagne.layers.DenseLayer(
         #l_hidden2_dropout,
-        l_hidden1,
+        #l_hidden1,
+        l_in, # Single layer : just for testing
         num_units=output_dim,
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
