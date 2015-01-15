@@ -194,14 +194,7 @@ def build_model(processed_input_dim, output_dim,
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
     
-    # Perhaps this need a different output layer
-    # a = NotMissing
-    # b = Missing (complex + simple)
-    # c-x = Missing a simple word (take shift into account)
-    
-    # But this (for the first runs) easy to model as a soft-max thing 
-    # from 0=(nogap), 1=(complex), 2..(small_limit+2)=small-word
-    
+    # This output layer is a 1+1+32 dimensional vector (softmax'd each element)
     return l_out
 
 
@@ -224,12 +217,19 @@ def create_iter_functions(dataset, output_layer,
         batch_index * batch_size, (batch_index + 1) * batch_size
     )
 
+    # Output layer vector position assignment :
+    # a = NotMissing
+    # b = Missing (complex)
+    # c-x = Missing a simple word (take shift into account)
+    
     def loss(output):
         return -T.mean(T.log(output)[T.arange(Y_batch.shape[0]), Y_batch])
 
     loss_train = loss(output_layer.get_output(X_batch_flat_vectors))
     loss_eval  = loss(output_layer.get_output(X_batch_flat_vectors, deterministic=True))
 
+    # But this (for the first runs) easy to model as a soft-max thing 
+    # from 0=(nogap), 1=(complex), 2..(small_limit+2)=small-word
     pred = T.argmax(
         output_layer.get_output(X_batch_flat_vectors, deterministic=True), axis=1
     )
