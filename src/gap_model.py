@@ -194,7 +194,7 @@ def build_model(processed_input_dim, output_dim,
         #l_hidden1,
         l_in, # Single layer : just for testing
         num_units=output_dim,
-        W=lasagne.init.Normal(std=0.5),
+        #W=lasagne.init.Normal(std=0.5),
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
     
@@ -239,7 +239,7 @@ def create_iter_functions(dataset, output_layer,
     pred = T.argmax(
         output_layer.get_output(X_batch_flat_vectors, deterministic=True), axis=1
     )
-    accuracy = T.mean(T.eq(pred, Y_batch))
+    accuracy = T.mean(T.eq(pred, Y_batch), dtype=theano.config.float32)  # Would otherwise use float64
 
     all_params = lasagne.layers.get_all_params(output_layer)
     
