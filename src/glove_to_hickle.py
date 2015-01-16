@@ -24,11 +24,37 @@ for line in inputfile:
 	vector_py.append(arr)
 	#break
 
-#See : http://stackoverflow.com/questions/22392497/how-to-add-a-new-row-to-an-empty-numpy-array
+# See : http://stackoverflow.com/questions/22392497/how-to-add-a-new-row-to-an-empty-numpy-array
 vectors = np.asarray(vector_py, dtype=np.float32)
 
+# See : http://stackoverflow.com/questions/2850743/numpy-how-to-quickly-normalize-many-vectors
+norm = np.std(vectors, axis=1)
+
 to_hickle = dict(
-  vectors = vectors,
+  # vectors = vectors,  # This has scale problem for less frequent words...
+  vectors = vectors / norm[..., np.newaxis],  # Normalise it away
 )
 hickle.dump(to_hickle, args.output, mode='w', compression='gzip')
 
+"""
+>>> import hickle
+>>> d = hickle.load("data/2-glove/1MM_3-vectors.hickle")
+>>> v=d['vectors']
+>>> v.shape
+(82905, 240)
+>>> import numpy as np
+>>> np.mean(v)
+-0.0005894294
+>>> np.std(v)
+0.16272192
+>>> st = np.std(v, axis=1)
+>>> st # This is a problem
+array([ 0.54684573,  0.57480294,  0.56632203, ...,  0.10306011,
+        0.08285667,  0.07928564], dtype=float32)
+>>> v2 = v / st[... , np.newaxis]
+>>> st2 = np.std(v2, axis=1)
+>>> st2 # Problem solved
+array([ 1.        ,  0.99999994,  0.99999994, ...,  1.        ,
+        1.        ,  0.99999994], dtype=float32)
+
+"""
