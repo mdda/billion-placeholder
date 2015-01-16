@@ -239,7 +239,7 @@ def create_iter_functions(dataset, output_layer,
     pred = T.argmax(
         output_layer.get_output(X_batch_flat_vectors, deterministic=True), axis=1
     )
-    accuracy = T.mean(T.eq(pred, Y_batch), dtype=theano.config.float32)  # Would otherwise use float64
+    accuracy = T.mean(T.eq(pred, Y_batch), dtype=theano.config.floatX)  # Would otherwise use float64
 
     all_params = lasagne.layers.get_all_params(output_layer)
     
