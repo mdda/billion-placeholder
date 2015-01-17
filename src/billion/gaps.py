@@ -27,12 +27,18 @@ class Gaps(object):
     #print "Words in Line : %d" % (len(words),)
     
     for i in range(len(words)-2):
-      if vocab_indices[i] is None or vocab_indices[i+1] is None or vocab_indices[i+2] is None:
-        continue
+      #if vocab_indices[i] is None or vocab_indices[i+1] is None or vocab_indices[i+2] is None:
+      #  continue
         
       # Middle word missing :: So ans>0
       x = [ vocab_indices[i], vocab_indices[i+2] ]
+      
+      # This may loop around to end/beginning of sentence...
+      #x = [ vocal_indices[i-1], vocab_indices[i], vocab_indices[i+2], vocab_indices[i+3] ]
         
+      if None in x: 
+        continue
+      
       # Pick out small words for 'easy' identification
       missing = vocab_indices[i+1]
       ans = (missing+2) if missing<self.small_limit else 1
@@ -45,12 +51,18 @@ class Gaps(object):
       yield (x, ans)
     
     for i in range(len(words)-1):
-      if vocab_indices[i] is None or vocab_indices[i+1] is None:
-        continue
+      #if vocab_indices[i] is None or vocab_indices[i+1] is None:
+      #  continue
         
       # Word not missing :: So ans==0
       x = [ vocab_indices[i], vocab_indices[i+1] ]
       
+      # This may loop around to end/beginning of sentence...
+      #x = [ vocab_indices[i-1], vocab_indices[i], vocab_indices[i+1], vocab_indices[i+2] ]
+      
+      if None in x: 
+        continue
+        
       yield (x, 0)
 
 """
