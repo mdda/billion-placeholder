@@ -108,8 +108,15 @@ python src/glove_to_hickle.py --input data/2-glove/ALL_3-vectors.txt \
 ##python src/make_gaps_training.py --input data/2-glove/1MM_4-heldout.txt --vocab data/2-glove/1MM_1-vocab.txt \
 ##                                 --output data/3-gaps/1MM_valid.txt --small 32
 
-# Invocation intended...
+# Invocation intended...  (using 1MM throughout)
 python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
+						  --mode train \
+						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
+						  --save data/3-gaps/1MM_model.hickle \
+              --epochs 2
+
+# Use 'ALL' vector dictionary
+python src/gap_model.py   --vocab data/2-glove/ALL_1-vocab.txt --vectors data/2-glove/ALL_3-vectors.hickle --small 32 \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
 						  --save data/3-gaps/1MM_model.hickle
