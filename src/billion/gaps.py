@@ -42,6 +42,7 @@ class Gaps(object):
       # Pick out small words for 'easy' identification
       missing = vocab_indices[i+1]
       if missing is None: 
+        #print "Missing : ", words[i+1] # Check that these are 'very infrequent'
         continue
         
       ans = (missing+2) if missing<self.small_limit else 1
