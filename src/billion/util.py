@@ -46,6 +46,10 @@ def load_vocab(filename):
   for i,line in enumerate(f):
     w = line.split()[0] 
     v[w] = i
+    
+    #if i>=82905: break
+    #if i>82900: break
+    
   f.close()
   
   return v
