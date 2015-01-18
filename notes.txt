@@ -119,7 +119,9 @@ python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-
 python src/gap_model.py   --vocab data/2-glove/ALL_1-vocab.txt --vectors data/2-glove/ALL_3-vectors.hickle --small 32 \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
-						  --save data/3-gaps/1MM_model.hickle
+						  --save data/3-gaps/1MM_model.hickle \
+              --epochs 2
+
 
 ## To run on GPU/old-CUDA (benchmark speedup 464 vs 1175, ie: 2.5x faster than CPU)
 ## Prepend :
