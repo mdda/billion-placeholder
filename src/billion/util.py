@@ -48,7 +48,7 @@ def load_vocab(filename):
     v[w] = i
     
     #if i>=82905: break
-    #if i>82900: break
+    if i>82900: break
     
   f.close()
   

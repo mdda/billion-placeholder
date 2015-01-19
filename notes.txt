@@ -132,7 +132,17 @@ THEANORC=theano.cuda-sandbox.rc optirun python ...
 
 # TODO :
 # Check scale of GloVE vectors : N(0, 0.5) at 'top' of vocab, N(0, 0.07) at 'end' of vocab !!! 
+Normalize to being N(.,1) throughout
 #   See end of gap_model.py - may be a reason to try word2vec, maybe
+
+# Training errors tell a very odd story...
+# 1MM vocab gives better results (1 epoch = 63.2%), than ALL vocab (1 epoch = 56.37%)
+# Even if ALL vocab is truncated to same length (1 epoch = 55.5%)
+# Tried 1MM vocab with different seeds too : No change in good result
+
+#Are both vector files normalized? == NO.  Run normalization on 'ALL' too (and limit to 82k vocab)
+
+Is the vocab in a different order? 
 
 
 save model to disk 
