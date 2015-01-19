@@ -18,6 +18,8 @@ warnings.simplefilter("error", RuntimeWarning)
 import billion
 import hickle 
 
+import random
+
 parser = argparse.ArgumentParser(description='Converts corpus to "gaps training data"')
 parser.add_argument('-m','--mode',  help='{train|test}', required=True)
 
@@ -160,6 +162,8 @@ def build_model(processed_input_dim, output_dim,
     # Need to understand InputLayer structure 
     # (how does l_out keep a reference to it? = This is tracked through whole network)
     # And then need to take out [int32] and convert it into concatinated embedding vectors
+
+    random.seed(1234)
     
     # input_dim = CONTEXT_LENGTH # of int32
     # processed_input_dim = CONTEXT_LENGTH * language['vector_width'] # of floatX
