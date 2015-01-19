@@ -140,7 +140,10 @@ Normalize to being N(.,1) throughout
 # Even if ALL vocab is truncated to same length (1 epoch = 55.5%)
 # Tried 1MM vocab with different seeds too : No change in good result
 
-#Are both vector files normalized? == NO.  Run normalization on 'ALL' too (and limit to 82k vocab)
+# Are both vector files normalized? == NO.  Run normalization on 'ALL' too (and limit to 82k vocab)
+#   But that moves 1 epoch to 51.4% !
+# Rerun with no vocab cap : 59.6%
+
 
 Is the vocab in a different order? 
 
