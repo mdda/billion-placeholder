@@ -146,6 +146,9 @@ Normalize to being N(.,1) throughout
 
 
 Is the vocab in a different order? 
+# 1MM vocab and vectors confirmed to be in same order (=#occurrences, then alphabetic)
+ALL vocab and vectors = same?
+
 
 
 save model to disk 
