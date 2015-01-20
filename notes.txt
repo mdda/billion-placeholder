@@ -145,9 +145,9 @@ Normalize to being N(.,1) throughout
 # Rerun with no vocab cap : 59.6%
 
 
-Is the vocab in a different order? 
+# Is the vocab in a different order? 
 # 1MM vocab and vectors confirmed to be in same order (=#occurrences, then alphabetic)
-ALL vocab and vectors = same?
+# ALL vocab and vectors = same? :: Unfortunately, yes.  @82000, #occurrences = 133
 
 
 
