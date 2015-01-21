@@ -149,6 +149,11 @@ Normalize to being N(.,1) throughout
 # 1MM vocab and vectors confirmed to be in same order (=#occurrences, then alphabetic)
 # ALL vocab and vectors = same? :: Unfortunately, yes.  @82000, #occurrences = 133
 
+## Why is this?  Ideas:  1MM vocab is precisely what is needed for 1MM training set
+##    But : the results apply to validation set too - where vocab is not pre-selected
+##    Also : ALL-vocab should be 'better defined', but truncating it is (CHECK) worse, not better
+##    As expected, normalisation helps.
+
 
 
 save model to disk 
