@@ -150,10 +150,11 @@ run             seed   epoch1   N  epochN
 1MM norm        1234   63.20    2  64.40
 1MM norm retry         63.31    2  64.31
 
-ALL raw uncap          56.37   10  62.09
+ALL raw  uncap         56.37   10  62.09
 ALL norm uncap  1234   59.59    2  61.60
+ALL norm uncap  1234   59.02   10  64.93
 
-ALL raw limit          55.48    2  55.49
+ALL raw  limit         55.48    2  55.49
 ALL norm limit  1234   51.37    2  51.38
 
 
