@@ -144,10 +144,24 @@ Normalize to being N(.,1) throughout
 #   But that moves 1 epoch to 51.4% !
 # Rerun with no vocab cap : 59.6%
 
+run             seed   epoch1   N  epochN
+1MM norm               63.15    2  64.44
+1MM norm        123    63.20    2  64.41
+1MM norm        1234   63.20    2  64.40
+1MM norm retry         63.31    2  64.31
+
+ALL raw uncap          56.37   10  62.09
+ALL norm uncap  1234   59.59    2  61.60
+
+ALL raw limit          55.48    2  55.49
+ALL norm limit  1234   51.37    2  51.38
+
 
 # Is the vocab in a different order? 
 # 1MM vocab and vectors confirmed to be in same order (=#occurrences, then alphabetic)
 # ALL vocab and vectors = same? :: Unfortunately, yes.  @82000, #occurrences = 133
+
+
 
 ## Why is this?  Ideas:  1MM vocab is precisely what is needed for 1MM training set
 ##    But : the results apply to validation set too - where vocab is not pre-selected
