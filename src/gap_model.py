@@ -64,7 +64,7 @@ CONTEXT_LENGTH = 2
 def load_language(vocab, vectors, small):
     print("Vectors file = %s" % (vectors,))
     d = hickle.load(vectors)
-    vectors_np = d['vectors'] #[:82905,:]
+    vectors_np = d['vectors'][:82905,:]
     vectors = theano.shared(lasagne.utils.floatX(vectors_np))
     
     print("  Vectors.nbytes \t= \t", billion.util.comma_000(vectors_np.nbytes))
