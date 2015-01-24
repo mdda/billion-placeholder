@@ -163,7 +163,7 @@ def build_model(processed_input_dim, output_dim,
     # (how does l_out keep a reference to it? = This is tracked through whole network)
     # And then need to take out [int32] and convert it into concatinated embedding vectors
 
-    random.seed(1234)
+    random.seed(1235)
     
     # input_dim = CONTEXT_LENGTH # of int32
     # processed_input_dim = CONTEXT_LENGTH * language['vector_width'] # of floatX
@@ -199,7 +199,7 @@ def build_model(processed_input_dim, output_dim,
         l_hidden1,
         #l_in, # Single layer : just for testing
         num_units=output_dim,
-        W=lasagne.init.Normal(std=0.1),
+        W=lasagne.init.Normal(std=0.1*3),
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
     

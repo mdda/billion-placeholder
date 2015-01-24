@@ -157,9 +157,13 @@ ALL norm uncap  1234   59.02   10  64.93
 # ^^  Normalization helps uncapped 'ALL' by 2-3%
 
 ALL raw  limit         55.48    2  55.49
-ALL norm limit  123    51.37    2  51.38
 ALL norm limit  1234   51.37    2  53.93
+ALL norm limit  123    51.37    2  51.38
+ALL norm limit  1235   51.37    2  51.38 # identical!  init: 0.1 (unch)
 # ^^ Normalizing the ALL vocab (when truncated) HURTS performance = Puzzling
+
+ALL norm limit  1235   51.37    2  51.37 # init : 0.1*0.1
+
 
 
 # Is the vocab in a different order? 
