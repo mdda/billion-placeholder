@@ -162,7 +162,10 @@ ALL norm limit  123    51.37    2  51.38
 ALL norm limit  1235   51.37    2  51.38 # identical!  init: 0.1 (unch)
 # ^^ Normalizing the ALL vocab (when truncated) HURTS performance = Puzzling
 
-ALL norm limit  1235   51.37    2  51.37 # init : 0.1*0.1
+ALL norm limit  1235   51.37    2  51.37 # init : hidden:0.1, output:0.1*0.1
+ALL norm limit  1235   51.36    2  54.88 # init : hidden:0.1, output:0.1*3
+ALL norm limit  1235   51.38    2  54.82 # init : hidden:0.1*3, output:0.1*3
+ALL norm limit  1235   51.37    2  55.02 # init : hidden:0.1*3, output:0.1*9
 
 
 
