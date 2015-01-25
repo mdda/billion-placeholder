@@ -175,7 +175,7 @@ def build_model(processed_input_dim, output_dim,
     l_hidden1 = lasagne.layers.DenseLayer(
         l_in,
         num_units=num_hidden_units,
-        W=lasagne.init.Normal(std=0.1*9),
+        W=lasagne.init.Normal(std=0.3*9),
         nonlinearity=lasagne.nonlinearities.rectify,
     )
     
