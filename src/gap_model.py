@@ -16,7 +16,9 @@ import warnings
 warnings.simplefilter("error", RuntimeWarning)
 
 import billion
+
 import hickle 
+import pickle
 
 import random
 
@@ -379,14 +381,18 @@ if __name__ == '__main__':
         model = set_up_complete_model(dataset)
         
         if args.load:
-            params = hickle.load(args.load)
+            #params = hickle.load(args.load)
+            with open(args.load, 'rb') as f:
+                params = pickle.load(f)
             lasagne.layers.set_all_param_values(model['output_layer'], params)
             
         train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs)
         
         if args.save:
             params = lasagne.layers.get_all_param_values(model['output_layer'])
-            hickle.dump(params, args.save, mode='w', compression='gzip')
+            #hickle.dump(params, args.save, mode='w', compression='gzip')
+            with open(args.save, 'wb') as f:
+                pickle.dump(params, f, -1)
         
     if args.mode == 'test':
         pass
