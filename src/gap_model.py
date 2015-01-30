@@ -43,7 +43,8 @@ args = parser.parse_args()
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
-BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
+#BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
+BULK_SIZE = 1024  # Training Records to read in blocks off disk
 
 # Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
 #              = (CONTEXT_LENGTH * 4 + 1) * BULK_SIZE
@@ -379,13 +380,13 @@ if __name__ == '__main__':
         
         if args.load:
             params = hickle.load(args.load)
-            lasagne.layers.set_all_param_values(model.output_layer, params)
+            lasagne.layers.set_all_param_values(model['output_layer'], params)
             
         train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs)
         
         if args.save:
-            params = lasagne.layers.get_all_param_values(model.output_layer)
-            hickle.dump(params, args.save)
+            params = lasagne.layers.get_all_param_values(model['output_layer'])
+            hickle.dump(params, args.save, mode='w', compression='gzip')
         
     if args.mode == 'test':
         pass
