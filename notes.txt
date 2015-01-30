@@ -194,6 +194,8 @@ Now retry with 1MM and initialisation as found best above :
 1MM norm +-2    1235   55.70   10  65.35 # init : hidden:0.1*9, output:0.1*9  (and still learning...)
 
 TODO :: 
+Try to enable CPU BLAS to see whether it can be utilized
+
 save model to disk
 load model from disk
 
