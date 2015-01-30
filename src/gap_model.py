@@ -34,8 +34,8 @@ parser.add_argument(     '--epochs', help='Number of Epochs', required=False, de
 parser.add_argument(     '--test',  help='Test text file name', )
 parser.add_argument(     '--output',  help='Submission file name to write', )
 
-parser.add_argument(     '--load',  help='File to load model from', )
-parser.add_argument(     '--save',  help='File to save model to', )
+parser.add_argument(     '--load',  help='File to load model from', default=None)
+parser.add_argument(     '--save',  help='File to save model to', default=None)
 
 args = parser.parse_args()
 
@@ -298,9 +298,12 @@ def set_up_complete_model(dataset):
         output_dim = dataset['language']['gaps'].small_limit + 2,
     )
     print("Creating IterFunctions...")
-    iter_funcs = create_iter_functions(dataset, output_layer)
     
-    return iter_funcs
+    return dict(
+      output_layer = output_layer, 
+      iter_funcs=create_iter_functions(dataset, output_layer),
+    )
+      
 
 def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
     num_batches_train = dataset['train']['num_examples'] // batch_size
@@ -372,9 +375,17 @@ if __name__ == '__main__':
         # Validation data loads immediately, since it is fairly small
         dataset['valid'] = load_validation_set(args.valid, language['gaps'])  
         
-        iter_funcs = set_up_complete_model(dataset)
-        train_and_validate_all(iter_funcs, dataset, num_epochs=args.epochs)
+        model = set_up_complete_model(dataset)
         
+        if args.load:
+            params = hickle.load(args.load)
+            lasagne.layers.set_all_param_values(model.output_layer, params)
+            
+        train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs)
+        
+        if args.save:
+            params = lasagne.layers.get_all_param_values(model.output_layer)
+            hickle.dump(params, args.save)
         
     if args.mode == 'test':
         pass

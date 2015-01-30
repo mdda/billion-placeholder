@@ -20,6 +20,7 @@ mode=FAST_RUN
 #profile_optimizer=True
 
 [blas]
+ldflags = -lf77blas -latlas -lgfortran
 #ldflags=-lblas
-ldflags=-lopenblas
+#ldflags=-lopenblas
 # -lgfortran
