@@ -348,9 +348,9 @@ def train_and_validate_all(iter_funcs, dataset, num_epochs):
     print("Starting training...")
     for epoch_results in train_and_validate(iter_funcs, dataset):
         print("Epoch %d of %d (%6.2f secs)" % (epoch_results['number'], num_epochs, epoch_results['elapsed']))
-        print("  training loss:\t\t%.6f" % epoch_results['train_loss'])
-        print("  validation loss:\t\t%.6f" % epoch_results['valid_loss'])
-        print("  validation accuracy:\t\t%.2f %%" %
+        print("  training loss:\t%.6f" % epoch_results['train_loss'])
+        print("  validation loss:\t%.6f" % epoch_results['valid_loss'])
+        print("  validation accuracy:\t\t\t%.2f %%" %
               (epoch_results['valid_accuracy'] * 100))
 
         if epoch_results['number'] >= num_epochs:

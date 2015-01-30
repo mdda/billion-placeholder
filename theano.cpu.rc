@@ -10,7 +10,6 @@ device=cpu
 #openmp_elemwise_minsize=200000
 
 exception_verbosity=high
-optimizer=fast_compile
 
 mode=FAST_RUN
 #mode=DebugMode
@@ -21,4 +20,6 @@ mode=FAST_RUN
 #profile_optimizer=True
 
 [blas]
-
+#ldflags=-lblas
+ldflags=-lopenblas
+# -lgfortran

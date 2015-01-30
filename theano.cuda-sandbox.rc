@@ -5,7 +5,6 @@ warn_float64=warn
 device=gpu0
 
 exception_verbosity=high
-optimizer=fast_compile
 
 mode=FAST_RUN
 #mode=DebugMode
@@ -14,3 +13,6 @@ mode=FAST_RUN
 #profile=True
 #profile_memory=True
 #profile_optimizer=True
+
+[nvcc]
+fastmath = True
