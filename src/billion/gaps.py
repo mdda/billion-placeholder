@@ -9,6 +9,8 @@ class Gaps(object):
     self.vocab_index = billion.util.load_vocab(vocab)
     self.small_limit = small_limit
 
+    self.padding = self.vocab_index['.']
+    
     if False:
       for w in ['the', 'computer', 'investor', 'xNONEXISTENTx', ]:
         print w, ' -> ', self.vocab_index[w]
@@ -25,8 +27,9 @@ class Gaps(object):
     vocab_indices = [ self.vocab_index[w] for w in words ]
     
     #print "Words in Line : %d" % (len(words),)
+    vocab_indices.append(self.padding)
     
-    for i in range(len(words)-2):
+    for i in range(len(words)-3): # -2 for +/-1 window
       #if vocab_indices[i] is None or vocab_indices[i+1] is None or vocab_indices[i+2] is None:
       #  continue
         
@@ -34,7 +37,7 @@ class Gaps(object):
       #x = [ vocab_indices[i], vocab_indices[i+2] ]
       
       # This may loop around to end/beginning of sentence...
-      x = [ vocal_indices[i-1], vocab_indices[i], vocab_indices[i+2], vocab_indices[i+3] ]
+      x = [ vocab_indices[i-1], vocab_indices[i], vocab_indices[i+2], vocab_indices[i+3] ]
         
       if None in x: 
         continue

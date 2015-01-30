@@ -182,6 +182,7 @@ Now retry with 1MM and initialisation as found best above :
 # 1MM vocab and vectors confirmed to be in same order (=#occurrences, then alphabetic)
 # ALL vocab and vectors = same? :: Unfortunately, yes.  @82000, #occurrences = 133
 
+1MM norm +-2    1235   55.37    2  58.17 # init : hidden:0.1*9, output:0.1*9
 
 
 ## Why is this?  Ideas:  1MM vocab is precisely what is needed for 1MM training set
