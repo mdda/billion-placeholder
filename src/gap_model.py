@@ -56,7 +56,7 @@ MINIBATCH_SIZE = 256
 
 NUM_HIDDEN_UNITS = 240
 
-CONTEXT_LENGTH = 2
+CONTEXT_LENGTH = 4
 
 # This will use ADAGRAD, rather than momentum, etc
 

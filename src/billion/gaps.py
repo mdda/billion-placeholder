@@ -31,10 +31,10 @@ class Gaps(object):
       #  continue
         
       # Middle word missing :: So ans>0
-      x = [ vocab_indices[i], vocab_indices[i+2] ]
+      #x = [ vocab_indices[i], vocab_indices[i+2] ]
       
       # This may loop around to end/beginning of sentence...
-      #x = [ vocal_indices[i-1], vocab_indices[i], vocab_indices[i+2], vocab_indices[i+3] ]
+      x = [ vocal_indices[i-1], vocab_indices[i], vocab_indices[i+2], vocab_indices[i+3] ]
         
       if None in x: 
         continue
@@ -59,10 +59,10 @@ class Gaps(object):
       #  continue
         
       # Word not missing :: So ans==0
-      x = [ vocab_indices[i], vocab_indices[i+1] ]
+      #x = [ vocab_indices[i], vocab_indices[i+1] ]
       
       # This may loop around to end/beginning of sentence...
-      #x = [ vocab_indices[i-1], vocab_indices[i], vocab_indices[i+1], vocab_indices[i+2] ]
+      x = [ vocab_indices[i-1], vocab_indices[i], vocab_indices[i+1], vocab_indices[i+2] ]
       
       if None in x: 
         continue
