@@ -182,21 +182,24 @@ Now retry with 1MM and initialisation as found best above :
 # 1MM vocab and vectors confirmed to be in same order (=#occurrences, then alphabetic)
 # ALL vocab and vectors = same? :: Unfortunately, yes.  @82000, #occurrences = 133
 
+## Why are some of these results wierd?  
+##   Ideas:  1MM vocab is precisely what is needed for 1MM training set
+##   But : the results apply to validation set too - where vocab is not pre-selected
+##   Also : ALL-vocab should be 'better defined', but truncating it is (CHECK) worse, not better
+##   As expected, normalisation helps.
+
+##run with +/- 2 window instead of +/- 1
+
 1MM norm +-2    1235   55.37    2  58.17 # init : hidden:0.1*9, output:0.1*9
-
-
-## Why is this?  Ideas:  1MM vocab is precisely what is needed for 1MM training set
-##    But : the results apply to validation set too - where vocab is not pre-selected
-##    Also : ALL-vocab should be 'better defined', but truncating it is (CHECK) worse, not better
-##    As expected, normalisation helps.
-
+1MM norm +-2    1235   55.70   10  65.35 # init : hidden:0.1*9, output:0.1*9  (and still learning...)
 
 TODO :: 
 save model to disk
 load model from disk
 
+Randomization of order that mini-batch samples are taken within a BULK-SIZE?
+
 run for longer than 10 epochs...
-run with +/- 2 window instead of +/- 1
 
 confidence estimate based on 2nd best guess (next after argmax is ... hmmm)
 
