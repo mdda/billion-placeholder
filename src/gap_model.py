@@ -44,7 +44,7 @@ args = parser.parse_args()
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
 #BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
-BULK_SIZE = 1024  # Training Records to read in blocks off disk
+BULK_SIZE = 10*1024  # Training Records to read in blocks off disk
 
 # Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
 #              = (CONTEXT_LENGTH * 4 + 1) * BULK_SIZE
