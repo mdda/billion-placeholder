@@ -1,3 +1,6 @@
+# Usage      : THEANORC=theano.cuda-sandbox.rc python src/....
+# (Bumbebee) : THEANORC=theano.cuda-sandbox.rc optirun python src/....
+
 [global]
 floatX=float32
 warn_float64=warn 
@@ -16,3 +19,7 @@ mode=FAST_RUN
 
 [nvcc]
 fastmath = True
+
+#THEANORC=theano.cuda-sandbox.rc optirun python  env/Theano/theano/misc/check_blas.py 
+# We executed 10 calls to gemm with a and b matrices of shapes (2000, 2000) and (2000, 2000).
+# Total execution time: 0.45s on GPU.

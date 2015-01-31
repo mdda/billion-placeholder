@@ -19,8 +19,28 @@ mode=FAST_RUN
 #profile_memory=True
 #profile_optimizer=True
 
+
 [blas]
-ldflags = -lf77blas -latlas -lgfortran
+## Check for blas installed : 
+# X=python -c "import theano;import os.path; print os.path.split(theano.__file__)[0]" 
+# python ${X}/misc/check_blas.py
+
+## Plain python run (uses float64 by default) :
+#python env/Theano/theano/misc/check_blas.py 
+# We executed 10 calls to gemm with a and b matrices of shapes (2000, 2000) and (2000, 2000).
+# Total execution time: 5.16s on CPU (with **direct Theano binding to blas**).
+
+## This config file (specifies float32) :
+#THEANORC=theano.cpu.rc python env/Theano/theano/misc/check_blas.py 
+#We executed 10 calls to gemm with a and b matrices of shapes (2000, 2000) and (2000, 2000).
+#Total execution time: 2.82s on CPU (with **direct Theano binding to blas**).
+
+
+## Suggests that no additional flags are required
+## So : Is BLAS being used in the evaluations?
+
+## Ideas for flags:
+#ldflags = -lf77blas -latlas -lgfortran
 #ldflags=-lblas
 #ldflags=-lopenblas
 # -lgfortran
