@@ -303,10 +303,11 @@ def create_iter_functions(dataset, output_layer,
 
     return iters
 
-def set_up_complete_model(dataset):
+def set_up_complete_model(dataset, seed=None):
     output_layer = build_model(
         processed_input_dim = CONTEXT_LENGTH * dataset['language']['vector_width'], 
         output_dim = dataset['language']['gaps'].small_limit + 2,
+        seed=seed,
     )
 
     iter_funcs=create_iter_functions(dataset, output_layer)
@@ -375,8 +376,8 @@ def train_and_validate_all(iter_funcs, dataset, num_epochs):
         print("  validation loss:\t%.6f\t\t%7.2fs" %  (valid_pre_results['loss'],valid_pre_results['elapsed']))
         print("  validation accuracy:\t\t\t%.2f %%" % (valid_pre_results['accuracy'] * 100))
               
-        #train_results      = train_model(iter_funcs, dataset)
-        #print("  training loss:\t%.6f\t\t%7.2fs" %    (train_results['loss'], train_results['elapsed']) )
+        train_results      = train_model(iter_funcs, dataset)
+        print("  training loss:\t%.6f\t\t%7.2fs" %    (train_results['loss'], train_results['elapsed']) )
         
         valid_post_results = validate_model(iter_funcs, dataset)
         print("  validation loss:\t%.6f\t\t%7.2fs" %  (valid_post_results['loss'], valid_post_results['elapsed']))
@@ -397,7 +398,7 @@ if __name__ == '__main__':
         # Validation data loads immediately, since it is fairly small
         dataset['valid'] = load_validation_set(args.valid, language['gaps'])  
         
-        model = set_up_complete_model(dataset)
+        model = set_up_complete_model(dataset, seed=args.seed)
         
         if args.load:
             print("Loading Model from '%s'" % args.load)
@@ -406,7 +407,7 @@ if __name__ == '__main__':
                 params = pickle.load(f)
             lasagne.layers.set_all_param_values(model['output_layer'], params)
             
-        train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs, seed=args.seed)
+        train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs)
         
         if args.save:
             print("Saving Model to '%s'" % args.save)

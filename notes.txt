@@ -152,9 +152,9 @@ Normalize to being N(.,1) throughout
 run             seed   epoch1   N  epochN
 1MM norm               63.15    2  64.44
 1MM norm        123    63.20    2  64.41
-1MM norm        1234   63.20    2  64.40
+1MM norm        1234   63.20    2  64.40  # This is suspiciously similar
 1MM norm retry         63.31    2  64.31
-# ^^ very consistent (reassuring)
+# ^^ very consistent (somewhat reassuring - but why are they slightly different?)
 
 ALL raw  uncap         56.37   10  62.09
 ALL norm uncap  1234   59.59    2  61.60
