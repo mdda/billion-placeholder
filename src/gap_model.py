@@ -47,7 +47,7 @@ args = parser.parse_args()
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
 BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
-if True: # Use if 'training' from holdout set (quick end-to-end test only)
+if False: # Use if 'training' from holdout set (quick end-to-end test only)
     BULK_SIZE = 10*1024 
 
 # Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
@@ -372,16 +372,16 @@ def train_and_validate_all(iter_funcs, dataset, num_epochs):
     for epoch in range(0, num_epochs):
         print("Epoch %d of %d: " % (epoch+1, num_epochs))
         
-        valid_pre_results  = validate_model(iter_funcs, dataset)
-        print("  validation loss:\t%.6f\t\t%7.2fs" %  (valid_pre_results['loss'],valid_pre_results['elapsed']))
-        print("  validation accuracy:\t\t\t%.2f %%" % (valid_pre_results['accuracy'] * 100))
-              
-        train_results      = train_model(iter_funcs, dataset)
-        print("  training loss:\t%.6f\t\t%7.2fs" %    (train_results['loss'], train_results['elapsed']) )
+        with validate_model(iter_funcs, dataset) as res:
+            print("  validation loss:\t%.6f\t\t%7.2fs" %  (res['loss'], res['elapsed']))
+            print("  validation accuracy:\t\t\t%.2f %%" % (res['accuracy'] * 100))
+            
+        with train_model(iter_funcs, dataset) as res:
+            print("  training loss:\t%.6f\t\t%7.2fs" %    (res['loss'], res['elapsed']) )
         
-        valid_post_results = validate_model(iter_funcs, dataset)
-        print("  validation loss:\t%.6f\t\t%7.2fs" %  (valid_post_results['loss'], valid_post_results['elapsed']))
-        print("  validation accuracy:\t\t\t%.2f %%" % (valid_post_results['accuracy'] * 100))
+        with validate_model(iter_funcs, dataset) as res:
+            print("  validation loss:\t%.6f\t\t%7.2fs" %  (res['loss'], res['elapsed']))
+            print("  validation accuracy:\t\t\t%.2f %%" % (res['accuracy'] * 100))
 
 if __name__ == '__main__':
     if args.mode != 'train' and args.mode != 'test':

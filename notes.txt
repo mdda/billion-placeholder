@@ -113,6 +113,7 @@ THEANORC=theano.cpu.rc python src/gap_model.py \
               --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
+              --seed 5555 \
 						  --save data/3-gaps/1MM_model.pickle \
               --epochs 10 \
 						  --load data/3-gaps/1MM_model.pickle 
@@ -122,6 +123,7 @@ THEANORC=theano.cpu.rc python src/gap_model.py \
               --vocab data/2-glove/ALL_1-vocab.txt --vectors data/2-glove/ALL_3-vectors.hickle --small 32 \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
+              --seed 5555 \
 						  --save data/3-gaps/1MM_model.pickle \
               --epochs 10 \
 						  --load data/3-gaps/1MM_model.pickle 
@@ -195,10 +197,12 @@ Now retry with 1MM and initialisation as found best above :
 
 ##run with +/- 2 window instead of +/- 1
 
-1MM norm +-2    1235   55.37    2  58.17 # init : hidden:0.1*9, output:0.1*9
-1MM norm +-2    1235   55.70   10  65.35 # init : hidden:0.1*9, output:0.1*9  (and still learning...)
-1MM norm +-2    1235   55.70   10  66.13 # init : hidden:0.1*9/2, output:0.1*9  (and still learning...)
-1MM norm +-2+10 1235   56.71   10  64.77 # init : hidden:0.1*9/2, output:0.1*9  (Huh? reloading gives different results...)
+1MM norm +-2    ????   55.37    2  58.17 # init : hidden:0.1*9, output:0.1*9
+1MM norm +-2    ????   55.70   10  65.35 # init : hidden:0.1*9, output:0.1*9  (and still learning...)
+1MM norm +-2    ????   55.70   10  66.13 # init : hidden:0.1*9/2, output:0.1*9  (and still learning...)
+1MM norm +-2+10 ????   56.71   10  64.77 # init : hidden:0.1*9/2, output:0.1*9  (Huh? reloading gives different results...)
+
+
 
 TODO :: 
 Run for longer than 10 epochs... NB : Check that reloading actually works
