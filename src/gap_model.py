@@ -372,14 +372,17 @@ def train_and_validate_all(iter_funcs, dataset, num_epochs):
     for epoch in range(0, num_epochs):
         print("Epoch %d of %d: " % (epoch+1, num_epochs))
         
-        with validate_model(iter_funcs, dataset) as res:
+        if True:
+            res = validate_model(iter_funcs, dataset)
             print("  validation loss:\t%.6f\t\t%7.2fs" %  (res['loss'], res['elapsed']))
             print("  validation accuracy:\t\t\t%.2f %%" % (res['accuracy'] * 100))
             
-        with train_model(iter_funcs, dataset) as res:
+        if True:
+            res = train_model(iter_funcs, dataset)
             print("  training loss:\t%.6f\t\t%7.2fs" %    (res['loss'], res['elapsed']) )
         
-        with validate_model(iter_funcs, dataset) as res:
+        if True:
+            res = validate_model(iter_funcs, dataset)
             print("  validation loss:\t%.6f\t\t%7.2fs" %  (res['loss'], res['elapsed']))
             print("  validation accuracy:\t\t\t%.2f %%" % (res['accuracy'] * 100))
 
