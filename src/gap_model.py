@@ -9,7 +9,7 @@ import theano.tensor as T
 import lasagne
 
 import argparse
-import itertools
+#import itertools
 import time
 
 import warnings
@@ -46,7 +46,7 @@ args = parser.parse_args()
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
 BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
-if False: # Use if 'training' from holdout set (quick end-to-end test only)
+if True: # Use if 'training' from holdout set (quick end-to-end test only)
     BULK_SIZE = 10*1024 
 
 # Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
@@ -167,6 +167,8 @@ def build_model(processed_input_dim, output_dim,
     # (how does l_out keep a reference to it? = This is tracked through whole network)
     # And then need to take out [int32] and convert it into concatinated embedding vectors
 
+    print("Building model ...")
+    
     random.seed(1235)
     
     # input_dim = CONTEXT_LENGTH # of int32
@@ -215,6 +217,8 @@ def build_model(processed_input_dim, output_dim,
 def create_iter_functions(dataset, output_layer,
                           batch_size=MINIBATCH_SIZE
                          ):
+    print("Creating IterFunctions...")
+    
     batch_index = T.iscalar('batch_index')
     X_batch     = T.imatrix('x')
     
@@ -302,68 +306,79 @@ def set_up_complete_model(dataset):
         processed_input_dim = CONTEXT_LENGTH * dataset['language']['vector_width'], 
         output_dim = dataset['language']['gaps'].small_limit + 2,
     )
-    print("Creating IterFunctions...")
+
+    iter_funcs=create_iter_functions(dataset, output_layer)
     
     return dict(
       output_layer = output_layer, 
-      iter_funcs=create_iter_functions(dataset, output_layer),
+      iter_funcs = iter_funcs,
     )
       
 
-def train_and_validate(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
-    num_batches_train = dataset['train']['num_examples'] // batch_size
-    num_batches_valid = dataset['valid']['num_examples'] // batch_size
-    #num_batches_test  = dataset['test' ]['num_examples'] // batch_size
-
-    for epoch in itertools.count(1):  # This just allows us to enumerate epoch_results
-        t_start = time.time()
+def train_model(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
+    num_batches = dataset['train']['num_examples'] // batch_size
+    
+    t_start = time.time()
+    
+    batch_losses = []
+    
+    reset_training_set_loader(dataset['train'], dataset['language']['gaps'])
+    
+    while True:  # Loop for loading additional training data
+        loaded = load_training_set_inplace(dataset['train'])
+        print(" full = ", loaded)
+        if not loaded: # There wasn't enough data for a full 'BULK' so ditch attempt
+            break
         
-        batch_train_losses = []
-        
-        reset_training_set_loader(dataset['train'], dataset['language']['gaps'])
-        
-        while True:  # Loop for loading additional training data
-            loaded = load_training_set_inplace(dataset['train'])
-            print(" full = ", loaded)
-            if not loaded: # There wasn't enough data for a full 'BULK' so ditch attempt
-                break
-            
-            for b in range(num_batches_train):
-                batch_train_loss = iter_funcs['train'](b)
-                batch_train_losses.append(batch_train_loss)
+        for b in range(num_batches):
+            batch_loss = iter_funcs['train'](b)
+            batch_losses.append(batch_loss)
 
-        avg_train_loss = np.mean(batch_train_losses)
+    avg_loss = np.mean(batch_losses)
+    
+    return {
+        'loss': avg_loss,
+        'elapsed' : time.time() - t_start,
+    }
 
-        batch_valid_losses = []
-        batch_valid_accuracies = []
-        for b in range(num_batches_valid):
-            batch_valid_loss, batch_valid_accuracy = iter_funcs['valid'](b)
-            batch_valid_losses.append(batch_valid_loss)
-            batch_valid_accuracies.append(batch_valid_accuracy)
+def validate_model(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
+    num_batches = dataset['valid']['num_examples'] // batch_size
 
-        avg_valid_loss = np.mean(batch_valid_losses)
-        avg_valid_accuracy = np.mean(batch_valid_accuracies)
+    t_start = time.time()
+    
+    batch_losses = []
+    batch_accuracies = []
+    
+    for b in range(num_batches):
+        batch_loss, batch_accuracy = iter_funcs['valid'](b)
+        batch_losses.append(batch_loss)
+        batch_accuracies.append(batch_accuracy)
 
-        yield {
-            'number': epoch,
-            'train_loss': avg_train_loss,
-            'valid_loss': avg_valid_loss,
-            'valid_accuracy': avg_valid_accuracy,
-            'elapsed' : time.time() - t_start,
-		}
+    avg_loss = np.mean(batch_losses)
+    avg_accuracy = np.mean(batch_accuracies)
+
+    return {
+        'loss': avg_loss,
+        'accuracy': avg_accuracy,
+        'elapsed' : time.time() - t_start,
+    }
 
 def train_and_validate_all(iter_funcs, dataset, num_epochs):
     print("Starting training...")
-    for epoch_results in train_and_validate(iter_funcs, dataset):
-        print("Epoch %d of %d (%6.2f secs)" % (epoch_results['number'], num_epochs, epoch_results['elapsed']))
-        print("  training loss:\t%.6f" % epoch_results['train_loss'])
-        print("  validation loss:\t%.6f" % epoch_results['valid_loss'])
-        print("  validation accuracy:\t\t\t%.2f %%" %
-              (epoch_results['valid_accuracy'] * 100))
-
-        if epoch_results['number'] >= num_epochs:
-            break
-
+    
+    for epoch in range(0, num_epochs):
+        print("Epoch %d of %d: " % (epoch+1, num_epochs))
+        
+        valid_pre_results  = validate_model(iter_funcs, dataset)
+        print("  validation loss:\t%.6f\t\t%7.2fs" %  (valid_pre_results['loss'],valid_pre_results['elapsed']))
+        print("  validation accuracy:\t\t\t%.2f %%" % (valid_pre_results['accuracy'] * 100))
+              
+        #train_results      = train_model(iter_funcs, dataset)
+        #print("  training loss:\t%.6f\t\t%7.2fs" %    (train_results['loss'], train_results['elapsed']) )
+        
+        valid_post_results = validate_model(iter_funcs, dataset)
+        print("  validation loss:\t%.6f\t\t%7.2fs" %  (valid_post_results['loss'], valid_post_results['elapsed']))
+        print("  validation accuracy:\t\t\t%.2f %%" % (valid_post_results['accuracy'] * 100))
 
 if __name__ == '__main__':
     if args.mode != 'train' and args.mode != 'test':
