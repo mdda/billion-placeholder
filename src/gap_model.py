@@ -32,6 +32,7 @@ parser.add_argument(     '--small', help='Number of "small words" to capture', r
 parser.add_argument(     '--train', help='Training text file name', )
 parser.add_argument(     '--valid', help='Validation text file name', )
 parser.add_argument(     '--epochs', help='Number of Epochs', required=False, default=10, type=int)
+parser.add_argument(     '--seed',  help='Random number seed', required=False, default=1, type=int)
 
 parser.add_argument(     '--test',  help='Test text file name', )
 parser.add_argument(     '--output',  help='Submission file name to write', )
@@ -161,7 +162,8 @@ def load_validation_set(valid, gaps):  # Will load all
 
 def build_model(processed_input_dim, output_dim,
                 batch_size=MINIBATCH_SIZE, 
-                num_hidden_units=NUM_HIDDEN_UNITS):
+                num_hidden_units=NUM_HIDDEN_UNITS,
+                seed=None):
 
     # Need to understand InputLayer structure 
     # (how does l_out keep a reference to it? = This is tracked through whole network)
@@ -169,7 +171,7 @@ def build_model(processed_input_dim, output_dim,
 
     print("Building model ...")
     
-    random.seed(1235)
+    np.random.seed(seed)
     
     # input_dim = CONTEXT_LENGTH # of int32
     # processed_input_dim = CONTEXT_LENGTH * language['vector_width'] # of floatX
@@ -398,14 +400,16 @@ if __name__ == '__main__':
         model = set_up_complete_model(dataset)
         
         if args.load:
+            print("Loading Model from '%s'" % args.load)
             #params = hickle.load(args.load)
             with open(args.load, 'rb') as f:
                 params = pickle.load(f)
             lasagne.layers.set_all_param_values(model['output_layer'], params)
             
-        train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs)
+        train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs, seed=args.seed)
         
         if args.save:
+            print("Saving Model to '%s'" % args.save)
             params = lasagne.layers.get_all_param_values(model['output_layer'])
             #hickle.dump(params, args.save, mode='w', compression='gzip')
             with open(args.save, 'wb') as f:
