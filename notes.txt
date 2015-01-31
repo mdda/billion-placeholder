@@ -109,18 +109,23 @@ python src/glove_to_hickle.py --input data/2-glove/ALL_3-vectors.txt \
 ##                                 --output data/3-gaps/1MM_valid.txt --small 32
 
 # Invocation intended...  (using 1MM throughout)
-python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
+THEANORC=theano.cpu.rc python src/gap_model.py \
+              --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
-						  --save data/3-gaps/1MM_model.hickle \
-              --epochs 2
+						  --save data/3-gaps/1MM_model.pickle \
+              --epochs 10 \
+						  --load data/3-gaps/1MM_model.pickle 
 
 # Use 'ALL' vector dictionary
-python src/gap_model.py   --vocab data/2-glove/ALL_1-vocab.txt --vectors data/2-glove/ALL_3-vectors.hickle --small 32 \
+THEANORC=theano.cpu.rc python src/gap_model.py \
+              --vocab data/2-glove/ALL_1-vocab.txt --vectors data/2-glove/ALL_3-vectors.hickle --small 32 \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
-						  --save data/3-gaps/1MM_model.hickle \
-              --epochs 2
+						  --save data/3-gaps/1MM_model.pickle \
+              --epochs 10 \
+						  --load data/3-gaps/1MM_model.pickle 
+
 
 
 ## To run on GPU/old-CUDA (benchmark speedup 464 vs 1175, ie: 2.5x faster than CPU)
@@ -192,16 +197,16 @@ Now retry with 1MM and initialisation as found best above :
 
 1MM norm +-2    1235   55.37    2  58.17 # init : hidden:0.1*9, output:0.1*9
 1MM norm +-2    1235   55.70   10  65.35 # init : hidden:0.1*9, output:0.1*9  (and still learning...)
+1MM norm +-2    1235   55.70   10  66.13 # init : hidden:0.1*9/2, output:0.1*9  (and still learning...)
+1MM norm +-2+10 1235   56.71   10  64.77 # init : hidden:0.1*9/2, output:0.1*9  (Huh? reloading gives different results...)
 
 TODO :: 
-Try to enable CPU BLAS to see whether it can be utilized
+Run for longer than 10 epochs... NB : Check that reloading actually works
 
-save model to disk
-load model from disk
+Acutally see whether CPU BLAS is utilized
 
 Randomization of order that mini-batch samples are taken within a BULK-SIZE?
 
-run for longer than 10 epochs...
 
 confidence estimate based on 2nd best guess (next after argmax is ... hmmm)
 

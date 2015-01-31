@@ -45,8 +45,9 @@ args = parser.parse_args()
 # The vectors will be stored on GPU all the time
 # Blocks of training data will be 'mini-batched' and also paged in
 # in units of 'BULK_SIZE'
-#BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
-BULK_SIZE = 10*1024  # Training Records to read in blocks off disk
+BULK_SIZE = 10*1000*1024  # Training Records to read in blocks off disk
+if False: # Use if 'training' from holdout set (quick end-to-end test only)
+    BULK_SIZE = 10*1024 
 
 # Memory usage = (ints for embedding index + byte for answer) * BULK_SIZE
 #              = (CONTEXT_LENGTH * 4 + 1) * BULK_SIZE
@@ -178,7 +179,7 @@ def build_model(processed_input_dim, output_dim,
     l_hidden1 = lasagne.layers.DenseLayer(
         l_in,
         num_units=num_hidden_units,
-        W=lasagne.init.Normal(std=0.1*9),
+        W=lasagne.init.Normal(std=0.1*9/2),
         nonlinearity=lasagne.nonlinearities.rectify,
     )
     
@@ -190,6 +191,7 @@ def build_model(processed_input_dim, output_dim,
         l_hidden2 = lasagne.layers.DenseLayer(
             l_hidden1_dropout,
             num_units=num_hidden_units,
+            W=lasagne.init.Normal(std=0.1),
             nonlinearity=lasagne.nonlinearities.rectify,
         )
         l_hidden2_dropout = lasagne.layers.DropoutLayer(
@@ -206,7 +208,7 @@ def build_model(processed_input_dim, output_dim,
         nonlinearity=lasagne.nonlinearities.softmax,
 	)
     
-    # This output layer is a 1+1+32 dimensional vector (softmax'd each element)
+    # This output layer is a 1+1+32 dimensional vector (softmax'd over every element)
     return l_out
 
 
