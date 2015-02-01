@@ -384,7 +384,7 @@ def train_and_validate_all(iter_funcs, dataset, num_epochs):
             
         if True:
             res = train_model(iter_funcs, dataset)
-            print("  training loss:\t%.6f\t\t%7.2fs" %    (res['loss'], res['elapsed']) )
+            print("  training loss:\t%.6f\t\t%7.2fs ~ %dmins" %    (res['loss'], res['elapsed'], int(res['elapsed']/60)) )
         
         if True:
             res = validate_model(iter_funcs, dataset)
