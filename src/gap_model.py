@@ -264,10 +264,15 @@ def create_iter_functions(dataset, output_layer,
     #)
     
     #def adagrad(loss, all_params, learning_rate=1.0, epsilon=1e-6):
-    updates = lasagne.updates.adagrad(
+    #updates = lasagne.updates.adagrad(
+    #    loss_train, all_params #, learning_rate, momentum
+    #)
+
+    #def adadelta(loss, all_params, learning_rate=1.0, rho=0.95, epsilon=1e-6):
+    updates = lasagne.updates.adadelta(
         loss_train, all_params #, learning_rate, momentum
     )
-
+    
     iters={}
     
     if 'train' in dataset:
