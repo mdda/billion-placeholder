@@ -205,13 +205,13 @@ Now retry with 1MM and initialisation as found best above :
 Found problem with random seeds
 Check that reloading actually works : Yes, apparently now it does!
 
-Differences in 64 vs 32bit significant on 1MM set for 1epoch? 
+Differences in 64 vs 32bit significant on 1MM set for 1epoch? : (saved model is half the size, as expected)
   :: initial validatation loss diff = (0.00 00 02)
   :: 1 epoch validatation loss diff = (0.00 22)  .. i.e. the results drift apart (accuracy 0.18% lower too)
 
 
+Run for longer than 10 epochs... NB : float32
 
-Run for longer than 10 epochs... NB : 
 
 
 
