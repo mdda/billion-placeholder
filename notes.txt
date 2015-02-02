@@ -211,6 +211,8 @@ Differences in 64 vs 32bit significant on 1MM set for 1epoch? : (saved model is 
 
 
 Run for longer than 10 epochs... NB : float32.  Done, but 10+10 epochs is likely much worse than 20 straight epochs
+  Strange result : "20 straight epochs" seems to rebound in *training loss* at epoch=10, and get worse from then...
+
 
 TODO :: 
 Do incremental saving (with 2-digit epoch counter) of model files
