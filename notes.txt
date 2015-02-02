@@ -210,12 +210,11 @@ Differences in 64 vs 32bit significant on 1MM set for 1epoch? : (saved model is 
   :: 1 epoch validatation loss diff = (0.00 22)  .. i.e. the results drift apart (accuracy 0.18% lower too)
 
 
-Run for longer than 10 epochs... NB : float32
-
-
-
+Run for longer than 10 epochs... NB : float32.  Done, but 10+10 epochs is likely much worse than 20 straight epochs
 
 TODO :: 
+Do incremental saving (with 2-digit epoch counter) of model files
+
 Acutally see whether CPU BLAS is utilized
 
 Randomization of order that mini-batch samples are taken within a BULK-SIZE?
