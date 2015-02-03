@@ -338,7 +338,8 @@ def train_model(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
         if not loaded: # There wasn't enough data for a full 'BULK' so ditch attempt
             break
         
-        for b in range(num_batches):
+        #for b in range(num_batches):
+        for b in np.random.permutation(num_batches):
             batch_loss = iter_funcs['train'](b)
             batch_losses.append(batch_loss)
 
