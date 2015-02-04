@@ -128,8 +128,6 @@ THEANORC=theano.cpu.rc python src/gap_model.py \
               --epochs 10 \
 						  --load data/3-gaps/1MM_model_ALL_%02d.pickle
 
-
-
 ## To run on GPU/old-CUDA (benchmark speedup 464 vs 1175, ie: 2.5x faster than CPU)
 ## Prepend :
 THEANORC=theano.cuda-sandbox.rc optirun python ...
@@ -212,13 +210,12 @@ Differences in 64 vs 32bit significant on 1MM set for 1epoch? : (saved model is 
 Run for longer than 10 epochs... NB : float32.  Done, but 10+10 epochs is likely much worse than 20 straight epochs
   Strange result : "20 straight epochs" seems to rebound in *training loss* at epoch=10, and get worse from then...
 
-Randomization of order that mini-batch samples are taken within a BULK-SIZE?
+DONE : Randomization of order that mini-batch samples are taken within a BULK-SIZE
+DONE : Incremental saving (with formatted epoch counter) of model files
 
 TODO :: 
-Do incremental saving (with 2-digit epoch counter) of model files
 
 Actually see whether CPU BLAS is utilized
-
 
 confidence estimate based on 2nd best guess (next after argmax is ... hmmm)
 
@@ -229,9 +226,6 @@ THEANORC=theano.cuda-gpuarray.rc optirun python ...
 run test data - and build submission (with / without small words)
 
 gather 'confidence' level for each answer (size of max output) or (ratio of 1st place to 2nd place), etc
-
-
-
 
 
 python src/gap_model.py   --vocab data/2-glove/1MM_1-vocab.txt --vectors data/2-glove/1MM_3-vectors.hickle --small 32 \
