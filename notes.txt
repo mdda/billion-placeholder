@@ -124,9 +124,9 @@ THEANORC=theano.cpu.rc python src/gap_model.py \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
               --seed 5555 \
-						  --save data/3-gaps/1MM_model_%02d.pickle \
+						  --save data/3-gaps/1MM_model_ALL_%02d.pickle \
               --epochs 10 \
-						  --load data/3-gaps/1MM_model_%02d.pickle
+						  --load data/3-gaps/1MM_model_ALL_%02d.pickle
 
 
 
