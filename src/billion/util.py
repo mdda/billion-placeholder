@@ -129,7 +129,8 @@ def filename_matching(filename, offset=0):  #Offsets of 0 or 1 allowed
   
   ## Yes, this is terribly inefficient, but it allows great flexibility...
   count=1
-  while (filename % count) in potentials:
+  while (just_file % count) in potentials:
+    #print("count ++ (was %d)" % count)
     count = count+1
     
   # Now count points to an un-used file
