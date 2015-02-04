@@ -214,6 +214,7 @@ DONE : Randomization of order that mini-batch samples are taken within a BULK-SI
 DONE : Incremental saving (with formatted epoch counter) of model files
 
 TODO :: 
+Examine results on individual sentences (i.e. move towards end result production)
 
 Actually see whether CPU BLAS is utilized
 
