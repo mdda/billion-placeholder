@@ -3,6 +3,10 @@ import re
 import sys # for Flush
 from collections import defaultdict
 
+import os
+#os.path import dirname, realpath, isfile, join
+#from os import listdir
+
 # import Levenshtein  # GPL = no thanks, today
 import editdistance
 
@@ -101,3 +105,32 @@ def levenshtein_python(a,b):
 ## levenshtein distance measure
 #levenshtein=Levenshtein.distance
 levenshtein=editdistance.eval
+
+def filename_matching(filename, offset=0):  #Offsets of 0 or 1 allowed
+  if not '%' in filename:
+    # This is just a regular file - no funky maths here
+    if not 0==offset:
+      print("Warning : Filename template must contain '%%' if you want to do offsets...")
+    return filename
+
+  if not ( offset==0 or offset==1 ):
+      print("Offsets for filename incrementing can only be 0 or 1")
+      exit(0)
+    
+  # Ok, so filename contains a number template '%d'
+  # Grab all files in directory, and then do a (quicker) comparison
+  base_d = os.path.dirname(os.path.realpath(filename))
+  just_file = os.path.basename(filename)
+  base_f = just_file[0 : just_file.index('%')]
+  #print("Searching : ('%s','%s')" % (base_d, base_f))
+
+  potentials = [ f for f in os.listdir(base_d) if os.path.isfile(os.path.join(base_d,f)) and f.startswith(base_f)]
+  #print(potentials)
+  
+  ## Yes, this is terribly inefficient, but it allows great flexibility...
+  count=0
+  while (filename % count) in potentials:
+    count = count+1
+   
+  return (filename % (count+offset))
+  

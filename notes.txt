@@ -114,9 +114,9 @@ THEANORC=theano.cpu.rc python src/gap_model.py \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
               --seed 5555 \
-						  --save data/3-gaps/1MM_model.pickle \
+						  --save data/3-gaps/1MM_model_%02d.pickle \
               --epochs 10 \
-						  --load data/3-gaps/1MM_model.pickle 
+						  --load data/3-gaps/1MM_model_%02d.pickle
 
 # Use 'ALL' vector dictionary
 THEANORC=theano.cpu.rc python src/gap_model.py \
@@ -212,13 +212,12 @@ Differences in 64 vs 32bit significant on 1MM set for 1epoch? : (saved model is 
 Run for longer than 10 epochs... NB : float32.  Done, but 10+10 epochs is likely much worse than 20 straight epochs
   Strange result : "20 straight epochs" seems to rebound in *training loss* at epoch=10, and get worse from then...
 
+Randomization of order that mini-batch samples are taken within a BULK-SIZE?
 
 TODO :: 
 Do incremental saving (with 2-digit epoch counter) of model files
 
 Actually see whether CPU BLAS is utilized
-
-Randomization of order that mini-batch samples are taken within a BULK-SIZE?
 
 
 confidence estimate based on 2nd best guess (next after argmax is ... hmmm)

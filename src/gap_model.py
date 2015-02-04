@@ -372,25 +372,33 @@ def validate_model(iter_funcs, dataset, batch_size=MINIBATCH_SIZE):
         'elapsed' : time.time() - t_start,
     }
 
-def train_and_validate_all(iter_funcs, dataset, num_epochs):
+def train_and_validate_all(model, dataset, num_epochs, save=None):
     print("Starting training...")
     
     for epoch in range(0, num_epochs):
         print("Epoch %d of %d: " % (epoch+1, num_epochs))
         
         if True:
-            res = validate_model(iter_funcs, dataset)
+            res = validate_model(model['iter_funcs'], dataset)
             print("  validation loss:\t%.6f\t\t%7.2fs" %  (res['loss'], res['elapsed']))
             print("  validation accuracy:\t\t\t%.2f %%" % (res['accuracy'] * 100))
             
         if True:
-            res = train_model(iter_funcs, dataset)
+            res = train_model(model['iter_funcs'], dataset)
             print("  training loss:\t%.6f\t\t%7.2fs ~ %dmins" %    (res['loss'], res['elapsed'], int(res['elapsed']/60)) )
         
         if True:
-            res = validate_model(iter_funcs, dataset)
+            res = validate_model(model['iter_funcs'], dataset)
             print("  validation loss:\t%.6f\t\t%7.2fs" %  (res['loss'], res['elapsed']))
             print("  validation accuracy:\t\t\t%.2f %%" % (res['accuracy'] * 100))
+
+        if save:
+            filename = billion.util.filename_matching(save, offset=1)
+            print("Saving Model to '%s'" % filename)
+            params = lasagne.layers.get_all_param_values(model['output_layer'])
+            #hickle.dump(params, filename, mode='w', compression='gzip')
+            with open(filename, 'wb') as f:
+                pickle.dump(params, f, -1)
 
 if __name__ == '__main__':
     if args.mode != 'train' and args.mode != 'test':
@@ -410,21 +418,15 @@ if __name__ == '__main__':
         model = set_up_complete_model(dataset, seed=args.seed)
         
         if args.load:
-            print("Loading Model from '%s'" % args.load)
-            #params = hickle.load(args.load)
-            with open(args.load, 'rb') as f:
+            filename = billion.util.filename_matching(args.load)
+            print("Loading Model from '%s'" % filename)
+            #params = hickle.load(filename)
+            with open(filename, 'rb') as f:
                 params = pickle.load(f)
             lasagne.layers.set_all_param_values(model['output_layer'], params)
             
-        train_and_validate_all(model['iter_funcs'], dataset, num_epochs=args.epochs)
-        
-        if args.save:
-            print("Saving Model to '%s'" % args.save)
-            params = lasagne.layers.get_all_param_values(model['output_layer'])
-            #hickle.dump(params, args.save, mode='w', compression='gzip')
-            with open(args.save, 'wb') as f:
-                pickle.dump(params, f, -1)
-        
+        train_and_validate_all(model, dataset, num_epochs=args.epochs, save=args.save)
+                
     if args.mode == 'test':
         pass
 
