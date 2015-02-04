@@ -128,9 +128,13 @@ def filename_matching(filename, offset=0):  #Offsets of 0 or 1 allowed
   #print(potentials)
   
   ## Yes, this is terribly inefficient, but it allows great flexibility...
-  count=0
+  count=1
   while (filename % count) in potentials:
     count = count+1
+    
+  # Now count points to an un-used file
+  if 0==offset: # But (if offset==0) we want a used one (or zero)...
+    count = count-1
    
   return (filename % (count+offset))
   
