@@ -136,5 +136,5 @@ def filename_matching(filename, offset=0):  #Offsets of 0 or 1 allowed
   if 0==offset: # But (if offset==0) we want a used one (or zero)...
     count = count-1
    
-  return (filename % (count+offset))
+  return (filename % count)
   
