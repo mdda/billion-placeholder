@@ -114,9 +114,9 @@ THEANORC=theano.cpu.rc python src/gap_model.py \
 						  --mode train \
 						  --train data/2-glove/1MM_0-corpus.txt --valid data/2-glove/1MM_4-heldout.txt \
               --seed 5555 \
-						  --save data/3-gaps/1MM_model_rand-minibatch_%02d.pickle \
+						  --save data/3-gaps/1MM_model_extra-hidden_%02d.pickle \
               --epochs 10 \
-						  --load data/3-gaps/1MM_model_rand-minibatch_%02d.pickle
+						  --load data/3-gaps/1MM_model_extra-hidden_%02d.pickle
 
 # Use 'ALL' vector dictionary
 THEANORC=theano.cpu.rc python src/gap_model.py \
@@ -214,6 +214,9 @@ DONE : Randomization of order that mini-batch samples are taken within a BULK-SI
 DONE : Incremental saving (with formatted epoch counter) of model files
 
 TODO :: 
+Add hidden layer
+
+
 Examine results on individual sentences (i.e. move towards end result production)
 
 Actually see whether CPU BLAS is utilized
