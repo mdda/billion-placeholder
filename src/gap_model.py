@@ -195,7 +195,7 @@ def build_model(processed_input_dim, output_dim,
         l_hidden2 = lasagne.layers.DenseLayer(
             l_hidden1_dropout,
             num_units=num_hidden_units,
-            W=lasagne.init.Normal(std=0.1),
+            W=lasagne.init.Normal(std=0.1*9),
             nonlinearity=lasagne.nonlinearities.rectify,
         )
         l_hidden2_dropout = lasagne.layers.DropoutLayer(
