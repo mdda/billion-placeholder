@@ -213,9 +213,10 @@ Run for longer than 10 epochs... NB : float32.  Done, but 10+10 epochs is likely
 DONE : Randomization of order that mini-batch samples are taken within a BULK-SIZE
 DONE : Incremental saving (with formatted epoch counter) of model files
 
-TODO :: 
-Add hidden layer
+Add hidden layer : Seems to prevent learning ...
+Try with dropout layer (no extra hidden units) : Moderate success, but still hits barrier ~64.4%
 
+TODO :: 
 
 Examine results on individual sentences (i.e. move towards end result production)
 
