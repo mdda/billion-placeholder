@@ -192,6 +192,8 @@ def build_model(processed_input_dim, output_dim,
             l_hidden1,
             p=0.5,
         )
+        
+    if False:
         l_hidden2 = lasagne.layers.DenseLayer(
             l_hidden1_dropout,
             num_units=num_hidden_units,
@@ -204,8 +206,9 @@ def build_model(processed_input_dim, output_dim,
         )
         
     l_out = lasagne.layers.DenseLayer(
-        l_hidden2_dropout,
+        #l_hidden2_dropout,
         #l_hidden1,
+        l_hidden1_dropout,
         #l_in, # Single layer : just for testing
         num_units=output_dim,
         W=lasagne.init.Normal(std=0.1*9),
