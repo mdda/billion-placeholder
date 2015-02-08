@@ -251,7 +251,7 @@ def create_iter_functions(dataset, output_layer,
         return -T.mean(T.log(output)[T.arange(Y_batch.shape[0]), Y_batch])  
 
     loss_train = loss(output_layer.get_output(X_batch_flat_vectors))
-    loss_eval  = loss(output_layer.get_output(X_batch_flat_vectors, deterministic=True))
+    loss_eval  = loss(output_layer.get_output(X_batch_flat_vectors, deterministic=True))  # deterministic=True turns off dropout
 
     # But this (for the first runs) easy to model as a soft-max thing 
     # from 0=(nogap), 1=(complex), 2..(small_limit+2)=small-word
