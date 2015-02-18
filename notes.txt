@@ -219,10 +219,12 @@ Try with dropout layer (no extra hidden units) : Moderate success, but still hit
 TODO :: 
 
 Examine results on individual sentences (i.e. move towards end result production)
+confidence estimate based on 2nd best guess (next after argmax is ... hmmm)
+
+Consider coding Word2Vec (or Socher, GloVE, etc) in Theano to optimized embedding for missing-ness
+
 
 Actually see whether CPU BLAS is utilized
-
-confidence estimate based on 2nd best guess (next after argmax is ... hmmm)
 
 run on GPU/new-CUDA (benchmark speedup)
 :: Prepend :
