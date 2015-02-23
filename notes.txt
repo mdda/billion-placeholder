@@ -221,8 +221,10 @@ TODO ::
 Examine results on individual sentences (i.e. move towards end result production)
 confidence estimate based on 2nd best guess (next after argmax is ... hmmm)
 
-Consider coding Word2Vec (or Socher, GloVE, etc) in Theano to optimized embedding for missing-ness
-
+#Consider coding Word2Vec (or Socher, GloVE, etc) in Theano to optimized embedding for missing-ness
+=> git clone https://github.com/Fematich/nn_ner.git
+(MIT licensed implementation of SENNA NER network in Theano)
+specifically, add the word-embedding layerization in a Lasagne-compatible way
 
 Actually see whether CPU BLAS is utilized
 
