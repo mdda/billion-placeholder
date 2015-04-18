@@ -306,8 +306,8 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 	}
 
 	for {
-    // Waste a few lines...
-    for i:=0; i<100; i++ {
+    // Waste a few lines...  (3032 lines in heldout.txt.csv)
+    for i:=0; i<1100; i++ {
       reader.Read()
     }
 
