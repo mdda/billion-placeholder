@@ -188,12 +188,61 @@ func read_train(filename string) PairList {
   return pl
 }
 
+func read_test_bigrams(filename string) PairList {
+	vocab := map[string]int{}
+
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return PairList{}
+	}
+	defer file.Close()
+	reader := csv.NewReader(file)
+
+	// First line different
+	header, err := reader.Read()
+	if header[0] != "id" {
+		fmt.Println("Bad Header", err)
+		return PairList{}
+	}
+
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error:", err)
+      return PairList{}
+		}
+		// record is []string
+    
+    txt   := record[1]
+    
+		words := strings.Split(txt, " ")
+    for i:=1; i<len(words)-1; i++ {
+      word := words[i] + "-" + words[i+1]
+      //fmt.Println("word:", word)
+      vocab[word]++
+    }
+  }    
+  pl := sortMapByValue(vocab)
+  
+  l := len(pl)
+  fmt.Printf("Test Vocab bigram size : %d\n", l)
+  
+  if(l>25) { l=25 }
+  for i := 0; i<l; i++ {
+    fmt.Printf("%7d -> %7d %s\n", i, pl[i].Value, pl[i].Key)
+  }  
+  
+  return pl
+}
 
 const currently_running_version int = 1000
 
 func main() {
-	cmd := flag.String("cmd", "", "Required : {}")
-	cmd_type := flag.String("type", "", "create:{fake_training_data|training_set_transitions|synthetic_transitions}, db:{test|insert_problems}, visualize:{data|ga}, submit:{kaggle|fakescore}")
+	cmd := flag.String("cmd", "", "Required : {size}")
+	cmd_type := flag.String("type", "", "size:{vocab|bigrams}")
 
 	//delta := flag.Int("delta", 0, "Number of steps between start and end")
 	seed := flag.Int64("seed", 1, "Random seed to use")
@@ -209,63 +258,65 @@ func main() {
 	//rand.Seed(time.Now().UnixNano())
 	rand.Seed(*seed)
 
-	fmt.Printf("Billion Start : %s\n", time.Now().Format("2006-01-02_15-04_05:06:07"))
+	fmt.Printf("Billion Start : %s\n", time.Now().Format("2006-01-02_15h04m05s"))
   start := time.Now()
 
 	fname_test  := "../data/0-orig/test_v2.txt"
 	fname_train := "../data/0-orig/train_v2.txt"
   
-  // Read in the vocab for test
-  test_pairs  := read_test(fname_test)
-	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
-  
-  train_pairs := read_train(fname_train)
-	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
-  
-  // Create an empty test vocab
-	test_vocab := map[string]int{}
-  for i:=0; i<len(test_pairs); i++ {
-    p := test_pairs[i]
-    test_vocab[p.Key] = 0
-  }
-  
-  // The fill it with train word freqs (where applicable)
-  for i:=0; i<len(train_pairs); i++ {
-    p := train_pairs[i]
-    if _, ok := test_vocab[p.Key]; ok {
-      test_vocab[p.Key] = p.Value
-    }
-  }
-  
-  // Count the non-zero-freq test words
-  nonzero :=0
-  
-  hist_max := 10
-  hist := make([]int,hist_max)
-  
-  for _,v := range test_vocab {
-    if v>0 {
-      nonzero++
-    }
-    if v<hist_max {
-      hist[v]++
-    }
-  }
+	if *cmd == "size" {
+		/// ./billion -cmd=size -type=vocab
+		if *cmd_type == "vocab" {
+      // Read in the vocab for test
+      test_pairs  := read_test(fname_test)
+      fmt.Printf("Billion elapsed : %s\n", time.Since(start))
+      
+      train_pairs := read_train(fname_train)
+      fmt.Printf("Billion elapsed : %s\n", time.Since(start))
+      
+      // Create an empty test vocab
+      test_vocab := map[string]int{}
+      for i:=0; i<len(test_pairs); i++ {
+        p := test_pairs[i]
+        test_vocab[p.Key] = 0
+      }
+      
+      // The fill it with train word freqs (where applicable)
+      for i:=0; i<len(train_pairs); i++ {
+        p := train_pairs[i]
+        if _, ok := test_vocab[p.Key]; ok {
+          test_vocab[p.Key] = p.Value
+        }
+      }
+      
+      // Count the non-zero-freq test words
+      nonzero :=0
+      
+      hist_max := 10
+      hist := make([]int,hist_max)
+      
+      for _,v := range test_vocab {
+        if v>0 {
+          nonzero++
+        }
+        if v<hist_max {
+          hist[v]++
+        }
+      }
 
-	fmt.Printf("NonZero   test vocab words : %d\n", nonzero)
-  for i:=0; i<hist_max; i++ {
-    fmt.Printf("%2d occurences in train : %d\n", i, hist[i])
-  }
-  
-	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
-
-	if *cmd == "db" {
-		/// ./billion -cmd=db -type=test
-		if *cmd_type == "test" {
-			//test_open_db()
+      fmt.Printf("NonZero   test vocab words : %d\n", nonzero)
+      for i:=0; i<hist_max; i++ {
+        fmt.Printf("%2d occurences in train : %d\n", i, hist[i])
+      }
 		}
-
+    
+		/// ./billion -cmd=size -type=bigrams
+		if *cmd_type == "bigrams" {
+      read_test_bigrams(fname_test)
+		}
 	}
+
+	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
 	/*
 		if *cmd=="create" {

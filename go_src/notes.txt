@@ -25,6 +25,7 @@ GOPATH=`pwd` go build billion.go  && ./billion
 
 
 
+ ./billion -cmd=size -type=vocab
 
 "Vocab size on test  is   187k, max freq(the)=   348k"
 "Vocab size on train is 2.4MM,  max freq(the)=35.9MM"
@@ -41,3 +42,8 @@ NonZero   test vocab words : 174440
  8 occurences in train : 1923
  9 occurences in train : 1810
 Billion elapsed : 1m41.1391878s
+
+
+./billion -cmd=size -type=bigrams
+
+Test Vocab bigram size : 1.9MM
