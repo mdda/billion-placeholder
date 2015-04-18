@@ -154,7 +154,7 @@ func vocab_to_pairslist(vocab *map[string]int) PairList {
 	pl := sortMapByValue(vocab)
 
 	l := len(pl)
-	fmt.Printf("Test Vocab size : %d\n", l)
+	fmt.Printf("Vocab size : %d\n", l)
 
 	if l > 25 {
 		l = 25
