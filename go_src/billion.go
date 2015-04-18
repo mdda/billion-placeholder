@@ -106,7 +106,7 @@ func read_test_ngram(filename string, n int) PairList {
 		if 2 == n {
 			words[0] = strings.ToLower(words[0])
 			for i := 0; i < len(words)-1; i++ {
-				word := words[i] + "-" + words[i+1]
+				word := words[i] + "|" + words[i+1]
 				//fmt.Println("word:", word)
 				vocab[word]++
 			}
@@ -206,11 +206,71 @@ func read_train(filename string) PairList {
 	return pl
 }
 
+
+type SplitterAtom struct {
+  Together int
+  Separate int
+}
+type Splitter map[string]SplitterAtom
+
+func get_train_ngrams(filename string, pl PairList) Splitter {
+	splitter := Splitter{}
+  for i:=0; i<len(pl); i++ {
+    splitter[pl[i].Key] = SplitterAtom{0,0}
+  }
+
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return splitter
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+
+	for scanner.Scan() {
+		txt := scanner.Text()
+    words := strings.Split(txt, " ")
+    words[0] = strings.ToLower(words[0])
+    
+    for i := 0; i < len(words)-1; i++ {
+      word := words[i] + "|" + words[i+1]
+      if sa, ok := splitter[word]; ok {
+        sa.Together++
+        splitter[word] = sa
+      }
+    }
+    for i := 0; i < len(words)-2; i++ {
+      word := words[i] + "|" + words[i+2]
+      if sa, ok := splitter[word]; ok {
+        sa.Separate++
+        splitter[word] = sa
+      }
+    }
+	}
+
+	if err := scanner.Err(); err != nil {
+		fmt.Println(err)
+		return splitter
+	}
+
+  // Stuff here
+
+	return splitter
+}
+
+func (self Splitter) Save(filename string) {
+}
+
+
 const currently_running_version int = 1000
 
 func main() {
 	cmd := flag.String("cmd", "", "Required : {size}")
 	cmd_type := flag.String("type", "", "size:{vocab|bigrams}")
+
+	file_save := flag.String("save", "", "filename")
+	//file_load := flag.String("load", "", "filename")
 
 	//delta := flag.Int("delta", 0, "Number of steps between start and end")
 	seed := flag.Int64("seed", 1, "Random seed to use")
@@ -280,7 +340,14 @@ func main() {
 
 		/// ./billion -cmd=size -type=bigrams
 		if *cmd_type == "bigrams" {
-			read_test_ngram(fname_test, 2)
+			pl := read_test_ngram(fname_test, 2)
+      
+      // Now, go through the training set, building up a picture of '' or 'something' for each found bigram
+      splitter := get_train_ngrams(fname_train, pl)
+      
+      if len(*file_save)>0 {
+        splitter.Save(*file_save)
+      }
 		}
 	}
 
