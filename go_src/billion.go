@@ -260,6 +260,19 @@ func get_train_ngrams(filename string, pl PairList) Splitter {
 }
 
 func (self Splitter) Save(filename string) {
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return 
+	}
+	defer file.Close()
+  
+	writer := bufio.NewWriter(file)
+
+	for w, sa := range self {
+    line := fmt.Sprintf("%s,%d,%d", w, sa.Together, sa.Separate)
+    writer.WriteString(line)
+  }
 }
 
 
@@ -338,7 +351,7 @@ func main() {
 			}
 		}
 
-		/// ./billion -cmd=size -type=bigrams
+		/// ./billion -cmd=size -type=bigrams -save=0-bigrams.csv
 		if *cmd_type == "bigrams" {
 			pl := read_test_ngram(fname_test, 2)
       
