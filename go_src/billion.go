@@ -21,6 +21,10 @@ import (
   "strings"
 )
 
+import (
+	"bufio"
+)
+
 // A data structure to hold a key/value pair.
 type Pair struct {
   Key string
@@ -45,12 +49,13 @@ func sortMapByValue(m map[string]int) PairList {
    return p
 }
 
+func read_test(filename string) PairList {
+	vocab := map[string]int{}
 
-func read_test(filename string) {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
-		return
+		return PairList{}
 	}
 	defer file.Close()
 	reader := csv.NewReader(file)
@@ -59,10 +64,8 @@ func read_test(filename string) {
 	header, err := reader.Read()
 	if header[0] != "id" {
 		fmt.Println("Bad Header", err)
-		return
+		return PairList{}
 	}
-
-	vocab := map[string]int{}
 
 /*
 	id_max := 0
@@ -81,7 +84,7 @@ func read_test(filename string) {
 			break
 		} else if err != nil {
 			fmt.Println("Error:", err)
-			return
+      return PairList{}
 		}
 		// record is []string
     
@@ -136,12 +139,53 @@ func read_test(filename string) {
   pl := sortMapByValue(vocab)
   
   l := len(pl)
-  fmt.Printf("Vocab size : %d\n", l)
+  fmt.Printf("Test Vocab size : %d\n", l)
   
-  if(l>100) { l=100 }
+  if(l>25) { l=25 }
   for i := 0; i<l; i++ {
     fmt.Printf("%7d -> %7d %s\n", i, pl[i].Value, pl[i].Key)
   }  
+  
+  return pl
+}
+
+func read_train(filename string) PairList {
+	vocab := map[string]int{}
+
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return PairList{}
+	}
+	defer file.Close()
+  
+  scanner := bufio.NewScanner(file)
+
+  for scanner.Scan() {
+    //  fmt.Println(scanner.Text())
+    txt := scanner.Text()
+    for _, word := range strings.Split(txt, " ") {
+      vocab[word]++
+    }
+  }
+
+  if err := scanner.Err(); err != nil {
+    //log.Fatal(err)
+    fmt.Println(err)
+		return PairList{}
+  }
+
+  pl := sortMapByValue(vocab)
+  
+  l := len(pl)
+  fmt.Printf("Train Vocab size : %d\n", l)
+  
+  if(l>25) { l=25 }
+  for i := 0; i<l; i++ {
+    fmt.Printf("%7d -> %7d %s\n", i, pl[i].Value, pl[i].Key)
+  }  
+  
+  return pl
 }
 
 
@@ -167,8 +211,11 @@ func main() {
 
 	fmt.Print("Billion Hellos\n")
 
-	fname := "../data/0-orig/test_v2.txt"
-  read_test(fname)
+	fname_test  := "../data/0-orig/test_v2.txt"
+	fname_train := "../data/0-orig/train_v2.txt"
+  
+  read_test(fname_test)
+  read_train(fname_train)
   
 
 	if *cmd == "db" {
