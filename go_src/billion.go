@@ -219,7 +219,8 @@ func read_test_bigrams(filename string) PairList {
     txt   := record[1]
     
 		words := strings.Split(txt, " ")
-    for i:=1; i<len(words)-1; i++ {
+    words[0] = strings.ToLower(words[0])
+    for i:=0; i<len(words)-1; i++ {
       word := words[i] + "-" + words[i+1]
       //fmt.Println("word:", word)
       vocab[word]++
