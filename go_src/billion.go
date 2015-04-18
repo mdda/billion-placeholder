@@ -287,6 +287,64 @@ func (self Splitter) Load(filename string) {
   }
 }
 
+func (self Splitter) CreateSubmission(filename_test string, filename_submit string) {
+	file, err := os.Open(filename_test)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return
+	}
+	defer file.Close()
+	reader := csv.NewReader(file)
+  
+	fmt.Printf("filename_submit = %s", filename_submit)
+
+	// First line different
+	header, err := reader.Read()
+	if header[0] != "id" {
+		fmt.Println("Bad Header", err)
+		return
+	}
+
+	for {
+    // Waste a few lines...
+    for i:=0; i<100; i++ {
+      reader.Read()
+    }
+
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		// record is []string
+
+		id, _ := strconv.ParseFloat(record[0], 32)
+		txt := record[1]
+
+		//fmt.Println("id,txt:", id, txt)
+    fmt.Printf("%6.4f\n", id)
+
+		words := strings.Split(txt, " ")
+    words[0] = strings.ToLower(words[0])
+    for i := 0; i < len(words)-1; i++ {
+      word := words[i] + "|" + words[i+1]
+      
+      // Let's print the word, and its corresponding stats
+      sa := self[word]
+      tot := sa.Together+sa.Separate
+      if 0==tot {
+         tot=1
+      }
+      fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%%\n", words[i], words[i+1], 
+        sa.Together, sa.Separate, sa.Together+sa.Separate, 100-(sa.Together*100)/tot)
+      
+    }
+    break
+	}
+}
+
 
 const currently_running_version int = 1000
 
@@ -315,7 +373,8 @@ func main() {
 	start := time.Now()
 
 	fname_test := "../data/0-orig/test_v2.txt"
-	fname_test_heldout := "../data/1-holdout/heldout.txt.csv"
+	fname_heldout := "../data/1-holdout/heldout.txt.csv"  // This was the data not included in the training set (same format as test)
+	fname_validation := "../data/1-holdout/valid.txt"     // This is a test set for which we have perfect comparison ('truth.txt')
   
 	//fname_train := "../data/0-orig/train_v2.txt"
 	fname_train := "../data/1-holdout/train.txt"
@@ -330,7 +389,7 @@ func main() {
       vocab_to_pairslist(&vocab)
       
 			// Read in the vocab for holdout file (additional, for validation)
-			read_test_ngram(fname_test_heldout, &vocab, 1)
+			read_test_ngram(fname_heldout, &vocab, 1)
       
       test_pairs := vocab_to_pairslist(&vocab)
       
@@ -385,7 +444,7 @@ func main() {
 			// Read in the vocab for test file
 			read_test_ngram(fname_test, &vocab, 2)
 			// Read in the vocab for holdout file (additional, for validation)
-			read_test_ngram(fname_test_heldout, &vocab, 2)
+			read_test_ngram(fname_heldout, &vocab, 2)
 
       pl := vocab_to_pairslist(&vocab)
       
@@ -399,12 +458,14 @@ func main() {
 	}
 
 	if *cmd == "validate" {
-		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv
+		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_01.csv
 		if *cmd_type == "bigrams" {
       //vocab := map[string]int{}
       splitter := Splitter{}
       splitter.Load(*file_load)
-      
+
+      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save)
+      //splitter.CreateSubmission(fname_test, "1-test"+*file_save)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
