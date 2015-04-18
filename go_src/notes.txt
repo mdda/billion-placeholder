@@ -15,4 +15,8 @@ fusermount -u /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
 
 
 
+git config --global credential.helper 'cache --timeout=3600'
+
+
+
 
