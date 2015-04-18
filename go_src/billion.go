@@ -17,7 +17,7 @@ import (
 	"encoding/csv"
 	"io"
 	"os"
-	//	"strconv"
+	"strconv"
 	"strings"
 )
 
@@ -253,10 +253,37 @@ func (self Splitter) Save(filename string) {
 	defer file.Close()
   
 	writer := bufio.NewWriter(file)
-
+  
 	for w, sa := range self {
-    line := fmt.Sprintf("%s,%d,%d\n", w, sa.Together, sa.Separate)
+    line := fmt.Sprintf("\"%s\",%d,%d\n", strings.Replace(w, "\"", "\"\"", -1), sa.Together, sa.Separate)
     writer.WriteString(line)
+  }
+  writer.Flush()
+}
+
+func (self Splitter) Load(filename string) {
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return 
+	}
+	defer file.Close()
+  
+	reader := csv.NewReader(file)
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		// record is []string
+    word := record[0]
+    together, _ := strconv.Atoi(record[1])
+    separate, _ := strconv.Atoi(record[2])
+    
+    self[word] = SplitterAtom{together,separate}
   }
 }
 
@@ -268,7 +295,7 @@ func main() {
 	cmd_type := flag.String("type", "", "size:{vocab|bigrams}")
 
 	file_save := flag.String("save", "", "filename")
-	//file_load := flag.String("load", "", "filename")
+	file_load := flag.String("load", "", "filename")
 
 	//delta := flag.Int("delta", 0, "Number of steps between start and end")
 	seed := flag.Int64("seed", 1, "Random seed to use")
@@ -371,6 +398,15 @@ func main() {
 		}
 	}
 
+	if *cmd == "validate" {
+		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv
+		if *cmd_type == "bigrams" {
+      //vocab := map[string]int{}
+      splitter := Splitter{}
+      splitter.Load(*file_load)
+      
+    }
+  }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
 	/*
