@@ -18,5 +18,10 @@ fusermount -u /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
 git config --global credential.helper 'cache --timeout=3600'
 
 
+cd go_fun
+go fmt -w billion.go
+
+GOPATH=`pwd` go build billion.go  && ./billion
+
 
 
