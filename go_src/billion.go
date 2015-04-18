@@ -238,18 +238,24 @@ func main() {
   }
   
   // Count the non-zero-freq test words
-  nonzero, ones :=0,0
+  nonzero :=0
+  
+  hist_max := 10
+  hist := make([]int,hist_max)
+  
   for _,v := range test_vocab {
     if v>0 {
       nonzero++
     }
-    if v==1 {
-      ones++
+    if v<hist_max {
+      hist[v]++
     }
   }
 
 	fmt.Printf("NonZero   test vocab words : %d\n", nonzero)
-	fmt.Printf("Once-only test vocab words : %d\n", ones)
+  for i:=0; i<hist_max; i++ {
+    fmt.Printf("%2d occurences in train : %d\n", i, hist[i])
+  }
   
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 

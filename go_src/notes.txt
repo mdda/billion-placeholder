@@ -30,5 +30,14 @@ GOPATH=`pwd` go build billion.go  && ./billion
 "Vocab size on train is 2.4MM,  max freq(the)=35.9MM"
 
 NonZero   test vocab words : 174440
-Once-only test vocab words : 5911
+ 0 occurences in train : 12717
+ 1 occurences in train : 5911
+ 2 occurences in train : 4215
+ 3 occurences in train : 3440
+ 4 occurences in train : 2900
+ 5 occurences in train : 2587
+ 6 occurences in train : 2312
+ 7 occurences in train : 2177
+ 8 occurences in train : 1923
+ 9 occurences in train : 1810
 Billion elapsed : 1m41.1391878s
