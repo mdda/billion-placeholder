@@ -49,7 +49,7 @@ func sortMapByValue(m map[string]int) PairList {
    return p
 }
 
-func read_test(filename string) PairList {
+func read_test_ngram(filename string, n int) PairList {
 	vocab := map[string]int{}
 
 	file, err := os.Open(filename)
@@ -93,9 +93,22 @@ func read_test(filename string) PairList {
     
 		//fmt.Println("id,txt:", id, txt)
     
-    for _, word := range strings.Split(txt, " ") {
-      //fmt.Println("word:", word)
-      vocab[word]++
+		words := strings.Split(txt, " ")
+    if 1==n {
+      for i:=0; i<len(words); i++ {
+        word := words[i]
+        //fmt.Println("word:", word)
+        vocab[word]++
+      }
+    }
+
+    if 2==n {
+      words[0] = strings.ToLower(words[0])
+      for i:=0; i<len(words)-1; i++ {
+        word := words[i] + "-" + words[i+1]
+        //fmt.Println("word:", word)
+        vocab[word]++
+      }
     }
     
     /*
@@ -188,56 +201,6 @@ func read_train(filename string) PairList {
   return pl
 }
 
-func read_test_bigrams(filename string) PairList {
-	vocab := map[string]int{}
-
-	file, err := os.Open(filename)
-	if err != nil {
-		fmt.Println("Error:", err)
-		return PairList{}
-	}
-	defer file.Close()
-	reader := csv.NewReader(file)
-
-	// First line different
-	header, err := reader.Read()
-	if header[0] != "id" {
-		fmt.Println("Bad Header", err)
-		return PairList{}
-	}
-
-	for {
-		record, err := reader.Read()
-		if err == io.EOF {
-			break
-		} else if err != nil {
-			fmt.Println("Error:", err)
-      return PairList{}
-		}
-		// record is []string
-    
-    txt   := record[1]
-    
-		words := strings.Split(txt, " ")
-    words[0] = strings.ToLower(words[0])
-    for i:=0; i<len(words)-1; i++ {
-      word := words[i] + "-" + words[i+1]
-      //fmt.Println("word:", word)
-      vocab[word]++
-    }
-  }    
-  pl := sortMapByValue(vocab)
-  
-  l := len(pl)
-  fmt.Printf("Test Vocab bigram size : %d\n", l)
-  
-  if(l>25) { l=25 }
-  for i := 0; i<l; i++ {
-    fmt.Printf("%7d -> %7d %s\n", i, pl[i].Value, pl[i].Key)
-  }  
-  
-  return pl
-}
 
 const currently_running_version int = 1000
 
@@ -269,7 +232,7 @@ func main() {
 		/// ./billion -cmd=size -type=vocab
 		if *cmd_type == "vocab" {
       // Read in the vocab for test
-      test_pairs  := read_test(fname_test)
+      test_pairs  := read_test_ngram(fname_test,1)
       fmt.Printf("Billion elapsed : %s\n", time.Since(start))
       
       train_pairs := read_train(fname_train)
@@ -313,7 +276,7 @@ func main() {
     
 		/// ./billion -cmd=size -type=bigrams
 		if *cmd_type == "bigrams" {
-      read_test_bigrams(fname_test)
+      read_test_ngram(fname_test, 2)
 		}
 	}
 
