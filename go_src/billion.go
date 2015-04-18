@@ -307,7 +307,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 
 	for {
     // Waste a few lines...  (3032 lines in heldout.txt.csv)
-    for i:=0; i<1100; i++ {
+    for i:=0; i<1720; i++ {
       reader.Read()
     }
 
@@ -338,7 +338,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
          tot=1
       }
       fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%%\n", words[i], words[i+1], 
-        sa.Together, sa.Separate, sa.Together+sa.Separate, 100-(sa.Together*100)/tot)
+        sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot)
       
     }
     break
