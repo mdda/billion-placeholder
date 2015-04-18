@@ -290,3 +290,17 @@ http://stackoverflow.com/questions/25166657/index-gymnastics-inside-a-theano-fun
 # Messing around with Stanford's GloVe words
 https://gist.github.com/JonathanRaiman/0d45d1ab214119cf45eb
 
+
+
+yum install sshfs
+
+mkdir /mnt/data/OpenSource-GitHub/billion-placeholder-mount
+
+# For home directory :
+sshfs remote-username@remote-server-name: /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
+
+# For specific directory (and map 'local' me to the 'remote' user) :
+sshfs -o idmap=user andrewsm@holland.herald:/home/andrewsm/OpenSource/billion-placeholder /mnt/data/OpenSource-GitHub/billion-placeholder-mount
+
+
+fusermount -u /mnt/data/OpenSource-GitHub/billion-placeholder-mount/

@@ -1,0 +1,18 @@
+
+yum install sshfs
+
+mkdir /mnt/data/OpenSource-GitHub/billion-placeholder-mount
+
+# For home directory :
+sshfs remote-username@remote-server-name: /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
+
+# For specific directory (and map 'local' me to the 'remote' user) :
+sshfs -o idmap=user andrewsm@holland.herald:/home/andrewsm/OpenSource/billion-placeholder /mnt/data/OpenSource-GitHub/billion-placeholder-mount
+
+
+fusermount -u /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
+
+
+
+
+
