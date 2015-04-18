@@ -39,10 +39,10 @@ func (p PairList) Len() int           { return len(p) }
 func (p PairList) Less(i, j int) bool { return p[i].Value > p[j].Value } // Sort DESC
 
 // A function to turn a map into a PairList, then sort and return it.
-func sortMapByValue(m map[string]int) PairList {
-	p := make(PairList, len(m))
+func sortMapByValue(m *map[string]int) PairList {
+	p := make(PairList, len(*m))
 	i := 0
-	for k, v := range m {
+	for k, v := range *m {
 		p[i] = Pair{k, v}
 		i++
 	}
@@ -50,13 +50,12 @@ func sortMapByValue(m map[string]int) PairList {
 	return p
 }
 
-func read_test_ngram(filename string, n int) PairList {
-	vocab := map[string]int{}
-
+// This adds the results of the read into the vocab passed as a pointer
+func read_test_ngram(filename string, vocab *map[string]int, n int) {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
-		return PairList{}
+		return
 	}
 	defer file.Close()
 	reader := csv.NewReader(file)
@@ -65,7 +64,7 @@ func read_test_ngram(filename string, n int) PairList {
 	header, err := reader.Read()
 	if header[0] != "id" {
 		fmt.Println("Bad Header", err)
-		return PairList{}
+		return
 	}
 
 	/*
@@ -85,7 +84,7 @@ func read_test_ngram(filename string, n int) PairList {
 			break
 		} else if err != nil {
 			fmt.Println("Error:", err)
-			return PairList{}
+			return
 		}
 		// record is []string
 
@@ -99,7 +98,7 @@ func read_test_ngram(filename string, n int) PairList {
 			for i := 0; i < len(words); i++ {
 				word := words[i]
 				//fmt.Println("word:", word)
-				vocab[word]++
+				(*vocab)[word]++
 			}
 		}
 
@@ -108,7 +107,7 @@ func read_test_ngram(filename string, n int) PairList {
 			for i := 0; i < len(words)-1; i++ {
 				word := words[i] + "|" + words[i+1]
 				//fmt.Println("word:", word)
-				vocab[word]++
+				(*vocab)[word]++
 			}
 		}
 
@@ -149,7 +148,9 @@ func read_test_ngram(filename string, n int) PairList {
 			}
 		*/
 	}
+}
 
+func vocab_to_pairslist(vocab *map[string]int) PairList {
 	pl := sortMapByValue(vocab)
 
 	l := len(pl)
@@ -165,13 +166,11 @@ func read_test_ngram(filename string, n int) PairList {
 	return pl
 }
 
-func read_train(filename string) PairList {
-	vocab := map[string]int{}
-
+func read_train(filename string, vocab *map[string]int) {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
-		return PairList{}
+		return
 	}
 	defer file.Close()
 
@@ -181,29 +180,15 @@ func read_train(filename string) PairList {
 		//  fmt.Println(scanner.Text())
 		txt := scanner.Text()
 		for _, word := range strings.Split(txt, " ") {
-			vocab[word]++
+			(*vocab)[word]++
 		}
 	}
 
 	if err := scanner.Err(); err != nil {
 		//log.Fatal(err)
 		fmt.Println(err)
-		return PairList{}
+		return
 	}
-
-	pl := sortMapByValue(vocab)
-
-	l := len(pl)
-	fmt.Printf("Train Vocab size : %d\n", l)
-
-	if l > 25 {
-		l = 25
-	}
-	for i := 0; i < l; i++ {
-		fmt.Printf("%7d -> %7d %s\n", i, pl[i].Value, pl[i].Key)
-	}
-
-	return pl
 }
 
 
@@ -270,7 +255,7 @@ func (self Splitter) Save(filename string) {
 	writer := bufio.NewWriter(file)
 
 	for w, sa := range self {
-    line := fmt.Sprintf("%s,%d,%d", w, sa.Together, sa.Separate)
+    line := fmt.Sprintf("%s,%d,%d\n", w, sa.Together, sa.Separate)
     writer.WriteString(line)
   }
 }
@@ -303,16 +288,31 @@ func main() {
 	start := time.Now()
 
 	fname_test := "../data/0-orig/test_v2.txt"
-	fname_train := "../data/0-orig/train_v2.txt"
+	fname_test_heldout := "../data/1-holdout/heldout.txt.csv"
+  
+	//fname_train := "../data/0-orig/train_v2.txt"
+	fname_train := "../data/1-holdout/train.txt"
 
 	if *cmd == "size" {
 		/// ./billion -cmd=size -type=vocab
 		if *cmd_type == "vocab" {
-			// Read in the vocab for test
-			test_pairs := read_test_ngram(fname_test, 1)
+      vocab := map[string]int{}
+      
+			// Read in the vocab for test file
+			read_test_ngram(fname_test, &vocab, 1)
+      vocab_to_pairslist(&vocab)
+      
+			// Read in the vocab for holdout file (additional, for validation)
+			read_test_ngram(fname_test_heldout, &vocab, 1)
+      
+      test_pairs := vocab_to_pairslist(&vocab)
+      
 			fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
-			train_pairs := read_train(fname_train)
+      vocab_train := map[string]int{}
+			read_train(fname_train, &vocab_train)
+      train_pairs := vocab_to_pairslist(&vocab_train)
+      
 			fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
 			// Create an empty test vocab
@@ -353,7 +353,14 @@ func main() {
 
 		/// ./billion -cmd=size -type=bigrams -save=0-bigrams.csv
 		if *cmd_type == "bigrams" {
-			pl := read_test_ngram(fname_test, 2)
+      vocab := map[string]int{}
+      
+			// Read in the vocab for test file
+			read_test_ngram(fname_test, &vocab, 2)
+			// Read in the vocab for holdout file (additional, for validation)
+			read_test_ngram(fname_test_heldout, &vocab, 2)
+
+      pl := vocab_to_pairslist(&vocab)
       
       // Now, go through the training set, building up a picture of '' or 'something' for each found bigram
       splitter := get_train_ngrams(fname_train, pl)

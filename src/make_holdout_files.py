@@ -19,10 +19,12 @@ input_file = open(args.input)
 
 train_file = open(args.train, 'w')
 heldout_file = open(args.heldout, 'w')
+heldout_csv = open(args.heldout+".csv", 'w')
 
 truth_file = open(args.truth, 'w')
 validation_file = open(args.valid, 'w')
 
+heldout_csv.write('"id","sentence"\n')
 truth_file.write('"id","sentence"\n')
 validation_file.write('"id","sentence"\n')
 
@@ -33,11 +35,13 @@ for l, line in enumerate(input_file):
     continue
   
   heldout_file.write(line)  # Same format as training file
+  #heldout_csv.write(',"+line+"\n')
     
   billion.util.print_thousands("Line # ", l)
   # Use this iter :: it's going into our 'holdout set'
 
   words = billion.util.stringize_test(line).split()
+  heldout_csv.write('%d,"%s"\n' % (l, ' '.join(words), ))
 
   for i in range(1, len(words)-1):
     # i is the word we're going to drop, not first or last...
@@ -52,6 +56,7 @@ input_file.close()
 
 train_file.close()
 heldout_file.close()
+heldout_csv.close()
 
 truth_file.close()
 validation_file.close()

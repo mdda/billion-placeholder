@@ -17,6 +17,13 @@ fusermount -u /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
 
 git config --global credential.helper 'cache --timeout=3600'
 
+. env/bin/activate
+python src/make_holdout_files.py --input data/0-orig/train_v2.txt \
+								 --train data/1-holdout/train.txt --heldout data/1-holdout/heldout.txt \
+                 --truth data/1-holdout/truth.txt --valid data/1-holdout/valid.txt 
+python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission data/1-holdout/valid.txt 
+
+
 
 cd go_fun
 go fmt -w billion.go
@@ -31,24 +38,27 @@ Billion Start : 2015-04-18_17h03m25s
 "Vocab size on test  is   187k, max freq(the)=   348k"
 "Vocab size on train is 2.4MM,  max freq(the)=35.9MM"
 
-NonZero   test vocab words : 174440
- 0 occurences in train : 12717
- 1 occurences in train : 5911
- 2 occurences in train : 4215
- 3 occurences in train : 3440
- 4 occurences in train : 2900
- 5 occurences in train : 2587
- 6 occurences in train : 2312
- 7 occurences in train : 2177
- 8 occurences in train : 1923
- 9 occurences in train : 1810
-Billion elapsed : 1m41.1391878s
+NonZero   test vocab words : 174440  // test 2 only
+
+NonZero   test vocab words : 175325  // Including Holdout too
+ 0 occurences in train : 12843
+ 1 occurences in train : 5971
+ 2 occurences in train : 4264
+ 3 occurences in train : 3473
+ 4 occurences in train : 2934
+ 5 occurences in train : 2616
+ 6 occurences in train : 2337
+ 7 occurences in train : 2204
+ 8 occurences in train : 1947
+ 9 occurences in train : 1823
+Billion elapsed : 1m43.704659258s
 
 
 ./billion -cmd=size -type=bigrams -save=0-bigrams.csv
 Test Vocab bigram size : 1.9MM
 
 ls -l *.csv
--rw-rw-r--. 1 andrewsm andrewsm 35434496 Apr 18 22:52 0-bigrams.csv
+-rw-rw-r--. 1 andrewsm andrewsm 37408768 Apr 18 23:01 0-bigrams.csv
+
 
 
