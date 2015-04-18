@@ -25,3 +25,10 @@ GOPATH=`pwd` go build billion.go  && ./billion
 
 
 
+
+"Vocab size on test  is   187k, max freq(the)=   348k"
+"Vocab size on train is 2.4MM,  max freq(the)=35.9MM"
+
+NonZero   test vocab words : 174440
+Once-only test vocab words : 5911
+Billion elapsed : 1m41.1391878s

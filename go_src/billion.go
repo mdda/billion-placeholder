@@ -4,7 +4,7 @@ package main
 
 import (
 	"fmt"
-	//	"time"
+	"time"
 	"flag"
 	"math/rand"
 )
@@ -209,14 +209,49 @@ func main() {
 	//rand.Seed(time.Now().UnixNano())
 	rand.Seed(*seed)
 
-	fmt.Print("Billion Hellos\n")
+	fmt.Printf("Billion Start : %s\n", time.Now().Format("2006-01-02_15-04_05:06:07"))
+  start := time.Now()
 
 	fname_test  := "../data/0-orig/test_v2.txt"
 	fname_train := "../data/0-orig/train_v2.txt"
   
-  read_test(fname_test)
-  read_train(fname_train)
+  // Read in the vocab for test
+  test_pairs  := read_test(fname_test)
+	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
   
+  train_pairs := read_train(fname_train)
+	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
+  
+  // Create an empty test vocab
+	test_vocab := map[string]int{}
+  for i:=0; i<len(test_pairs); i++ {
+    p := test_pairs[i]
+    test_vocab[p.Key] = 0
+  }
+  
+  // The fill it with train word freqs (where applicable)
+  for i:=0; i<len(train_pairs); i++ {
+    p := train_pairs[i]
+    if _, ok := test_vocab[p.Key]; ok {
+      test_vocab[p.Key] = p.Value
+    }
+  }
+  
+  // Count the non-zero-freq test words
+  nonzero, ones :=0,0
+  for _,v := range test_vocab {
+    if v>0 {
+      nonzero++
+    }
+    if v==1 {
+      ones++
+    }
+  }
+
+	fmt.Printf("NonZero   test vocab words : %d\n", nonzero)
+	fmt.Printf("Once-only test vocab words : %d\n", ones)
+  
+	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
 	if *cmd == "db" {
 		/// ./billion -cmd=db -type=test
