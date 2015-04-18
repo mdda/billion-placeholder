@@ -22,10 +22,11 @@ cd go_fun
 go fmt -w billion.go
 
 GOPATH=`pwd` go build billion.go  && ./billion
+Billion Start : 2015-04-18_17h03m25s
+...
 
 
-
- ./billion -cmd=size -type=vocab
+./billion -cmd=size -type=vocab
 
 "Vocab size on test  is   187k, max freq(the)=   348k"
 "Vocab size on train is 2.4MM,  max freq(the)=35.9MM"
@@ -45,5 +46,4 @@ Billion elapsed : 1m41.1391878s
 
 
 ./billion -cmd=size -type=bigrams
-
 Test Vocab bigram size : 1.9MM
