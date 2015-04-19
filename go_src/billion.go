@@ -411,7 +411,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       if sa.Separate<10 { // Evidence either way is very poor
         v=0 //
       }
-      if (sa.Separate*100)/tot<75 { // poor percentage suggesting split
+      if (sa.Separate*100)/tot<90 { // poor percentage suggesting split
         v=0
       }
       
