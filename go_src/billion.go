@@ -356,7 +356,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 	for {
     if(false) {
       // Waste a few lines...  (3032 lines in heldout.txt.csv)
-      for i:=0; i<1720; i++ {
+      for i:=0; i<1420; i++ {
         reader.Read()
       }
     }
@@ -376,6 +376,9 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 
     //fmt.Printf("%6.4f\n", id)
 
+    best_i := -1
+    best_v := -1
+
 		words := strings.Split(txt, " ")
     words[0] = strings.ToLower(words[0])
     for i := 0; i < len(words)-1; i++ {
@@ -390,18 +393,41 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       if 0==tot {
          tot=1
       }
+      max_prop := (tot*100)/v0
+      if max_prop < (tot*100)/v1 {
+        max_prop = (tot*100)/v1
+      }
+      v := (max_prop * sa.Separate)/tot
+      if (sa.Separate*100)/tot<50 {
+        //v=0
+      }
+      
+      if v>best_v {
+        best_i=i
+        best_v=v
+      }
+      
       if(true) {
-        fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)\n", words[i], words[i+1], 
+        fmt.Printf("%12s - %12s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1], 
           sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot,
-          v0, v1)
+          v0, v1, (tot*100)/v0, (tot*100)/v1,
+          v )
       }
     }
     
     //line := fmt.Sprintf("\"%s\",%d,%d\n", strings.Replace(w, "\"", "\"\"", -1), sa.Together, sa.Separate)
     //writer.Write( []string{id, strings.Join( words_verbatim, " ")} )
     
-    words_verbatim := strings.Split(txt, " ")
-    txt_out := strings.Join( words_verbatim, " ")
+    words_output := strings.Split(txt, " ")
+    
+    if best_v>0 { // Insert it into the list of words
+      i := best_i+1
+      words_output = append(words_output, "")
+      copy(words_output[i+1:], words_output[i:])
+      words_output[i] = "" // Insert an empty word...
+    }
+    
+    txt_out := strings.Join( words_output, " ")
     writer.WriteString( fmt.Sprintf("%s,\"%s\"\n", id, strings.Replace(txt_out, "\"", "\"\"", -1)) )
     
     break
