@@ -576,7 +576,7 @@ func main() {
 	}
 
 	if *cmd == "validate" {
-		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_01.csv
+		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -hyper=1,2,3,5,6
 		if *cmd_type == "bigrams" {
       vocab := Vocab{}
       vocab.Load("0-vocab.csv") // Hard coded for now
@@ -585,7 +585,7 @@ func main() {
       splitter.Load(*file_load)
 
       splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip)
-      splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
+      //splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
