@@ -239,8 +239,6 @@ func get_train_ngrams(filename string, pl PairList) Splitter {
 		return splitter
 	}
 
-  // Stuff here
-
 	return splitter
 }
 
@@ -251,12 +249,11 @@ func (self Splitter) Save(filename string) {
 		return 
 	}
 	defer file.Close()
-  
-	writer := bufio.NewWriter(file)
+	writer := csv.NewWriter(file)
   
 	for w, sa := range self {
-    line := fmt.Sprintf("\"%s\",%d,%d\n", strings.Replace(w, "\"", "\"\"", -1), sa.Together, sa.Separate)
-    writer.WriteString(line)
+    //line := fmt.Sprintf("\"%s\",%d,%d\n", strings.Replace(w, "\"", "\"\"", -1), sa.Together, sa.Separate)
+    writer.Write( []string{w, strconv.Itoa(sa.Together), strconv.Itoa(sa.Separate)} )
   }
   writer.Flush()
 }
@@ -288,15 +285,23 @@ func (self Splitter) Load(filename string) {
 }
 
 func (self Splitter) CreateSubmission(filename_test string, filename_submit string) {
-	file, err := os.Open(filename_test)
+	file_in, err := os.Open(filename_test)
 	if err != nil {
-		fmt.Println("Error:", err)
+		fmt.Println("Error file_in:", err)
 		return
 	}
-	defer file.Close()
-	reader := csv.NewReader(file)
+	defer file_in.Close()
+	reader := csv.NewReader(file_in)
   
-	fmt.Printf("filename_submit = %s", filename_submit)
+	file_out, err := os.Create(filename_submit)
+	if err != nil {
+		fmt.Println("Error file_out:", err)
+		return 
+	}
+	defer file_out.Close()
+	writer := bufio.NewWriter(file_out)  // since csv.Writer doesn't allow force quoting
+  
+	//fmt.Printf("filename_submit = %s", filename_submit)
 
 	// First line different
 	header, err := reader.Read()
@@ -304,11 +309,14 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 		fmt.Println("Bad Header", err)
 		return
 	}
+  writer.WriteString("\"id\",\"sentence\"\n");
 
 	for {
-    // Waste a few lines...  (3032 lines in heldout.txt.csv)
-    for i:=0; i<1720; i++ {
-      reader.Read()
+    if(false) {
+      // Waste a few lines...  (3032 lines in heldout.txt.csv)
+      for i:=0; i<1720; i++ {
+        reader.Read()
+      }
     }
 
 		record, err := reader.Read()
@@ -320,11 +328,11 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 		}
 		// record is []string
 
-		id, _ := strconv.ParseFloat(record[0], 32)
+		//id, _ := strconv.ParseFloat(record[0], 32)
+    id  := record[0] // Don't really care about content
 		txt := record[1]
 
-		//fmt.Println("id,txt:", id, txt)
-    fmt.Printf("%6.4f\n", id)
+    //fmt.Printf("%6.4f\n", id)
 
 		words := strings.Split(txt, " ")
     words[0] = strings.ToLower(words[0])
@@ -337,12 +345,22 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       if 0==tot {
          tot=1
       }
-      fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%%\n", words[i], words[i+1], 
-        sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot)
-      
+      if(false) {
+        fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%%\n", words[i], words[i+1], 
+          sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot)
+      }
     }
-    break
+    
+    //line := fmt.Sprintf("\"%s\",%d,%d\n", strings.Replace(w, "\"", "\"\"", -1), sa.Together, sa.Separate)
+    //writer.Write( []string{id, strings.Join( words_verbatim, " ")} )
+    
+    words_verbatim := strings.Split(txt, " ")
+    txt_out := strings.Join( words_verbatim, " ")
+    writer.WriteString( fmt.Sprintf("%s,\"%s\"\n", id, strings.Replace(txt_out, "\"", "\"\"", -1)) )
+    
+    //break
 	}
+  writer.Flush()
 }
 
 
