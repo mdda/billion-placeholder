@@ -25,6 +25,8 @@ import (
 	"bufio"
 )
 
+type Vocab map[string]int
+
 // A data structure to hold a key/value pair.
 type Pair struct {
 	Key   string
@@ -39,7 +41,8 @@ func (p PairList) Len() int           { return len(p) }
 func (p PairList) Less(i, j int) bool { return p[i].Value > p[j].Value } // Sort DESC
 
 // A function to turn a map into a PairList, then sort and return it.
-func sortMapByValue(m *map[string]int) PairList {
+//func sortMapByValue(m *map[string]int) PairList {
+func sortMapByValue(m *Vocab) PairList {
 	p := make(PairList, len(*m))
 	i := 0
 	for k, v := range *m {
@@ -51,7 +54,7 @@ func sortMapByValue(m *map[string]int) PairList {
 }
 
 // This adds the results of the read into the vocab passed as a pointer
-func read_test_ngram(filename string, vocab *map[string]int, n int) {
+func (vocab *Vocab) ReadTestNGram(filename string, n int) {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -150,7 +153,7 @@ func read_test_ngram(filename string, vocab *map[string]int, n int) {
 	}
 }
 
-func vocab_to_pairslist(vocab *map[string]int) PairList {
+func (vocab *Vocab) MakeSortedPairList() PairList {
 	pl := sortMapByValue(vocab)
 
 	l := len(pl)
@@ -166,7 +169,7 @@ func vocab_to_pairslist(vocab *map[string]int) PairList {
 	return pl
 }
 
-func read_train(filename string, vocab *map[string]int) {
+func (vocab *Vocab) ReadTrainingFile(filename string) {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -400,22 +403,22 @@ func main() {
 	if *cmd == "size" {
 		/// ./billion -cmd=size -type=vocab
 		if *cmd_type == "vocab" {
-      vocab := map[string]int{}
+      vocab := Vocab{}
       
 			// Read in the vocab for test file
-			read_test_ngram(fname_test, &vocab, 1)
-      vocab_to_pairslist(&vocab)
+			vocab.ReadTestNGram(fname_test, 1)
+      //vocab.MakeSortedPairList()
       
 			// Read in the vocab for holdout file (additional, for validation)
-			read_test_ngram(fname_heldout, &vocab, 1)
+			vocab.ReadTestNGram(fname_heldout, 1)
       
-      test_pairs := vocab_to_pairslist(&vocab)
+      test_pairs := vocab.MakeSortedPairList()
       
 			fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
-      vocab_train := map[string]int{}
-			read_train(fname_train, &vocab_train)
-      train_pairs := vocab_to_pairslist(&vocab_train)
+      vocab_train := Vocab{}
+			vocab_train.ReadTrainingFile(fname_train)
+      train_pairs := vocab_train.MakeSortedPairList()
       
 			fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
@@ -457,14 +460,14 @@ func main() {
 
 		/// ./billion -cmd=size -type=bigrams -save=0-bigrams.csv
 		if *cmd_type == "bigrams" {
-      vocab := map[string]int{}
+      vocab := Vocab{}
       
 			// Read in the vocab for test file
-			read_test_ngram(fname_test, &vocab, 2)
+			vocab.ReadTestNGram(fname_test, 2)
 			// Read in the vocab for holdout file (additional, for validation)
-			read_test_ngram(fname_heldout, &vocab, 2)
+			vocab.ReadTestNGram(fname_heldout, 2)
 
-      pl := vocab_to_pairslist(&vocab)
+      pl := vocab.MakeSortedPairList()
       
       // Now, go through the training set, building up a picture of '' or 'something' for each found bigram
       splitter := get_train_ngrams(fname_train, pl)
