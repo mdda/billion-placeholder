@@ -326,7 +326,7 @@ func (self Splitter) Load(filename string) {
   }
 }
 
-func (self Splitter) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab) {
+func (self Splitter) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab, skip_check int) {
 	file_in, err := os.Open(filename_test)
 	if err != nil {
 		fmt.Println("Error file_in:", err)
@@ -354,9 +354,9 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
   writer.WriteString("\"id\",\"sentence\"\n");
 
 	for {
-    if(false) {
+    if(skip_check>0) {
       // Waste a few lines...  (3032 lines in heldout.txt.csv)
-      for i:=0; i<1420; i++ {
+      for i:=0; i<skip_check-1; i++ {
         reader.Read()
       }
     }
@@ -403,8 +403,12 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       }
       
       v := (max_prop * sa.Separate)/tot
-      if (sa.Separate*100)/tot<50 {
-        //v=0
+      //if (sa.Separate*100)/tot<50 {
+      if sa.Separate<50 { // No evidence
+        v=0 //
+      }
+      if (sa.Separate*100)/tot<75 { // poor percentage suggesting split
+        v=0
       }
       
       if v>best_v {
@@ -412,7 +416,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
         best_v=v
       }
       
-      if(false) {
+      if(skip_check>0) {
         fmt.Printf("%12s - %12s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1], 
           sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot,
           v0, v1, (tot*100)/v0, (tot*100)/v1,
@@ -435,7 +439,9 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     txt_out := strings.Join( words_output, " ")
     writer.WriteString( fmt.Sprintf("%s,\"%s\"\n", id, strings.Replace(txt_out, "\"", "\"\"", -1)) )
     
-    //break
+    if(skip_check>0) {
+      break
+    }
 	}
   writer.Flush()
 }
@@ -452,6 +458,8 @@ func main() {
 
 	//delta := flag.Int("delta", 0, "Number of steps between start and end")
 	seed := flag.Int64("seed", 1, "Random seed to use")
+  
+	skip := flag.Int("skip", 0, "Debugging aid")
 
 	//id := flag.Int("id", 0, "Specific id to examine")
 	//training_only := flag.Bool("training", false, "Act on training set (default=false, i.e. test set)")
@@ -565,8 +573,8 @@ func main() {
       splitter := Splitter{}
       splitter.Load(*file_load)
 
-      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab)
-      //splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab)
+      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip)
+      //splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
