@@ -194,6 +194,45 @@ func (vocab *Vocab) ReadTrainingFile(filename string) {
 	}
 }
 
+func (self Vocab) Save(filename string) {
+	file, err := os.Create(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return 
+	}
+	defer file.Close()
+	writer := csv.NewWriter(file)
+  
+	for w, c := range self {
+    writer.Write( []string{w, strconv.Itoa(c)} )
+  }
+  writer.Flush()
+}
+
+func (self Vocab) Load(filename string) {
+	file, err := os.Open(filename)
+	if err != nil {
+		fmt.Println("Error:", err)
+		return 
+	}
+	defer file.Close()
+  
+	reader := csv.NewReader(file)
+	for {
+		record, err := reader.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error:", err)
+			return
+		}
+		// record is []string
+    word := record[0]
+    count, _ := strconv.Atoi(record[1])
+    
+    self[word] = count
+  }
+}
 
 type SplitterAtom struct {
   Together int
