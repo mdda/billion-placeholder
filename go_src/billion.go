@@ -353,15 +353,19 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 	}
   writer.WriteString("\"id\",\"sentence\"\n");
 
+  line_num := 0
 	for {
     if(skip_check>0) {
       // Waste a few lines...  (3032 lines in heldout.txt.csv)
       for i:=0; i<skip_check-1; i++ {
         reader.Read()
+        line_num++
       }
     }
 
 		record, err := reader.Read()
+    line_num++
+    
 		if err == io.EOF {
 			break
 		} else if err != nil {
@@ -377,7 +381,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     //fmt.Printf("%6.4f\n", id)
 
     best_i := -1
-    best_v := -1
+    best_v := 20  // Must beat this to register at all
 
 		words := strings.Split(txt, " ")
     words[0] = strings.ToLower(words[0])
@@ -404,7 +408,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       
       v := (max_prop * sa.Separate)/tot
       //if (sa.Separate*100)/tot<50 {
-      if sa.Separate<50 { // No evidence
+      if sa.Separate<10 { // Evidence either way is very poor
         v=0 //
       }
       if (sa.Separate*100)/tot<75 { // poor percentage suggesting split
@@ -417,7 +421,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       }
       
       if(skip_check>0) {
-        fmt.Printf("%12s - %12s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1], 
+        fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1], 
           sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot,
           v0, v1, (tot*100)/v0, (tot*100)/v1,
           v )
@@ -429,11 +433,18 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     
     words_output := strings.Split(txt, " ")
     
-    if best_v>0 { // Insert it into the list of words
+    if best_i>=0 { // Insert it into the list of words
       i := best_i+1
       words_output = append(words_output, "")
       copy(words_output[i+1:], words_output[i:])
       words_output[i] = "" // Insert an empty word...
+      
+      if(true || skip_check>0) {
+        words_highlight := append(strings.Split(txt, " "), "")
+        copy(words_highlight[i+1:], words_highlight[i:])
+        words_highlight[i] = "***"
+        fmt.Printf("%d - %s\n", line_num, strings.Join( words_highlight, " "))
+      }
     }
     
     txt_out := strings.Join( words_output, " ")
