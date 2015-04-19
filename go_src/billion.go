@@ -393,10 +393,15 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       if 0==tot {
          tot=1
       }
-      max_prop := (tot*100)/v0
-      if max_prop < (tot*100)/v1 {
-        max_prop = (tot*100)/v1
+      
+      max_prop := 0
+      if v0>0 && v1>0 {
+        max_prop = (tot*100)/v0
+        if max_prop < (tot*100)/v1 {
+          max_prop = (tot*100)/v1
+        }
       }
+      
       v := (max_prop * sa.Separate)/tot
       if (sa.Separate*100)/tot<50 {
         //v=0
@@ -407,7 +412,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
         best_v=v
       }
       
-      if(true) {
+      if(false) {
         fmt.Printf("%12s - %12s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1], 
           sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot,
           v0, v1, (tot*100)/v0, (tot*100)/v1,
@@ -430,7 +435,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     txt_out := strings.Join( words_output, " ")
     writer.WriteString( fmt.Sprintf("%s,\"%s\"\n", id, strings.Replace(txt_out, "\"", "\"\"", -1)) )
     
-    break
+    //break
 	}
   writer.Flush()
 }

@@ -68,4 +68,8 @@ ls -l *.csv
 python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission go_src/1-valid.bigram_01.csv
  Lines =    71,627  -> 5.54352  1SD=(5.53332, 5.55372)   (as expected - first test is identical to 'data/1-holdout/valid.txt ')
 
+With ultra-silly 'v' : 
+ Lines =    71,627  -> 6.33473  1SD=(6.32440, 6.34506) 
+
+
 
