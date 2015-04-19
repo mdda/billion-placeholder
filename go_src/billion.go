@@ -156,14 +156,13 @@ func (vocab *Vocab) ReadTestNGram(filename string, n int) {
 func (vocab *Vocab) MakeSortedPairList() PairList {
 	pl := sortMapByValue(vocab)
 
-	l := len(pl)
-	fmt.Printf("Vocab size : %d\n", l)
+	fmt.Printf("Vocab size : %d\n", len(pl))
 
-	if l > 25 {
-		l = 25
-	}
-	for i := 0; i < l; i++ {
-		fmt.Printf("%7d -> %7d %s\n", i, pl[i].Value, pl[i].Key)
+	for i,p := range pl {
+		fmt.Printf("%7d -> %8d %s\n", i, p.Value, p.Key)
+    if(i>=20) {
+      break
+    }
 	}
 
 	return pl
@@ -194,7 +193,7 @@ func (vocab *Vocab) ReadTrainingFile(filename string) {
 	}
 }
 
-func (self Vocab) Save(filename string) {
+func (self *Vocab) Save(filename string) {
 	file, err := os.Create(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -203,8 +202,9 @@ func (self Vocab) Save(filename string) {
 	defer file.Close()
 	writer := csv.NewWriter(file)
   
-	for w, c := range self {
-    writer.Write( []string{w, strconv.Itoa(c)} )
+	pl := sortMapByValue(self) // Far prefer this to be ordered...
+	for _,p := range pl {
+    writer.Write( []string{p.Key, strconv.Itoa(p.Value)} )
   }
   writer.Flush()
 }
@@ -326,7 +326,7 @@ func (self Splitter) Load(filename string) {
   }
 }
 
-func (self Splitter) CreateSubmission(filename_test string, filename_submit string) {
+func (self Splitter) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab) {
 	file_in, err := os.Open(filename_test)
 	if err != nil {
 		fmt.Println("Error file_in:", err)
@@ -380,6 +380,9 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     words[0] = strings.ToLower(words[0])
     for i := 0; i < len(words)-1; i++ {
       word := words[i] + "|" + words[i+1]
+
+      v0 := (*vocab)[words[i]]
+      v1 := (*vocab)[words[i+1]]
       
       // Let's print the word, and its corresponding stats
       sa := self[word]
@@ -387,9 +390,10 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       if 0==tot {
          tot=1
       }
-      if(false) {
-        fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%%\n", words[i], words[i+1], 
-          sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot)
+      if(true) {
+        fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)\n", words[i], words[i+1], 
+          sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot,
+          v0, v1)
       }
     }
     
@@ -400,7 +404,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     txt_out := strings.Join( words_verbatim, " ")
     writer.WriteString( fmt.Sprintf("%s,\"%s\"\n", id, strings.Replace(txt_out, "\"", "\"\"", -1)) )
     
-    //break
+    break
 	}
   writer.Flush()
 }
@@ -440,11 +444,11 @@ func main() {
 	fname_train := "../data/1-holdout/train.txt"
 
 	if *cmd == "size" {
-		/// ./billion -cmd=size -type=vocab
+		/// ./billion -cmd=size -type=vocab -save=0-vocab.csv
 		if *cmd_type == "vocab" {
       vocab := Vocab{}
       
-			// Read in the vocab for test file
+			// Read in the vocab for test file - counts will be disgarded
 			vocab.ReadTestNGram(fname_test, 1)
       //vocab.MakeSortedPairList()
       
@@ -461,8 +465,8 @@ func main() {
       
 			fmt.Printf("Billion elapsed : %s\n", time.Since(start))
 
-			// Create an empty test vocab
-			test_vocab := map[string]int{}
+			// Create an empty test vocab from the test set 'skeleton'
+			test_vocab := Vocab{}
 			for i := 0; i < len(test_pairs); i++ {
 				p := test_pairs[i]
 				test_vocab[p.Key] = 0
@@ -495,6 +499,10 @@ func main() {
 			for i := 0; i < hist_max; i++ {
 				fmt.Printf("%2d occurences in train : %d\n", i, hist[i])
 			}
+      
+      if len(*file_save)>0 {
+        test_vocab.Save(*file_save)
+      }
 		}
 
 		/// ./billion -cmd=size -type=bigrams -save=0-bigrams.csv
@@ -520,12 +528,14 @@ func main() {
 	if *cmd == "validate" {
 		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_01.csv
 		if *cmd_type == "bigrams" {
-      //vocab := map[string]int{}
+      vocab := Vocab{}
+      vocab.Load("0-vocab.csv") // Hard coded for now
+      
       splitter := Splitter{}
       splitter.Load(*file_load)
 
-      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save)
-      //splitter.CreateSubmission(fname_test, "1-test"+*file_save)
+      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab)
+      //splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))

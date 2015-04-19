@@ -33,7 +33,8 @@ Billion Start : 2015-04-18_17h03m25s
 ...
 
 
-./billion -cmd=size -type=vocab
+./billion -cmd=size -type=vocab -save=0-vocab.csv
+
 
 "Vocab size on test  is   187k, max freq(the)=   348k"
 "Vocab size on train is 2.4MM,  max freq(the)=35.9MM"
