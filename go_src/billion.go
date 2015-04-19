@@ -585,7 +585,7 @@ func main() {
       splitter.Load(*file_load)
 
       splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip)
-      //splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
+      splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
