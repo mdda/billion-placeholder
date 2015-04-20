@@ -329,7 +329,7 @@ func (self Splitter) Load(filename string) {
   }
 }
 
-func (self Splitter) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab, skip_check int) {
+func (self Splitter) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab, skip_check int, hyper []int) {
 	file_in, err := os.Open(filename_test)
 	if err != nil {
 		fmt.Println("Error file_in:", err)
@@ -384,7 +384,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     //fmt.Printf("%6.4f\n", id)
 
     best_i := -1
-    best_v := 20  // Must beat this to register at all
+    best_v := 20 + hyper[0]  // Must beat this to register at all
 
 		words := strings.Split(txt, " ")
     words[0] = strings.ToLower(words[0])
@@ -411,10 +411,10 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       
       v := (max_prop * sa.Separate)/tot
       //if (sa.Separate*100)/tot<50 {
-      if sa.Separate<10 { // Evidence either way is very poor
+      if sa.Separate<( 10 + hyper[1] ) { // Evidence either way is very poor
         v=0 //
       }
-      if (sa.Separate*100)/tot<90 { // poor percentage suggesting split
+      if (sa.Separate*100)/tot<( 90 + hyper[2] ) { // poor percentage suggesting split
         v=0
       }
       
@@ -442,7 +442,7 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       copy(words_output[i+1:], words_output[i:])
       words_output[i] = "" // Insert an empty word...
       
-      if(true || skip_check>0) {
+      if(false || skip_check>0) {
         words_highlight := append(strings.Split(txt, " "), "")
         copy(words_highlight[i+1:], words_highlight[i:])
         words_highlight[i] = "***"
@@ -545,6 +545,8 @@ func main() {
   
 	skip := flag.Int("skip", 0, "Debugging aid")
 	submit := flag.Int("submit", 0, "Build the submissions file too")
+
+	hyper_str := flag.String("hyper", "0,0,0,0,0,0,0,0,0,0", "integer,comma-separated hyperparameters (up to 10)")
 
 	//id := flag.Int("id", 0, "Specific id to examine")
 	//training_only := flag.Bool("training", false, "Act on training set (default=false, i.e. test set)")
@@ -660,9 +662,19 @@ func main() {
       splitter := Splitter{}
       splitter.Load(*file_load)
 
-      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip)
+			hyper := make([]int,10)
+			if len(*hyper_str)>0 {
+				hyper_p := strings.Split(*hyper_str, ",")
+				for i,s := range hyper_p {
+					if i<10 {
+						hyper[i], _ = strconv.Atoi(s)
+					}
+				}
+			}
+
+      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip, hyper)
       if *submit>0 {
-				splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
+				splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
 			}
     }
 		if *cmd_type == "score" {
