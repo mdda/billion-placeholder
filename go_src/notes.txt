@@ -58,6 +58,9 @@ Billion elapsed : 1m43.704659258s
 ./billion -cmd=size -type=bigrams -save=0-bigrams.csv
 Test Vocab bigram size : 1.9MM
 
+Laptop :: Billion elapsed : 9m46.05317233s
+
+
 ls -l *.csv
 -rw-rw-r--. 1 andrewsm andrewsm 41692493 Apr 19 22:31 0-bigrams.csv
 -rw-rw-r--. 1 andrewsm andrewsm 41692493 Apr 19 22:20 0-bigrams-inc-holdout.csv
@@ -78,5 +81,4 @@ SUBMITTED test ::
                        
 ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -hyper=1,2,3,5,6
 python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission go_src/1-valid.bigram_02.csv
-
 
