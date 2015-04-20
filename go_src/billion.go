@@ -399,6 +399,9 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
 
     best_i := -1
     best_v := 20 + hyper[0]  // Must beat this to register at all
+    if best_v<0 {
+			best_v = -best_v
+		}
 
 		words := strings.Split(txt, " ")
     words[0] = strings.ToLower(words[0])

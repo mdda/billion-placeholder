@@ -111,4 +111,6 @@ SUBMITTED #2   ::   5.41560 2 	Mon, 20 Apr 2015 09:41:03
 
 -seed=10 from 0,0,0,0,0 into bigram_03
   Levenshtein score : 5.52121 :: hyper=-7,+0,+8,+1,+7,+4,+4,+0,-1,+1
-
+  Levenshtein score : 5.46878 :: hyper=-18,-1,+4,+6,+11,-1,+3,-9,+0,+7
+  Levenshtein score : 5.44325 :: hyper=-20,+1,+7,+4,+6,+1,+7,-12,+1,+7
+  Levenshtein score : 5.44258 :: hyper=-20,+2,+7,+2,+4,+0,+7,-13,+0,+6
