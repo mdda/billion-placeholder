@@ -28,7 +28,7 @@ python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission data
 cd go_fun
 go fmt -w billion.go
 
-GOPATH=`pwd` go build billion.go levenshtein.go && ./billion
+make && ./billion
 Billion Start : 2015-04-18_17h03m25s
 ...
 
