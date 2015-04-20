@@ -28,7 +28,7 @@ python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission data
 cd go_fun
 go fmt -w billion.go
 
-GOPATH=`pwd` go build billion.go  && ./billion
+GOPATH=`pwd` go build billion.go levenshtein.go && ./billion
 Billion Start : 2015-04-18_17h03m25s
 ...
 
@@ -79,6 +79,9 @@ With some bug-fixes (check best_i, not best_v...) :
 SUBMITTED test ::
                        5.53379	1 	Sun, 19 Apr 2015 20:02:35 
                        
+
+./billion -cmd=validate -type=score -load=.bigram_01.csv 
+
+
 ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -skip=0 -hyper=1,2,3,5,6
-python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission go_src/1-valid.bigram_02.csv
 

@@ -1,7 +1,6 @@
 package main
 
-
-// GOPATH=`pwd` go build billion.go  && ./billion
+// GOPATH=`pwd` go build billion.go levenshtein.go && ./billion
 
 import (
 	"flag"
@@ -460,6 +459,67 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
   writer.Flush()
 }
 
+func get_validation_score(filename_truth string, filename_attempt string) float32 {
+	file_truth, err := os.Open(filename_truth)
+	if err != nil {
+		fmt.Println("Error file_truth:", err)
+		return 0.0
+	}
+	defer file_truth.Close()
+	reader_a := csv.NewReader(file_truth)
+
+	file_attempt, err := os.Open(filename_attempt)
+	if err != nil {
+		fmt.Println("Error file_attempt:", err)
+		return 0.0
+	}
+	defer file_attempt.Close()
+	reader_b := csv.NewReader(file_attempt)
+
+	// First line different
+	header_a, err := reader_a.Read()
+	if header_a[0] != "id" {
+		fmt.Println("Bad Header", err)
+		return 0.0
+	}
+	header_b, err := reader_b.Read()
+	if header_b[0] != "id" {
+		fmt.Println("Bad Header", err)
+		return 0.0
+	}
+	
+	total, total2, cnt := 0,0,0
+	for {
+		record_a, err := reader_a.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error ReaderA:", err)
+			return 0.0
+		}
+		record_b, err := reader_b.Read()
+		if err == io.EOF {
+			break
+		} else if err != nil {
+			fmt.Println("Error ReaderB:", err)
+			return 0.0
+		}
+		
+		if record_a[0] != record_b[0] {
+			fmt.Printf("LineID mismatch %s != %s\n", record_a[0],record_b[0])
+			break
+		}
+		
+		dist := LevenshteinDistance(record_a[1], record_b[1])
+		total += dist
+		total2 += dist*dist
+		cnt ++
+	}
+	if 0==cnt {
+		return 0.0
+	}
+	return float32(total) / float32(cnt)
+}
 
 const currently_running_version int = 1000
 
@@ -491,8 +551,10 @@ func main() {
 	start := time.Now()
 
 	fname_test := "../data/0-orig/test_v2.txt"
+	
 	fname_heldout := "../data/1-holdout/heldout.txt.csv"  // This was the data not included in the training set (same format as test)
 	fname_validation := "../data/1-holdout/valid.txt"     // This is a test set for which we have perfect comparison ('truth.txt')
+  fname_truth      := "../data/1-holdout/truth.txt"     // This is the perfect comparison file for the valid.txt test set
   
 	//fname_train := "../data/0-orig/train_v2.txt"
 	fname_train := "../data/1-holdout/train.txt"
@@ -592,6 +654,10 @@ func main() {
       if *submit>0 {
 				splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
 			}
+    }
+		if *cmd_type == "score" {
+			score := get_validation_score(fname_truth, "1-test"+*file_load)
+			fmt.Printf("  Levenshtein score : %6.4f\n", score)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
