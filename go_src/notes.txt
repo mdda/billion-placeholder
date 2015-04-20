@@ -67,7 +67,7 @@ ls -l *.csv
 -rw-rw-r--. 1 andrewsm andrewsm 41394372 Apr 19 22:27 0-bigrams_test2-only.csv
 
 
-./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_01.csv
+./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_01.csv -skip=0 -submit=1
 python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission go_src/1-valid.bigram_01.csv
  Lines =    71,627  -> 5.54352  1SD=(5.53332, 5.55372)   (as expected - first test is identical to 'data/1-holdout/valid.txt ')
 
@@ -79,6 +79,6 @@ With some bug-fixes (check best_i, not best_v...) :
 SUBMITTED test ::
                        5.53379	1 	Sun, 19 Apr 2015 20:02:35 
                        
-./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -hyper=1,2,3,5,6
+./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -skip=0 -hyper=1,2,3,5,6
 python src/score_vs_holdout.py --orig data/1-holdout/truth.txt --submission go_src/1-valid.bigram_02.csv
 

@@ -471,6 +471,7 @@ func main() {
 	seed := flag.Int64("seed", 1, "Random seed to use")
   
 	skip := flag.Int("skip", 0, "Debugging aid")
+	submit := flag.Int("submit", 0, "Build the submissions file too")
 
 	//id := flag.Int("id", 0, "Specific id to examine")
 	//training_only := flag.Bool("training", false, "Act on training set (default=false, i.e. test set)")
@@ -585,7 +586,9 @@ func main() {
       splitter.Load(*file_load)
 
       splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip)
-      //splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
+      if *sumbit>0 {
+				splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
+			}
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
