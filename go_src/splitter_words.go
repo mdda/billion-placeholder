@@ -71,7 +71,7 @@ func get_train_splittervocab(filename string, pl PairList) SplitterVocab {
 	return sv
 }
 
-func (self Vocab) to_single_string() string {
+func (self *Vocab) to_single_string() string {
   pl := sortMapByValue(self)
   
   s := []string{}
