@@ -23,6 +23,7 @@ import (
 
 import (
 	"bufio"
+	"math"
 )
 
 
@@ -518,7 +519,16 @@ func get_validation_score(filename_truth string, filename_attempt string) float3
 	if 0==cnt {
 		return 0.0
 	}
-	return float32(total) / float32(cnt)
+	
+	count := float64(cnt)
+	mean := float64(total) / count
+  sd   := float64(total2)/ count - mean*mean
+	conf := math.Sqrt(sd/count)
+
+	fmt.Printf("Count : %d,  av: %7.5f (%7.5f,%7.5f)\n", 
+		cnt, mean,
+		mean-conf, mean+conf )
+	return float32(mean)
 }
 
 const currently_running_version int = 1000
@@ -656,7 +666,7 @@ func main() {
 			}
     }
 		if *cmd_type == "score" {
-			score := get_validation_score(fname_truth, "1-test"+*file_load)
+			score := get_validation_score(fname_truth, "1-valid"+*file_load)
 			fmt.Printf("  Levenshtein score : %6.4f\n", score)
     }
   }
