@@ -126,3 +126,9 @@ Billion elapsed : 32.287076538s
 
 Count : 71628,  av: 5.44258 (5.43238,5.45278)
 SUBMITTED #3   ::   5.41004	3 	Mon, 20 Apr 2015 10:40:03    12th place
+
+
+Testing for 'next phase' ideas ::
+
+make && ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_04.csv -skip=900
+

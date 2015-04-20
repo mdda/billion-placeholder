@@ -213,6 +213,25 @@ func main() {
         splitter.Save(*file_save)
       }
 		}
+    
+		/// ./billion -cmd=size -type=sv -save=0-sv.csv
+		if *cmd_type == "sv" {
+      vocab := Vocab{}
+      
+			// Read in the vocab for test file
+			vocab.ReadTestNGram(fname_test, 1)
+			// Read in the vocab for holdout file (additional, for validation)
+			vocab.ReadTestNGram(fname_heldout, 1)
+
+      pl := vocab.MakeSortedPairList()
+      
+      // Now, go through the training set, building up a picture of '' or 'something' for each found bigram
+      sv := get_train_splittervocab(fname_train, pl)
+      
+      if len(*file_save)>0 {
+        sv.Save(*file_save)
+      }
+    }
 	}
 
 	if *cmd == "validate" {
