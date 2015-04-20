@@ -1,5 +1,6 @@
 package main
 
+
 // GOPATH=`pwd` go build billion.go  && ./billion
 
 import (
@@ -24,6 +25,8 @@ import (
 import (
 	"bufio"
 )
+
+
 
 type Vocab map[string]int
 
@@ -586,7 +589,7 @@ func main() {
       splitter.Load(*file_load)
 
       splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip)
-      if *sumbit>0 {
+      if *submit>0 {
 				splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip)
 			}
     }
