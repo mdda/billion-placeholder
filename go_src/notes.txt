@@ -132,3 +132,20 @@ Testing for 'next phase' ideas ::
 
 make && ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_04.csv -skip=900
 
+
+[andrewsm@holland go_src]$ make && ./billion -cmd=size -type=sv -save=0-sv.csv
+Billion Start : 2015-04-21_02h51m06s
+Vocab size : 188168
+      0 ->   352460 the
+      1 ->   345761 ,
+...
+Billion elapsed : 11m34.757361261s
+[andrewsm@holland go_src]$ ls -l 
+total 3087996
+-rw-rw-r--. 1 andrewsm andrewsm   41692493 Apr 19 22:31 0-bigrams.csv
+-rw-rw-r--. 1 andrewsm andrewsm   41692493 Apr 19 22:20 0-bigrams-inc-holdout.csv
+-rw-rw-r--. 1 andrewsm andrewsm   41394372 Apr 19 22:27 0-bigrams_test2-only.csv
+-rw-rw-r--. 1 andrewsm andrewsm  949830323 Apr 21 03:23 0-sv.csv
+-rw-rw-r--. 1 andrewsm andrewsm    2348836 Apr 20 02:35 0-vocab.csv
+
+

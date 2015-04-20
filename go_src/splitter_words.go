@@ -29,7 +29,7 @@ type SplitterVocab map[string]SVAtom
 func get_train_splittervocab(filename string, pl PairList) SplitterVocab {
 	sv := SplitterVocab{}
   for i:=0; i<len(pl); i++ {
-    sv[pl[i].Key] = SVAtom{}
+    sv[pl[i].Key] = SVAtom{ Vocab{}, Vocab{} }
   }
 
 	file, err := os.Open(filename)
@@ -60,6 +60,7 @@ func get_train_splittervocab(filename string, pl PairList) SplitterVocab {
         sv[word] = sa
       }
     }
+    //break
 	}
 
 	if err := scanner.Err(); err != nil {
@@ -70,12 +71,29 @@ func get_train_splittervocab(filename string, pl PairList) SplitterVocab {
 	return sv
 }
 
-func (v Vocab) to_single_string() string {
+func (self Vocab) to_single_string() string {
   s := []string{}
-  for k,v := range v {
-    s = append(s, fmt.Sprintf("%d:%s", k,v))
+  for k,v := range self {
+    new_key := strings.Replace(strings.Replace(k, ",", "#COMMA#",-1), ":","#COLON",-1)
+    s = append(s, fmt.Sprintf("%s:%d", new_key,v))
   }
   return "{"+strings.Join(s, ",")+"}"
+}
+
+func to_vocab(s string) Vocab {
+  vocab := Vocab{}
+  
+  if s[0] == '{' && s[len(s)-1] == '}' {  // Strip off the surrounding {}
+    s = s[1:(len(s)-1)]
+  }
+  for _,pair := range strings.Split(s, ",") {
+    piece := strings.Split(pair, ":")
+    k :=  piece[0]
+    v,_ := strconv.Atoi(piece[1])
+    new_key := strings.Replace(strings.Replace(k, "#COMMA#",",", -1), "#COLON",":", -1)
+    vocab[new_key] = v
+  }
+  return vocab
 }
 
 func (sv SplitterVocab) Save(filename string) {
@@ -93,7 +111,6 @@ func (sv SplitterVocab) Save(filename string) {
   writer.Flush()
 }
 
-/*
 func (self SplitterVocab) Load(filename string) {
 	file, err := os.Open(filename)
 	if err != nil {
@@ -113,13 +130,12 @@ func (self SplitterVocab) Load(filename string) {
 		}
 		// record is []string
     word := record[0]
-    together, _ := strconv.Atoi(record[1])
-    separate, _ := strconv.Atoi(record[2])
+    together := record[1]
+    separate := record[2]
     
-    self[word] = SplitterAtom{together,separate}
+    self[word] = SVAtom{ to_vocab(together),to_vocab(separate) }
   }
 }
-*/
 
 /*
 func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab, skip_check int, hyper []int) {
