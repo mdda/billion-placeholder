@@ -91,7 +91,8 @@ func get_validation_score(filename_truth string, filename_attempt string) float3
 	return float32(mean)
 }
 
-const currently_running_version int = 1000
+//const currently_running_version int = 1000  // Used for submissions 1,2,3
+const currently_running_version int = 1001  //
 
 func main() {
 	cmd := flag.String("cmd", "", "Required : {size}")
@@ -234,6 +235,10 @@ func main() {
 				if *submit>0 {
 					splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
 				}
+        
+        if *skip>0 {
+          break // all done
+        }
 				score := get_validation_score(fname_truth, "1-valid"+*file_save)
 				hyper_asstrings := make([]string, len(hyper))
 				for i, v:= range hyper {

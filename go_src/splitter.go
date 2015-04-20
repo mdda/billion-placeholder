@@ -185,6 +185,9 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
     if best_v<0 {
 			best_v = -best_v
 		}
+    if currently_running_version>1000 {
+      //best_v = 0
+    }
 
 		words := strings.Split(txt, " ")
     words[0] = strings.ToLower(words[0])
@@ -210,6 +213,10 @@ func (self Splitter) CreateSubmission(filename_test string, filename_submit stri
       }
       
       v := (max_prop * sa.Separate)/tot
+      if currently_running_version>1000 {
+        v = (max_prop * sa.Separate)/tot
+      }
+      
       //if (sa.Separate*100)/tot<50 {
       if sa.Separate<( 10 + hyper[1] ) { // Evidence either way is very poor
         v=0 //
