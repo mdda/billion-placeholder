@@ -667,7 +667,7 @@ func main() {
     }
 		if *cmd_type == "score" {
 			score := get_validation_score(fname_truth, "1-valid"+*file_load)
-			fmt.Printf("  Levenshtein score : %6.4f\n", score)
+			fmt.Printf("  Levenshtein score : %7.5f\n", score)
     }
   }
 	fmt.Printf("Billion elapsed : %s\n", time.Since(start))
