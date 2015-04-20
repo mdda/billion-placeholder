@@ -76,8 +76,7 @@ With ultra-silly 'v' :
 
 With some bug-fixes (check best_i, not best_v...) : 
  Lines =    71,627  -> 5.53733  1SD=(5.52711, 5.54755) 
-SUBMITTED test ::
-                       5.53379	1 	Sun, 19 Apr 2015 20:02:35 
+SUBMITTED #1 ::        5.53379	1 	Sun, 19 Apr 2015 20:02:35 
                        
 
 ./billion -cmd=validate -type=score -load=.bigram_01.csv 
@@ -106,6 +105,10 @@ Count : 71628,  av: 5.47420 (5.46398,5.48442)
     New Best score established
 Billion elapsed : 32.65909903s
 
+Count : 71628,  av: 5.47420 (5.46398,5.48442)
+SUBMITTED #2   ::   5.41560 2 	Mon, 20 Apr 2015 09:41:03 
+
 
 -seed=10 from 0,0,0,0,0 into bigram_03
+  Levenshtein score : 5.52121 :: hyper=-7,+0,+8,+1,+7,+4,+4,+0,-1,+1
 
