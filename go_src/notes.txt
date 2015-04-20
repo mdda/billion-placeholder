@@ -76,7 +76,7 @@ With ultra-silly 'v' :
 
 With some bug-fixes (check best_i, not best_v...) : 
  Lines =    71,627  -> 5.53733  1SD=(5.52711, 5.54755) 
-SUBMITTED #1 ::        5.53379	1 	Sun, 19 Apr 2015 20:02:35 
+SUBMITTED #1 ::        5.53379	1 	Sun, 19 Apr 2015 20:02:35   17th place
                        
 
 ./billion -cmd=validate -type=score -load=.bigram_01.csv 
@@ -106,7 +106,7 @@ Count : 71628,  av: 5.47420 (5.46398,5.48442)
 Billion elapsed : 32.65909903s
 
 Count : 71628,  av: 5.47420 (5.46398,5.48442)
-SUBMITTED #2   ::   5.41560 2 	Mon, 20 Apr 2015 09:41:03 
+SUBMITTED #2   ::   5.41560 2 	Mon, 20 Apr 2015 09:41:03    12th place
 
 
 -seed=10 from 0,0,0,0,0 into bigram_03
@@ -114,3 +114,15 @@ SUBMITTED #2   ::   5.41560 2 	Mon, 20 Apr 2015 09:41:03
   Levenshtein score : 5.46878 :: hyper=-18,-1,+4,+6,+11,-1,+3,-9,+0,+7
   Levenshtein score : 5.44325 :: hyper=-20,+1,+7,+4,+6,+1,+7,-12,+1,+7
   Levenshtein score : 5.44258 :: hyper=-20,+2,+7,+2,+4,+0,+7,-13,+0,+6
+
+GOPATH=`pwd` go build billion.go levenshtein.go && \
+  ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_03.csv \
+  -skip=0 -hyper=-20,+2,+7,+2,+4,+0,+7,-13,+0,+6 -submit=1
+Billion Start : 2015-04-20_18h37m32s
+Count : 71628,  av: 5.44258 (5.43238,5.45278)
+  Levenshtein score : 5.44258 :: hyper=-20,+2,+7,+2,+4,+0,+7,-13,+0,+6
+    New Best score established
+Billion elapsed : 32.287076538s
+
+Count : 71628,  av: 5.44258 (5.43238,5.45278)
+SUBMITTED #3   ::   5.41004	3 	Mon, 20 Apr 2015 10:40:03    12th place
