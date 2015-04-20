@@ -89,3 +89,6 @@ Count : 71628,  av: 5.53733 (5.52711,5.54755)
 ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_03.csv -skip=0 -hyper=-3,-4,4,0,0,0
 Count : 71628,  av: 5.53028 (5.52006,5.54050)
 
+Levenshtein score : 5.53028 :: hyper=-3,-4,+4,+0,+0,+0,+0,+0,+0,+0
+Levenshtein score : 5.52486 :: hyper=-6,-6,+7,+3,+2,+0,-1,+0,-3,-4
+

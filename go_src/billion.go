@@ -329,6 +329,20 @@ func (self Splitter) Load(filename string) {
   }
 }
 
+
+func get_hyper(hyper_str string) []int {
+	hyper := make([]int,10)
+	if len(hyper_str)>0 {
+		hyper_p := strings.Split(hyper_str, ",")
+		for i,s := range hyper_p {
+			if i<10 {
+				hyper[i], _ = strconv.Atoi(s)
+			}
+		}
+	}
+	return hyper
+}
+
 func (self Splitter) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab, skip_check int, hyper []int) {
 	file_in, err := os.Open(filename_test)
 	if err != nil {
@@ -545,6 +559,7 @@ func main() {
   
 	skip := flag.Int("skip", 0, "Debugging aid")
 	submit := flag.Int("submit", 0, "Build the submissions file too")
+	search := flag.Int("search", 0, "Number of search iterations")
 
 	hyper_str := flag.String("hyper", "0,0,0,0,0,0,0,0,0,0", "integer,comma-separated hyperparameters (up to 10)")
 
@@ -654,7 +669,7 @@ func main() {
 	}
 
 	if *cmd == "validate" {
-		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -hyper=1,2,3,5,6
+		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -hyper=1,2,3,5,6 -search=0
 		if *cmd_type == "bigrams" {
       vocab := Vocab{}
       vocab.Load("0-vocab.csv") // Hard coded for now
@@ -662,21 +677,44 @@ func main() {
       splitter := Splitter{}
       splitter.Load(*file_load)
 
-			hyper := make([]int,10)
-			if len(*hyper_str)>0 {
-				hyper_p := strings.Split(*hyper_str, ",")
-				for i,s := range hyper_p {
-					if i<10 {
-						hyper[i], _ = strconv.Atoi(s)
-					}
-				}
-			}
+			hyper := get_hyper(*hyper_str)
+			
+			hyper_best := make([]int, 10)
+			copy(hyper_best, hyper)  // dest, src
+			hyper_best_score := float32(-1.0) // Initialisation
 
-      splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip, hyper)
-      if *submit>0 {
-				splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
+			for {
+				splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip, hyper)
+				if *submit>0 {
+					splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
+				}
+				score := get_validation_score(fname_truth, "1-valid"+*file_save)
+				hyper_asstrings := make([]string, len(hyper))
+				for i, v:= range hyper {
+					hyper_asstrings[i] = fmt.Sprintf("%+d", v);
+				}
+				fmt.Printf("  Levenshtein score : %7.5f :: hyper=%s\n", score, strings.Join(hyper_asstrings, ","))
+				
+				// If this is the best so far, re-base the best
+				if hyper_best_score<0 || score<hyper_best_score { // new best score
+					copy(hyper_best, hyper)
+					hyper_best_score = score
+					fmt.Printf("    New Best score established\n")
+				}
+				
+				*search--
+				if *search<0 {
+					break
+				}
+
+				// Create next hyper as a variation of hyper_best ...
+				for i,v := range hyper_best {
+					hyper[i] = v + (rand.Intn(5)-2) // {-2,-1,0,1,2}
+				}
+				// And loop around...
 			}
     }
+		/// ./billion -cmd=validate -type=score -load=.bigram_02.csv
 		if *cmd_type == "score" {
 			score := get_validation_score(fname_truth, "1-valid"+*file_load)
 			fmt.Printf("  Levenshtein score : %7.5f\n", score)
