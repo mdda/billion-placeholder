@@ -9,8 +9,8 @@ import (
 import (
 	"os"
 	"encoding/csv"
-//	"io"
-//	"strconv"
+	"io"
+	"strconv"
 	"strings"
 )
 
@@ -72,10 +72,12 @@ func get_train_splittervocab(filename string, pl PairList) SplitterVocab {
 }
 
 func (self Vocab) to_single_string() string {
+  pl := sortMapByValue(self)
+  
   s := []string{}
-  for k,v := range self {
-    new_key := strings.Replace(strings.Replace(k, ",", "#COMMA#",-1), ":","#COLON",-1)
-    s = append(s, fmt.Sprintf("%s:%d", new_key,v))
+  for _, p := range pl {
+    new_key := strings.Replace(strings.Replace(p.Key, ",", "#COMMA#",-1), ":","#COLON",-1)
+    s = append(s, fmt.Sprintf("%s:%d", new_key,p.Value))
   }
   return "{"+strings.Join(s, ",")+"}"
 }

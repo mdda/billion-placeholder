@@ -157,14 +157,12 @@ func main() {
 
 			// Create an empty test vocab from the test set 'skeleton'
 			test_vocab := Vocab{}
-			for i := 0; i < len(test_pairs); i++ {
-				p := test_pairs[i]
+			for _, p := range test_pairs {
 				test_vocab[p.Key] = 0
 			}
 
 			// The fill it with train word freqs (where applicable)
-			for i := 0; i < len(train_pairs); i++ {
-				p := train_pairs[i]
+			for _, p := range train_pairs {
 				if _, ok := test_vocab[p.Key]; ok {
 					test_vocab[p.Key] = p.Value
 				}
