@@ -88,8 +88,11 @@ func to_vocab(s string) Vocab {
   if s[0] == '{' && s[len(s)-1] == '}' {  // Strip off the surrounding {}
     s = s[1:(len(s)-1)]
   }
+  //fmt.Printf("SplitterVocab='%s'\n", s)
+  if len(s)==0 {
+    return vocab // Nothing
+  }
   for _,pair := range strings.Split(s, ",") {
-    fmt.Printf("SplitterVocab.pair='%s'\n", pair)
     piece := strings.Split(pair, ":")
     k :=  piece[0]
     v, err := strconv.Atoi(piece[1])
@@ -100,7 +103,7 @@ func to_vocab(s string) Vocab {
     new_key := strings.Replace(strings.Replace(k, "#COMMA#",",", -1), "#COLON",":", -1)
     vocab[new_key] = v
     if v>1000 {
-      fmt.Printf("SplitterVocab[...][%s] : size=%6d\n", new_key, v)
+      fmt.Printf("size=%6d for SplitterVocab[...][%s]\n", v, new_key)
     }
   }
   return vocab
