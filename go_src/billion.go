@@ -234,12 +234,10 @@ func main() {
 
 	if *cmd == "validate" {
 		/// ./billion -cmd=validate -type=bigrams -load=0-bigrams.csv -save=.bigram_02.csv -hyper=1,2,3,5,6 -search=0
-		if *cmd_type == "bigrams" {
+		/// ./billion -cmd=validate -type=sv -load=0-sv.csv -save=.bigram_05.csv -hyper=1,2,3,5,6 -search=0 -skip=1555
+		if *cmd_type == "bigrams" || *cmd_type == "sv" {
       vocab := Vocab{}
       vocab.Load("0-vocab.csv") // Hard coded for now
-      
-      splitter := Splitter{}
-      splitter.Load(*file_load)
 
 			hyper := get_hyper(*hyper_str)
 			
@@ -247,11 +245,32 @@ func main() {
 			copy(hyper_best, hyper)  // dest, src
 			hyper_best_score := float32(-1.0) // Initialisation
 
+      splitter := Splitter{} // empty
+      if *cmd_type == "bigrams" {
+        splitter.Load(*file_load)
+      }
+      sv := SplitterVocab{}  // empty
+      if *cmd_type == "sv" {
+        sv.Load(*file_load)
+        fmt.Printf("Loaded SplitterVocab : size=%d\n", len(sv))
+      }
+
 			for {
-				splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip, hyper)
-				if *submit>0 {
-					splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
-				}
+        if *cmd_type == "bigrams" {
+          splitter.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip, hyper)
+          if *submit>0 {
+            splitter.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
+          }
+        }
+        if *cmd_type == "sv" {
+          break
+          /*
+          sv.CreateSubmission(fname_validation, "1-valid"+*file_save, &vocab, *skip, hyper)
+          if *submit>0 {
+            sv.CreateSubmission(fname_test, "1-test"+*file_save, &vocab, *skip, hyper)
+          }
+          */
+        }
         
         if *skip>0 {
           break // all done

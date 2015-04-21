@@ -89,11 +89,19 @@ func to_vocab(s string) Vocab {
     s = s[1:(len(s)-1)]
   }
   for _,pair := range strings.Split(s, ",") {
+    fmt.Printf("SplitterVocab.pair='%s'\n", pair)
     piece := strings.Split(pair, ":")
     k :=  piece[0]
-    v,_ := strconv.Atoi(piece[1])
+    v, err := strconv.Atoi(piece[1])
+    if err != nil  {
+      fmt.Printf("SplitterVocab.pair='%s'\n", pair)
+      continue
+    }
     new_key := strings.Replace(strings.Replace(k, "#COMMA#",",", -1), "#COLON",":", -1)
     vocab[new_key] = v
+    if v>1000 {
+      fmt.Printf("SplitterVocab[...][%s] : size=%6d\n", new_key, v)
+    }
   }
   return vocab
 }
