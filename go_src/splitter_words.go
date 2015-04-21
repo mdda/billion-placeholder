@@ -102,14 +102,14 @@ func to_vocab(s string) Vocab {
     }
     new_key := strings.Replace(strings.Replace(k, "#COMMA#",",", -1), "#COLON",":", -1)
     vocab[new_key] = v
-    if v>1000 {
+    if v>30*1000 {
       fmt.Printf("size=%6d for SplitterVocab[...][%s]\n", v, new_key)
     }
   }
   return vocab
 }
 
-func (sv SplitterVocab) Save(filename string) {
+func (sv SplitterVocab) Save(filename string, pl PairList) {  
 	file, err := os.Create(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -118,7 +118,10 @@ func (sv SplitterVocab) Save(filename string) {
 	defer file.Close()
 	writer := csv.NewWriter(file)
   
-	for w, sa := range sv {
+	//for w, sa := range sv {
+	for _,p := range pl {
+    w := p.Key 
+    sa := sv[w]
     writer.Write( []string{w, sa.Together.to_single_string(), sa.Separate.to_single_string()} )
   }
   writer.Flush()

@@ -227,7 +227,7 @@ func main() {
       sv := get_train_splittervocab(fname_train, pl)
       
       if len(*file_save)>0 {
-        sv.Save(*file_save)
+        sv.Save(*file_save, pl)
       }
     }
 	}
