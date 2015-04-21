@@ -153,7 +153,6 @@ func (self SplitterVocab) Load(filename string) {
   }
 }
 
-/*
 func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit string, vocab *Vocab, skip_check int, hyper []int) {
 	file_in, err := os.Open(filename_test)
 	if err != nil {
@@ -169,10 +168,8 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 		return 
 	}
 	defer file_out.Close()
-	writer := bufio.NewWriter(file_out)  // since csv.Writer doesn't allow force quoting
+	writer := bufio.NewWriter(file_out)
   
-	//fmt.Printf("filename_submit = %s", filename_submit)
-
 	// First line different
 	header, err := reader.Read()
 	if header[0] != "id" {
@@ -200,16 +197,12 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 			fmt.Println("Error:", err)
 			return
 		}
-		// record is []string
 
-		//id, _ := strconv.ParseFloat(record[0], 32)
     id  := record[0] // Don't really care about content
 		txt := record[1]
 
-    //fmt.Printf("%6.4f\n", id)
-
     best_i := -1
-    best_v := 20 + hyper[0]  // Must beat this to register at all
+    best_v := 20.0 + float64(hyper[0])  // Must beat this to register at all
     if best_v<0 {
 			best_v = -best_v
 		}
@@ -218,39 +211,38 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
     }
 
 		words := strings.Split(txt, " ")
-    words[0] = strings.ToLower(words[0])
+    //words[0] = strings.ToLower(words[0])
     for i := 0; i < len(words)-1; i++ {
-      word := words[i] + "|" + words[i+1]
-
-      v0 := (*vocab)[words[i]]
-      v1 := (*vocab)[words[i+1]]
+      word := words[i]
       
-      // Let's print the word, and its corresponding stats
+      // How frequent the words are stand-alone
+      v0 := float64((*vocab)[word])
+      v1 := float64((*vocab)[words[i+1]])
+      
+      // Stats for the size of the expected word lists
       sa := self[word]
-      tot := sa.Together+sa.Separate
-      if 0==tot {
-         tot=1
+      together := float64(len(sa.Together))
+      separate := float64(len(sa.Separate))
+      tot := together+separate
+      if tot<1.0 {
+         tot=1.0
       }
       
-      max_prop := 0
-      if v0>0 && v1>0 {
-        max_prop = (tot*100)/v0
-        if max_prop < (tot*100)/v1 {
-          max_prop = (tot*100)/v1
+      max_prop := 0.0
+      if v0>0.0 && v1>0.0 {
+        max_prop = 100.0 * tot/v0
+        if max_prop < 100.0 * tot/v1 {
+          max_prop = 100.0 * tot/v1
         }
       }
       
-      v := (max_prop * sa.Separate)/tot
-      if currently_running_version>1000 {
-        v = (max_prop * sa.Separate)/tot
-      }
+      v := (max_prop * separate)/tot
       
-      //if (sa.Separate*100)/tot<50 {
-      if sa.Separate<( 10 + hyper[1] ) { // Evidence either way is very poor
-        v=0 //
+      if separate<( 10.0 + float64(hyper[1]) ) { // Evidence either way is very poor
+        v=0.0
       }
-      if (sa.Separate*100)/tot<( 90 + hyper[2] ) { // poor percentage suggesting split
-        v=0
+      if 100.0*separate/tot<( 90.0 + float64(hyper[2]) ) { // poor percentage suggesting split
+        v=0.0
       }
       
       if v>best_v {
@@ -260,9 +252,9 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
       
       if(skip_check>0) {
         fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1], 
-          sa.Together, sa.Separate, sa.Together+sa.Separate, (sa.Separate*100)/tot,
-          v0, v1, (tot*100)/v0, (tot*100)/v1,
-          v )
+          int(together), int(separate), int(together+separate), int(100.0*separate/tot),
+          int(v0), int(v1), int(100.0*tot/v0), int(100.0*tot/v1),
+          int(v) )
       }
     }
     
@@ -294,5 +286,3 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 	}
   writer.Flush()
 }
-
-*/
