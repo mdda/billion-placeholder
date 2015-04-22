@@ -1,7 +1,5 @@
 package main
 
-// GOPATH=`pwd` go build billion.go vocab.go levenshtein.go && ./billion
-
 import (
 	"fmt"
 )
@@ -102,8 +100,8 @@ func to_vocab(s string) Vocab {
     }
     new_key := strings.Replace(strings.Replace(k, "#COMMA#",",", -1), "#COLON",":", -1)
     vocab[new_key] = v
-    if v>30*1000 {
-      fmt.Printf("size=%6d for SplitterVocab[...][%s]\n", v, new_key)
+    if v>65*1000 {
+      fmt.Printf("size=%8d for SplitterVocab[...][%s]\n", v, new_key)
     }
   }
   return vocab

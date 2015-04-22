@@ -149,3 +149,9 @@ total 3087996
 -rw-rw-r--. 1 andrewsm andrewsm    2348836 Apr 20 02:35 0-vocab.csv
 
 
+
+./billion -cmd=validate -type=sv -load=0-sv.csv -save=.sv_04.csv -skip=900
+Loaded SplitterVocab : size=188168
+Billion elapsed : 1m1.173691768s
+
+

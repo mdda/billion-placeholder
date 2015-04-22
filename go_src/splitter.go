@@ -1,7 +1,5 @@
 package main
 
-// GOPATH=`pwd` go build billion.go vocab.go levenshtein.go && ./billion
-
 import (
 	"fmt"
 )
