@@ -1,6 +1,6 @@
 package main
 
-// GOPATH=`pwd` go build billion.go vocab.go levenshtein.go && ./billion
+// GOPATH=`pwd` go build billion.go vocab.go splitter.go splitter_words.go levenshtein.go  && ./billion
 
 import (
 	"flag"

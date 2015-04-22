@@ -3,6 +3,9 @@ glove.tar.gz
 data/
 .geany/session.ini
 
+go_src/*.csv
+go_src/billion
+
 *.pyc
 env/
 
