@@ -167,6 +167,12 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 	defer file_out.Close()
 	writer := bufio.NewWriter(file_out)
 
+  tot_freq_vocab:=0
+  for _,v := range *vocab {
+    tot_freq_vocab += v 
+  }
+  fmt.Printf("Total vocab size : %d\n", tot_freq_vocab);
+
 	// First line different
 	header, err := reader.Read()
 	if header[0] != "id" {
@@ -225,7 +231,26 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 				tot = 1.0
 			}
 
-			v := 0.0
+      tot_freq1:=0
+      for _,v := range sa.Together {
+        tot_freq1 += v 
+      }
+      expected_freq1 := float64(tot_freq1) * v1/float64(tot_freq_vocab)
+      
+      tot_freq2:=0
+      for _,v := range sa.Separate {
+        tot_freq2 += v 
+      }
+      expected_freq2 := float64(tot_freq2) * v1/float64(tot_freq_vocab)
+
+      actual_freq1,ok := sa.Together[word]
+      if !ok { actual_freq1=0 }
+      actual_freq2,ok := sa.Separate[word]
+      if !ok { actual_freq2=0 }
+
+
+			val := 0.0
+      
 
 			// Thought process :
 			//   Want to know how 'surprising' next word is...
@@ -247,28 +272,35 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 			     }
 			   }
 
-			   v := (max_prop * separate)/tot
+			   val := (max_prop * separate)/tot
 			*/
 
-			// need to generate a 'v' per line here - will be maximised over
+			// need to generate a 'val' per line here - will be maximised over
 
 			if separate < (10.0 + float64(hyper[1])) { // Evidence either way is very poor
-				v = 0.0
+				val = 0.0
 			}
 			if 100.0*separate/tot < (90.0 + float64(hyper[2])) { // poor percentage suggesting split
-				v = 0.0
+				val = 0.0
 			}
 
-			if v > best_v {
+			if val > best_v {
 				best_i = i
-				best_v = v
+				best_v = val
 			}
 
-			if skip_check > 0 {
+			if false && skip_check > 0 {
 				fmt.Printf("%20s - %20s :: [%7d,%7d] :: %7d %3d%% :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1],
 					int(together), int(separate), int(together+separate), int(100.0*separate/tot),
 					int(v0), int(v1), int(100.0*tot/v0), int(100.0*tot/v1),
-					int(v))
+					int(val))
+			}
+			if skip_check > 0 {
+				fmt.Printf("%20s - %20s :: act[%7d,%7d] vs exp[%7.0f,%7.0f] :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1],
+					actual_freq1, actual_freq2, 
+          expected_freq1, expected_freq2,
+					int(v0), int(v1), int(100.0*tot/v0), int(100.0*tot/v1),
+					int(val))
 			}
 		}
 
