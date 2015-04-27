@@ -167,11 +167,11 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 	defer file_out.Close()
 	writer := bufio.NewWriter(file_out)
 
-  tot_freq_vocab:=0
-  for _,v := range *vocab {
-    tot_freq_vocab += v 
-  }
-  fmt.Printf("Total vocab size : %d\n", tot_freq_vocab);
+	tot_freq_vocab := 0
+	for _, v := range *vocab {
+		tot_freq_vocab += v
+	}
+	fmt.Printf("Total vocab size : %d\n", tot_freq_vocab)
 
 	// First line different
 	header, err := reader.Read()
@@ -231,37 +231,39 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 				tot = 1.0
 			}
 
-      tot_freq1:=0
-      for _,v := range sa.Together {
-        tot_freq1 += v 
-      }
-      expected_freq1 := float64(tot_freq1) * v1/float64(tot_freq_vocab)
-      
-      tot_freq2:=0
-      for _,v := range sa.Separate {
-        tot_freq2 += v 
-      }
-      expected_freq2 := float64(tot_freq2) * v1/float64(tot_freq_vocab)
+			tot_freq1 := 0
+			for _, v := range sa.Together {
+				tot_freq1 += v
+			}
+			expected_freq1 := float64(tot_freq1) * v1 / float64(tot_freq_vocab)
 
-      actual_freq1,ok := sa.Together[word]
-      if !ok { actual_freq1=0 }
-      actual_freq2,ok := sa.Separate[word]
-      if !ok { actual_freq2=0 }
+			tot_freq2 := 0
+			for _, v := range sa.Separate {
+				tot_freq2 += v
+			}
+			expected_freq2 := float64(tot_freq2) * v1 / float64(tot_freq_vocab)
 
+			actual_freq1, ok := sa.Together[word]
+			if !ok {
+				actual_freq1 = 0
+			}
+			actual_freq2, ok := sa.Separate[word]
+			if !ok {
+				actual_freq2 = 0
+			}
 
 			val := 0.0
-      
 
 			// Thought process :
 			//   Want to know how 'surprising' next word is...
 			// Surprise depends on what words commonly follow this one::
 
 			// If p1 is a common word, and relatively uncommon in the follow1 (also compared to its qty in follow2) then SURPRISE!
-      // If p1 is a rare word, but relatively common in follow1 or follow2, then that's informative too
-      
-      // So, useful to compare word-freq(0) with follow1-freq(1) and follow2-freq(2) and follow1-freq(2) and follow2-freq(1)
+			// If p1 is a rare word, but relatively common in follow1 or follow2, then that's informative too
 
-      // Building expressions out of comparisons of linear combos would be 'optimisable' over the hyper parameters
+			// So, useful to compare word-freq(0) with follow1-freq(1) and follow2-freq(2) and follow1-freq(2) and follow2-freq(1)
+
+			// Building expressions out of comparisons of linear combos would be 'optimisable' over the hyper parameters
 
 			/*
 			   max_prop := 0.0
@@ -297,8 +299,8 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 			}
 			if skip_check > 0 {
 				fmt.Printf("%20s - %20s :: act[%7d,%7d] vs exp[%7.0f,%7.0f] :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1],
-					actual_freq1, actual_freq2, 
-          expected_freq1, expected_freq2,
+					actual_freq1, actual_freq2,
+					expected_freq1, expected_freq2,
 					int(v0), int(v1), int(100.0*tot/v0), int(100.0*tot/v1),
 					int(val))
 			}
