@@ -298,9 +298,10 @@ func (self SplitterVocab) CreateSubmission(filename_test string, filename_submit
 					int(val))
 			}
 			if skip_check > 0 {
-				fmt.Printf("%20s - %20s :: act[%7d,%7d] vs exp[%7.0f,%7.0f] :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1],
+				fmt.Printf("%20s - %20s :: act[%7d,%7d] ratio[%3.0f%%,%3.0f%%] :: vocab:(%8d,%8d)=(%3d%%,%3d%%) -> %3d%%\n", words[i], words[i+1],
 					actual_freq1, actual_freq2,
-					expected_freq1, expected_freq2,
+					100.0 * float64(actual_freq1)/(expected_freq1+0.001), 
+					100.0 * float64(actual_freq2)/(expected_freq2+0.001),
 					int(v0), int(v1), int(100.0*tot/v0), int(100.0*tot/v1),
 					int(val))
 			}
