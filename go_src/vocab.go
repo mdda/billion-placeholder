@@ -20,7 +20,6 @@ import (
 	"bufio"
 )
 
-
 type Vocab map[string]int
 
 // A data structure to hold a key/value pair.
@@ -154,11 +153,11 @@ func (vocab *Vocab) MakeSortedPairList() PairList {
 
 	fmt.Printf("Vocab size : %d\n", len(pl))
 
-	for i,p := range pl {
+	for i, p := range pl {
 		fmt.Printf("%7d -> %8d %s\n", i, p.Value, p.Key)
-    if(i>=20) {
-      break
-    }
+		if i >= 20 {
+			break
+		}
 	}
 
 	return pl
@@ -193,26 +192,26 @@ func (self *Vocab) Save(filename string) {
 	file, err := os.Create(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
-		return 
+		return
 	}
 	defer file.Close()
 	writer := csv.NewWriter(file)
-  
+
 	pl := sortMapByValue(self) // Far prefer this to be ordered...
-	for _,p := range pl {
-    writer.Write( []string{p.Key, strconv.Itoa(p.Value)} )
-  }
-  writer.Flush()
+	for _, p := range pl {
+		writer.Write([]string{p.Key, strconv.Itoa(p.Value)})
+	}
+	writer.Flush()
 }
 
 func (self Vocab) Load(filename string) {
 	file, err := os.Open(filename)
 	if err != nil {
 		fmt.Println("Error:", err)
-		return 
+		return
 	}
 	defer file.Close()
-  
+
 	reader := csv.NewReader(file)
 	for {
 		record, err := reader.Read()
@@ -223,10 +222,9 @@ func (self Vocab) Load(filename string) {
 			return
 		}
 		// record is []string
-    word := record[0]
-    count, _ := strconv.Atoi(record[1])
-    
-    self[word] = count
-  }
-}
+		word := record[0]
+		count, _ := strconv.Atoi(record[1])
 
+		self[word] = count
+	}
+}
