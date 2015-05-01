@@ -304,3 +304,16 @@ sshfs -o idmap=user andrewsm@holland.herald:/home/andrewsm/OpenSource/billion-pl
 
 
 fusermount -u /mnt/data/OpenSource-GitHub/billion-placeholder-mount/
+
+
+
+
+And so it ends...
+Only submittable results were produced by code in <REPO>/go_src
+Which took about a weekend to write.
+
+Probably enough 'juice' in the pure bigram approach to get to #8 from current #12, 
+but no futher, since there is a step-wise change between #8 amd #7.
+
+But time would be better spent (i) sleeping; (ii) working on something 
+that can be submitted to a conference instead.
